@@ -1,0 +1,7 @@
+Correr en consola (powershell)
+
+npm install -g @gltf-transform/cli
+
+gltf-transform optimize modelos/facu2.glb modelos/facu3_opt.glb --compress draco --texture-compress webp --flatten false
+                               ^                     ^
+                nombre del modelo original  nombre del modelo optimizado

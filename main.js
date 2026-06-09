@@ -223,7 +223,7 @@ function init() {
     controls = new PointerLockControls(camera, renderer.domElement);
     scene.add(controls.getObject());
 
-    // El listener del botón va aquí, no dentro del callback async de carga
+    // listener del botón
     const startBtn = document.getElementById('start-btn');
     if (startBtn) {
         startBtn.addEventListener('click', () => {
@@ -333,7 +333,7 @@ function loadGLBModel() {
     loader.setDRACOLoader(dracoLoader);
 
     loader.load(
-        'modelos/facu2_opt.glb',
+        'modelos/facu3_opt.glb',
         (gltf) => {
             const model = gltf.scene;
             model.scale.set(100, 100, 100);

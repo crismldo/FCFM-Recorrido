@@ -1,0 +1,274 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>TEST - Sin colisiones</title>
+    <style>
+        * { margin: 0; padding: 0; }
+        body { background: #000; overflow: hidden; }
+        canvas { display: block; }
+        #overlay {
+            position: fixed; inset: 0;
+            display: flex; flex-direction: column;
+            align-items: center; justify-content: center;
+            background: rgba(0,0,0,0.7);
+            color: white; font-family: monospace; font-size: 18px;
+            gap: 16px;
+        }
+        #log {
+            position: fixed; top: 10px; left: 10px;
+            color: lime; font-family: monospace; font-size: 13px;
+            pointer-events: none;
+        }
+        button {
+            padding: 12px 32px; font-size: 18px;
+            cursor: pointer; background: #ff6600;
+            border: none; color: white; border-radius: 4px;
+        }
+    </style>
+    <script type="importmap">
+    {
+        "imports": {
+            "three": "https://unpkg.com/three@0.160.0/build/three.module.js",
+            "three/addons/": "https://unpkg.com/three@0.160.0/examples/jsm/",
+            "three-mesh-bvh": "https://unpkg.com/three-mesh-bvh@0.7.8/build/index.module.js"
+        }
+    }
+    </script>
+</head>
+<body>
+<canvas id="c"></canvas>
+<div id="overlay">
+    <div id="status">Cargando modelo...</div>
+    <button id="btn" style="display:none">ENTRAR</button>
+</div>
+<div id="log"></div>
+
+<script type="module">
+import * as THREE from 'three';
+import { GLTFLoader }          from 'three/addons/loaders/GLTFLoader.js';
+import { DRACOLoader }         from 'three/addons/loaders/DRACOLoader.js';
+import { PointerLockControls } from 'three/addons/controls/PointerLockControls.js';
+import { RGBELoader }          from 'three/addons/loaders/RGBELoader.js';
+import { MeshBVH, acceleratedRaycast } from 'three-mesh-bvh';
+
+// Parchea el raycast de Three.js para usar BVH
+THREE.Mesh.prototype.raycast = acceleratedRaycast;
+
+// ── LOG ───────────────────────────────────────────────────────
+const logEl = document.getElementById('log');
+function log(msg, color = 'lime') {
+    console.log(msg);
+    const line = document.createElement('div');
+    line.style.color = color;
+    line.textContent = msg;
+    logEl.prepend(line);
+    if (logEl.children.length > 10) logEl.lastChild.remove();
+}
+
+// ── RENDERER / SCENE / CAMERA ─────────────────────────────────
+const canvas   = document.getElementById('c');
+const renderer = new THREE.WebGLRenderer({ canvas, antialias: false });
+renderer.setSize(innerWidth, innerHeight);
+renderer.setPixelRatio(Math.min(devicePixelRatio, 1.5));
+renderer.toneMapping = THREE.ACESFilmicToneMapping;
+renderer.toneMappingExposure = 1.1;
+renderer.outputColorSpace = THREE.SRGBColorSpace;
+
+const scene  = new THREE.Scene();
+scene.fog    = new THREE.FogExp2(0xffe6d1, 0.002);
+
+const camera = new THREE.PerspectiveCamera(70, innerWidth / innerHeight, 0.1, 600);
+camera.position.set(7, 8.41, 37);
+
+// ── ILUMINACIÓN ───────────────────────────────────────────────
+const hemi = new THREE.HemisphereLight(0xffeeb1, 0x3a5f8a, 1.5);
+scene.add(hemi);
+
+const sun = new THREE.DirectionalLight(0xffaa33, 2.5);
+sun.position.set(50, 80, 50);
+sun.castShadow = true;
+sun.shadow.mapSize.set(1024, 1024);
+scene.add(sun);
+
+scene.add(new THREE.AmbientLight(0xffffff, 0.15));
+
+// HDR environment (igual que tu main.js)
+log('Cargando HDR...');
+new RGBELoader().load(
+    'https://dl.polyhaven.org/file/ph-assets/HDRIs/hdr/1k/kloofendal_48d_partly_cloudy_puresky_1k.hdr',
+    (hdr) => {
+        hdr.mapping = THREE.EquirectangularReflectionMapping;
+        scene.environment = hdr;
+        scene.background  = hdr;
+        scene.backgroundIntensity = 0.8;
+        log('✅ HDR cargado');
+    }
+);
+
+// ── CONTROLES ─────────────────────────────────────────────────
+const controls = new PointerLockControls(camera, renderer.domElement);
+scene.add(controls.getObject());
+
+const overlay = document.getElementById('overlay');
+const btn     = document.getElementById('btn');
+const status  = document.getElementById('status');
+
+btn.addEventListener('click', () => {
+    log('Click → controls.lock()');
+    controls.lock();
+});
+controls.addEventListener('lock',   () => { log('✅ PointerLock ON'); overlay.style.display = 'none'; });
+controls.addEventListener('unlock', () => { log('🔓 PointerLock OFF'); overlay.style.display = 'flex'; });
+
+// ── TECLADO ───────────────────────────────────────────────────
+const keys = { w: false, a: false, s: false, d: false, ' ': false };
+document.addEventListener('keydown', e => { const k = e.key === ' ' ? ' ' : e.key.toLowerCase(); if (k in keys) keys[k] = true; });
+document.addEventListener('keyup',   e => { const k = e.key === ' ' ? ' ' : e.key.toLowerCase(); if (k in keys) keys[k] = false; });
+
+// ── FÍSICA + COLISIONES (BVH) ─────────────────────────────────
+const FIXED_STEP       = 1 / 60;
+const MAX_SUBSTEPS     = 5;
+let   _accumulator     = 0;
+const moveSpeed        = 5.0;
+const gravity          = 25.0;
+const jumpForce        = 10.0;
+const cameraHeight     = 1.3;
+const collisionThreshold = 0.5;
+const COLLISION_EVERY  = 2;
+let   velocityY        = 0;
+let   isGrounded       = false;
+let   _collisionFrame  = 0;
+let   _lastCollisions  = { forward: false, backward: false, left: false, right: false };
+const collidableObjects = [];
+const LAYER_COLLIDABLE  = 1;
+
+const raycaster  = new THREE.Raycaster();
+raycaster.far    = 50;
+raycaster.layers.set(LAYER_COLLIDABLE);
+
+// Vectores reutilizables
+const _rayOrigin = new THREE.Vector3();
+const _camDir    = new THREE.Vector3();
+const _fwd = new THREE.Vector3(), _bwd = new THREE.Vector3();
+const _right = new THREE.Vector3(), _left = new THREE.Vector3();
+const _down  = new THREE.Vector3(0, -1, 0);
+const direction = new THREE.Vector3();
+
+// Piso base
+const ground = new THREE.Mesh(
+    new THREE.PlaneGeometry(500, 500),
+    new THREE.MeshStandardMaterial({ color: 0x111111 })
+);
+ground.rotation.x = -Math.PI / 2;
+ground.geometry.boundsTree = new MeshBVH(ground.geometry);
+ground.layers.enable(LAYER_COLLIDABLE);
+scene.add(ground);
+collidableObjects.push(ground);
+
+function physicsStep() {
+    const dt     = FIXED_STEP;
+    const camObj = controls.getObject();
+
+    // 1. GRAVEDAD Y SUELO
+    _rayOrigin.copy(camObj.position);
+    raycaster.set(_rayOrigin, _down);
+    const groundHits = raycaster.intersectObjects(collidableObjects, false);
+    const groundDist = groundHits.length > 0 ? groundHits[0].distance : Infinity;
+
+    if (groundDist <= cameraHeight + 0.05) {
+        isGrounded = true;
+        velocityY  = 0;
+        camObj.position.y = groundHits[0].point.y + cameraHeight;
+    } else {
+        isGrounded = false;
+        velocityY -= gravity * dt;
+    }
+    camObj.position.y += velocityY * dt;
+
+    // 2. SALTO
+    if (keys[' '] && isGrounded) { velocityY = jumpForce; isGrounded = false; }
+
+    // 3. COLISIONES HORIZONTALES (throttled)
+    _collisionFrame++;
+    if (_collisionFrame >= COLLISION_EVERY) {
+        _collisionFrame = 0;
+        camera.getWorldDirection(_camDir); _camDir.y = 0; _camDir.normalize();
+        _fwd.copy(_camDir); _bwd.copy(_camDir).negate();
+        _right.crossVectors(_camDir, camera.up).normalize(); _left.copy(_right).negate();
+        _rayOrigin.copy(camObj.position);
+
+        function blocked(dir) {
+            raycaster.set(_rayOrigin, dir);
+            const hits = raycaster.intersectObjects(collidableObjects, false);
+            return hits.length > 0 && hits[0].distance < collisionThreshold;
+        }
+        _lastCollisions.forward  = blocked(_fwd);
+        _lastCollisions.backward = blocked(_bwd);
+        _lastCollisions.right    = blocked(_right);
+        _lastCollisions.left     = blocked(_left);
+    }
+
+    // 4. MOVIMIENTO WASD
+    direction.set(0, 0, 0);
+    if (keys['w']) direction.z -= 1;
+    if (keys['s']) direction.z += 1;
+    if (keys['a']) direction.x -= 1;
+    if (keys['d']) direction.x += 1;
+    direction.normalize();
+
+    if (_lastCollisions.forward  && direction.z < 0) direction.z = 0;
+    if (_lastCollisions.backward && direction.z > 0) direction.z = 0;
+    if (_lastCollisions.right    && direction.x > 0) direction.x = 0;
+    if (_lastCollisions.left     && direction.x < 0) direction.x = 0;
+
+    if (direction.z !== 0) controls.moveForward(-direction.z * moveSpeed * dt);
+    if (direction.x !== 0) controls.moveRight(direction.x * moveSpeed * dt);
+}
+
+// ── CARGA GLB CON DRACO ───────────────────────────────────────
+const dracoLoader = new DRACOLoader();
+dracoLoader.setDecoderPath('https://www.gstatic.com/draco/versioned/decoders/1.5.6/');
+dracoLoader.setDecoderConfig({ type: 'wasm' });
+
+const loader = new GLTFLoader();
+loader.setDRACOLoader(dracoLoader);
+
+log('Cargando modelo...');
+loader.load('modelos/facu3_opt.glb', (gltf) => {
+    const model = gltf.scene;
+    model.scale.set(100, 100, 100);
+    model.position.y = 10;
+    scene.add(model); // sin traverse, sin BVH, sin matrixAutoUpdate
+    btn.style.display = 'inline-block';
+});
+
+// ── LOOP ──────────────────────────────────────────────────────
+const clock = new THREE.Clock();
+
+function animate() {
+    requestAnimationFrame(animate);
+    const dt = clock.getDelta();
+    _accumulator += Math.min(dt, FIXED_STEP * MAX_SUBSTEPS);
+
+    if (controls.isLocked) {
+        while (_accumulator >= FIXED_STEP) {
+            physicsStep();
+            _accumulator -= FIXED_STEP;
+        }
+        const p = camera.position;
+        log(`X:${p.x.toFixed(1)} Y:${p.y.toFixed(1)} Z:${p.z.toFixed(1)}`);
+    }
+
+    renderer.render(scene, camera);
+}
+animate();
+
+window.addEventListener('resize', () => {
+    camera.aspect = innerWidth / innerHeight;
+    camera.updateProjectionMatrix();
+    renderer.setSize(innerWidth, innerHeight);
+});
+</script>
+</body>
+</html>
