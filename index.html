@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>FCFM - Recorrido Virtual</title>
+    <link rel="stylesheet" href="style.css">
+    
+    <script type="importmap">
+    {
+        "imports": {
+            "three": "https://unpkg.com/three@0.160.0/build/three.module.js",
+            "three/addons/": "https://unpkg.com/three@0.160.0/examples/jsm/",
+            "three-mesh-bvh": "https://unpkg.com/three-mesh-bvh@0.7.8/build/index.module.js"
+        }
+    }
+    </script>
+</head>
+<body>
+    <canvas id="webgl"></canvas>
+
+    <div id="ui-container">
+        <div id="coords" class="glass-panel">
+            <span class="label">UBICACIÓN</span>
+            <div id="pos-values">X: 0 | Y: 0 | Z: 0</div>
+        </div>
+
+        <div class="controls-hint glass-panel">
+            <p><strong>WASD</strong> Caminar</p>
+            <p><strong>ESPACIO</strong> Saltar</p>
+        </div>
+    </div>
+
+    <div id="blocker">
+        <div id="instructions" class="glass-panel main-menu">
+            <h1>RECORRIDO VIRTUAL FCFM</h1>
+            <div class="loader-container">
+                <div id="loading-bar"></div>
+            </div>
+            <p id="status-text">Cargando activos...</p>
+            <button id="start-btn" style="display: none;">EXPLORAR</button>
+        </div>
+    </div>
+
+    <script type="module" src="main.js"></script>
+</body>
+</html>
