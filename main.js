@@ -38,7 +38,7 @@ document.addEventListener('keyup', e => {
 
 // ── FÍSICA ────────────────────────────────────────────────────
 const FIXED_STEP         = 1 / 60;
-const MAX_SUBSTEPS       = 5;
+const MAX_SUBSTEPS       = 2;
 let   _accumulator       = 0;
 const moveSpeed          = 5.0;
 const gravity            = 25.0;
@@ -89,21 +89,13 @@ function enhanceMetalMaterial(mat) {
 }
 
 function createGlassMaterial(orig) {
-    return new THREE.MeshPhysicalMaterial({
-        color:              orig.color ?? new THREE.Color(0xffffff),
-        map:                orig.map ?? null,
-        normalMap:          orig.normalMap ?? null,
-        metalness:          0.0,
-        roughness:          0.05,
-        transmission:       0.92,
-        ior:                1.52,
-        thickness:          0.3,
-        transparent:        true,
-        opacity:            1.0,
-        side:               THREE.DoubleSide,
-        envMapIntensity:    3.0,
-        attenuationDistance: 0.5,
-        attenuationColor:   orig.color ?? new THREE.Color(0xffffff),
+    return new THREE.MeshStandardMaterial({
+        color: orig.color ?? new THREE.Color(0xffffff),
+        metalness: 0.1,
+        roughness: 0.1,
+        transparent: true,
+        opacity: 0.4, // Standard alpha blending instead of transmission
+        side: THREE.DoubleSide
     });
 }
 
@@ -246,6 +238,9 @@ function init() {
     raycaster.far = 50;
     raycaster.layers.set(LAYER_COLLIDABLE);
 
+
+    raycaster.firstHitOnly = true;
+
     // ── ILUMINACIÓN ───────────────────────────────────────────
     const hemi = new THREE.HemisphereLight(0xffeeb1, 0x3a5f8a, 1.5);
     hemi.position.set(0, 50, 0);
@@ -334,7 +329,7 @@ function loadGLBModel() {
     loader.setDRACOLoader(dracoLoader);
 
     loader.load(
-        'modelos/facu3_opt.glb',
+        'modelos/facuNEW_opt.glb',
         (gltf) => {
             const model = gltf.scene;
             model.scale.set(100, 100, 100);
@@ -351,8 +346,8 @@ function loadGLBModel() {
             model.traverse((child) => {
                 if (!child.isMesh) return;
 
-                child.castShadow    = true;
-                child.receiveShadow = true;
+                child.castShadow    = false;
+                child.receiveShadow = false;
                 child.frustumCulled = true;
 
                 // Materiales
