@@ -8,6 +8,7 @@ import { EffectComposer }      from 'three/addons/postprocessing/EffectComposer.
 import { RenderPass }          from 'three/addons/postprocessing/RenderPass.js';
 import { OutputPass }          from 'three/addons/postprocessing/OutputPass.js';
 import { MeshBVH, acceleratedRaycast } from 'three-mesh-bvh';
+import  Stats                  from 'three/addons/libs/stats.module.js';
 
 // Parchea el raycast global para usar BVH automáticamente
 THREE.Mesh.prototype.raycast = acceleratedRaycast;
@@ -396,11 +397,26 @@ function loadGLBModel() {
     );
 }
 
+
+// ============================================================
+// CONTADOR DE FPS
+// ============================================================
+
+const stats = new Stats();
+    const fpsDisplay = document.getElementById('fps-value');
+
+    // We store the time to update the UI only once per second
+    let lastTime = performance.now();
+    let frames = 0;
+
 // ============================================================
 // LOOP DE ANIMACIÓN
 // ============================================================
 function animate() {
     requestAnimationFrame(animate);
+
+
+    stats.begin();
 
     const dt = clock.getDelta();
     _accumulator += Math.min(dt, FIXED_STEP * MAX_SUBSTEPS);
@@ -423,7 +439,23 @@ function animate() {
         }
     }
 
+
+    
+
     composer.render();
+
+    stats.end();
+
+    // Logic to update your custom DIV
+    frames++;
+    const now = performance.now();
+    if (now >= lastTime + 1000) {
+        fpsDisplay.innerText = frames;
+        frames = 0;
+        lastTime = now;
+    }
+
+    
 }
 
 // ── ARRANQUE ──────────────────────────────────────────────────

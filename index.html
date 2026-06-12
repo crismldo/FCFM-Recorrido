@@ -11,9 +11,11 @@
         "imports": {
             "three": "https://unpkg.com/three@0.160.0/build/three.module.js",
             "three/addons/": "https://unpkg.com/three@0.160.0/examples/jsm/",
-            "three-mesh-bvh": "https://unpkg.com/three-mesh-bvh@0.7.8/build/index.module.js"
+            "three-mesh-bvh": "https://unpkg.com/three-mesh-bvh@0.7.8/build/index.module.js",
+            "stats": "https://unpkg.com/stats.js@0.17.0/build/stats.min.js"
         }
     }
+
     </script>
 </head>
 <body>
@@ -23,6 +25,7 @@
         <div id="coords" class="glass-panel">
             <span class="label">UBICACIÓN</span>
             <div id="pos-values">X: 0 | Y: 0 | Z: 0</div>
+            <div id="temptest">FPS: <span id="fps-value">0</span></div>
         </div>
 
         <div class="controls-hint glass-panel">
