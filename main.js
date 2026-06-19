@@ -27,7 +27,6 @@ const coordsDiv    = document.getElementById('coords');
 const stats        = new Stats();
 const fpsDisplay   = document.getElementById('fps-value');
 
-// We store the time to update the UI only once per second
 let lastTime = performance.now();
 let frames = 0;
 
@@ -63,7 +62,6 @@ const collidableObjects  = [];
 const LAYER_COLLIDABLE   = 1;
 let   raycaster;
 
-// Vectores reutilizables (sin new cada frame)
 const _rayOrigin = new THREE.Vector3();
 const _camDir    = new THREE.Vector3();
 const _fwd  = new THREE.Vector3();
@@ -81,7 +79,7 @@ const teleportList = [
 ];
 
 // ============================================================
-// CONFIGURACIÓN DE LOADERS (Globales para reutilizar memoria)
+// CONFIGURACIÓN DE LOADERS
 // ============================================================
 const dracoLoader = new DRACOLoader();
 dracoLoader.setDecoderPath('https://www.gstatic.com/draco/versioned/decoders/1.5.6/');
@@ -122,7 +120,6 @@ function physicsStep() {
     const dt     = FIXED_STEP;
     const camObj = controls.getObject();
 
-    // 1. GRAVEDAD Y SUELO
     _rayOrigin.copy(camObj.position);
     raycaster.set(_rayOrigin, _down);
     const groundHits = raycaster.intersectObjects(collidableObjects, false);
@@ -138,13 +135,11 @@ function physicsStep() {
     }
     camObj.position.y += velocityY * dt;
 
-    // 2. SALTO
     if (keys[' '] && isGrounded) {
         velocityY  = jumpForce;
         isGrounded = false;
     }
 
-    // 3. COLISIONES HORIZONTALES
     _collisionFrame++;
     if (_collisionFrame >= COLLISION_EVERY) {
         _collisionFrame = 0;
@@ -169,7 +164,6 @@ function physicsStep() {
         _lastCollisions.left     = blocked(_left);
     }
 
-    // 4. MOVIMIENTO WASD
     direction.set(0, 0, 0);
     if (keys['w']) direction.z -= 1;
     if (keys['s']) direction.z += 1;
@@ -185,7 +179,6 @@ function physicsStep() {
     if (direction.z !== 0) controls.moveForward(-direction.z * moveSpeed * dt);
     if (direction.x !== 0) controls.moveRight(direction.x * moveSpeed * dt);
 
-    // 5. TELEPORTERS
     if (teleportCooldown > 0) {
         teleportCooldown -= dt;
     } else {
@@ -205,18 +198,28 @@ function physicsStep() {
 // INIT
 // ============================================================
 function init() {
+    // Definimos el color base para el horizonte y la niebla
+    const FOG_COLOR = 0xffe6d1;
+
     // ── ESCENA ────────────────────────────────────────────────
     scene = new THREE.Scene();
-    scene.fog = new THREE.FogExp2(0xffe6d1, 0.002);
+    
+    // [CAMBIO]: Niebla lineal. Empieza suave a los 80m y es total a los 150m
+    scene.fog = new THREE.Fog(FOG_COLOR, 80, 150);
 
     // ── CÁMARA ────────────────────────────────────────────────
-    camera = new THREE.PerspectiveCamera(70, innerWidth / innerHeight, 0.1, 600);
+    // [CAMBIO]: Reducido el Far Plane de 600 a 150 para no renderizar lo lejano
+    camera = new THREE.PerspectiveCamera(70, innerWidth / innerHeight, 0.1, 50);
     camera.position.set(7, 8.41, 37);
 
     // ── RENDERER ──────────────────────────────────────────────
     renderer = new THREE.WebGLRenderer({ canvas, antialias: false, powerPreference: 'high-performance' });
     renderer.setSize(innerWidth, innerHeight);
     renderer.setPixelRatio(Math.min(devicePixelRatio, 1.5));
+    
+    // [CAMBIO]: Forzamos al fondo a ser del mismo color de la niebla
+    renderer.setClearColor(FOG_COLOR, 1.0); 
+
     renderer.shadowMap.enabled = true;
     renderer.shadowMap.type    = THREE.VSMShadowMap;
     renderer.toneMapping       = THREE.ACESFilmicToneMapping;
@@ -329,15 +332,16 @@ function loadEnvironmentAndModel() {
             if (statusText) statusText.innerText = 'CARGANDO CAMPUS...';
 
             try {
-                // AQUÍ ESPECIFICAS LAS RUTAS, POSICIONES Y ESCALAS DE TUS MODELOS
+                // Configuración modular de tus pedazos de mapa
                 await Promise.all([
                     loadGLBModel('modelos/PisoTest_opt.glb', { x: 0, y: 10, z: 0, scale: 100 }),
-
+                    loadGLBModel('modelos/Estaci_SalaMaestros_opt.glb', { x: 0, y: 10, z: 0, scale: 100 }),
                     loadGLBModel('modelos/EstacionamientoTest_opt.glb', { x: 0, y: 10, z: 0, scale: 100 }),
-
-                    // Descomenta y cambia las rutas para agregar más:
-                    // loadGLBModel('modelos/OtroModelo.glb', { x: 10, y: 0, z: 15, scale: 1 }),
-                    // loadGLBModel('modelos/TercerModelo.glb', { x: -5, y: 5, z: -10, scale: 2 })
+                    loadGLBModel('modelos/Main_Entrada_opt.glb', { x: 0, y: 10, z: 0, scale: 100 }),
+                    loadGLBModel('modelos/Main_Edificio_opt.glb', { x: 0, y: 10, z: 0, scale: 100 }),
+                    loadGLBModel('modelos/Main_Pozo_opt.glb', { x: 0, y: 10, z: 0, scale: 100 }),
+                    // Aquí puedes añadir más módulos en el futuro:
+                    // loadGLBModel('modelos/PisoNorte.glb', { x: 0, y: 10, z: -100, scale: 100 }),
                 ]);
 
                 isModelLoaded = true;
@@ -353,7 +357,7 @@ function loadEnvironmentAndModel() {
     );
 }
 
-// Función Promisificada para cargar modelos individuales
+// Función para cargar modelos individuales
 function loadGLBModel(path, options = {}) {
     return new Promise((resolve, reject) => {
         const posX  = options.x !== undefined ? options.x : 0;
@@ -405,7 +409,7 @@ function loadGLBModel(path, options = {}) {
 
                 resolve(model);
             },
-            undefined, // Omitimos progreso individual
+            undefined,
             (err) => reject(err)
         );
     });
@@ -429,7 +433,6 @@ function animate() {
             _accumulator -= FIXED_STEP;
         }
 
-        // Actualizar coordenadas en UI solo si cambiaron
         const p = controls.getObject().position;
         const cx = p.x.toFixed(2), cy = p.y.toFixed(2), cz = p.z.toFixed(2);
         if (cx !== _lastCoordX || cy !== _lastCoordY || cz !== _lastCoordZ) {
