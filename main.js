@@ -248,7 +248,7 @@ function init() {
 
     const sun = new THREE.DirectionalLight(0xffaa33, 2.5);
     sun.position.set(50, 80, 50);
-    sun.castShadow = true;
+    sun.castShadow = false;
     sun.shadow.mapSize.set(1024, 1024);
     sun.shadow.camera.near = 1;
     sun.shadow.camera.far  = 150;
@@ -299,8 +299,10 @@ function loadEnvironmentAndModel() {
         'https://dl.polyhaven.org/file/ph-assets/HDRIs/hdr/1k/kloofendal_48d_partly_cloudy_puresky_1k.hdr',
         (hdr) => {
             hdr.mapping = THREE.EquirectangularReflectionMapping;
-            scene.environment = hdr;
-            scene.background  = hdr;
+            
+            //scene.environment = hdr;
+            //scene.background  = hdr;
+            
             scene.backgroundIntensity  = 0.8;
             scene.environmentIntensity = 1.2;
 
@@ -329,7 +331,7 @@ function loadGLBModel() {
     loader.setDRACOLoader(dracoLoader);
 
     loader.load(
-        'modelos/facuNEW_opt.glb',
+        'modelos/PisoTest.glb',
         (gltf) => {
             const model = gltf.scene;
             model.scale.set(100, 100, 100);
