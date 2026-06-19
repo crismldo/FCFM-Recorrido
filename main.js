@@ -24,6 +24,12 @@ const canvas       = document.getElementById('webgl');
 const blocker      = document.getElementById('blocker');
 const instructions = document.getElementById('instructions');
 const coordsDiv    = document.getElementById('coords');
+const stats        = new Stats();
+const fpsDisplay   = document.getElementById('fps-value');
+
+// We store the time to update the UI only once per second
+let lastTime = performance.now();
+let frames = 0;
 
 // ── TECLADO ───────────────────────────────────────────────────
 const keys = { w: false, a: false, s: false, d: false, ' ': false };
@@ -74,6 +80,16 @@ const teleportList = [
     { name: "TP_2", position: new THREE.Vector3(22.6, 8.4, 24.6), target: new THREE.Vector3(20.5, 8.4, 24.8) },
 ];
 
+// ============================================================
+// CONFIGURACIÓN DE LOADERS (Globales para reutilizar memoria)
+// ============================================================
+const dracoLoader = new DRACOLoader();
+dracoLoader.setDecoderPath('https://www.gstatic.com/draco/versioned/decoders/1.5.6/');
+dracoLoader.setDecoderConfig({ type: 'wasm' });
+
+const gltfLoader = new GLTFLoader();
+gltfLoader.setDRACOLoader(dracoLoader);
+
 // ── DETECCIÓN DE MATERIALES ───────────────────────────────────
 const METAL_KEYWORDS = ['metal','steel','iron','aluminum','aluminium','chrome','copper','brass','acero','hierro','aluminio','cromo'];
 const GLASS_KEYWORDS = ['glass','cristal','vidrio','window','ventana','glazing'];
@@ -94,7 +110,7 @@ function createGlassMaterial(orig) {
         metalness: 0.1,
         roughness: 0.1,
         transparent: true,
-        opacity: 0.4, // Standard alpha blending instead of transmission
+        opacity: 0.4,
         side: THREE.DoubleSide
     });
 }
@@ -128,7 +144,7 @@ function physicsStep() {
         isGrounded = false;
     }
 
-    // 3. COLISIONES HORIZONTALES (throttled cada COLLISION_EVERY frames)
+    // 3. COLISIONES HORIZONTALES
     _collisionFrame++;
     if (_collisionFrame >= COLLISION_EVERY) {
         _collisionFrame = 0;
@@ -216,7 +232,6 @@ function init() {
     controls = new PointerLockControls(camera, renderer.domElement);
     scene.add(controls.getObject());
 
-    // listener del botón
     const startBtn = document.getElementById('start-btn');
     if (startBtn) {
         startBtn.addEventListener('click', () => {
@@ -237,8 +252,6 @@ function init() {
     raycaster = new THREE.Raycaster();
     raycaster.far = 50;
     raycaster.layers.set(LAYER_COLLIDABLE);
-
-
     raycaster.firstHitOnly = true;
 
     // ── ILUMINACIÓN ───────────────────────────────────────────
@@ -292,17 +305,13 @@ function init() {
 }
 
 // ============================================================
-// CARGA HDR + MODELO
+// CARGA HDR + MODELOS MÚLTIPLES
 // ============================================================
 function loadEnvironmentAndModel() {
     new RGBELoader().load(
         'https://dl.polyhaven.org/file/ph-assets/HDRIs/hdr/1k/kloofendal_48d_partly_cloudy_puresky_1k.hdr',
-        (hdr) => {
+        async (hdr) => {
             hdr.mapping = THREE.EquirectangularReflectionMapping;
-            
-            //scene.environment = hdr;
-            //scene.background  = hdr;
-            
             scene.backgroundIntensity  = 0.8;
             scene.environmentIntensity = 1.2;
 
@@ -313,106 +322,100 @@ function loadEnvironmentAndModel() {
             scene.add(probe);
             pmrem.dispose();
 
-            loadGLBModel();
+            const loadingBar = document.getElementById('loading-bar');
+            const statusText = document.getElementById('status-text');
+            const startBtn   = document.getElementById('start-btn');
+
+            if (statusText) statusText.innerText = 'CARGANDO CAMPUS...';
+
+            try {
+                // AQUÍ ESPECIFICAS LAS RUTAS, POSICIONES Y ESCALAS DE TUS MODELOS
+                await Promise.all([
+                    loadGLBModel('modelos/PisoTest_opt.glb', { x: 0, y: 10, z: 0, scale: 100 }),
+
+                    loadGLBModel('modelos/EstacionamientoTest_opt.glb', { x: 0, y: 10, z: 0, scale: 100 }),
+
+                    // Descomenta y cambia las rutas para agregar más:
+                    // loadGLBModel('modelos/OtroModelo.glb', { x: 10, y: 0, z: 15, scale: 1 }),
+                    // loadGLBModel('modelos/TercerModelo.glb', { x: -5, y: 5, z: -10, scale: 2 })
+                ]);
+
+                isModelLoaded = true;
+                if (statusText) statusText.style.display = 'none';
+                if (loadingBar?.parentElement) loadingBar.parentElement.style.display = 'none';
+                if (startBtn) startBtn.style.display = 'inline-block';
+
+            } catch (error) {
+                console.error("Fallo general al cargar modelos:", error);
+                if (statusText) statusText.innerText = 'Error al cargar los modelos.';
+            }
         }
     );
 }
 
-function loadGLBModel() {
-    const loadingBar = document.getElementById('loading-bar');
-    const statusText = document.getElementById('status-text');
-    const startBtn   = document.getElementById('start-btn');
+// Función Promisificada para cargar modelos individuales
+function loadGLBModel(path, options = {}) {
+    return new Promise((resolve, reject) => {
+        const posX  = options.x !== undefined ? options.x : 0;
+        const posY  = options.y !== undefined ? options.y : 0;
+        const posZ  = options.z !== undefined ? options.z : 0;
+        const scale = options.scale !== undefined ? options.scale : 100;
 
-    const dracoLoader = new DRACOLoader();
-    dracoLoader.setDecoderPath('https://www.gstatic.com/draco/versioned/decoders/1.5.6/');
-    dracoLoader.setDecoderConfig({ type: 'wasm' });
+        gltfLoader.load(
+            path,
+            (gltf) => {
+                const model = gltf.scene;
+                model.scale.set(scale, scale, scale);
+                model.position.set(posX, posY, posZ);
 
-    const loader = new GLTFLoader();
-    loader.setDRACOLoader(dracoLoader);
+                scene.add(model);
+                model.updateMatrixWorld(true);
+                model.traverse(c => { c.matrixAutoUpdate = false; });
 
-    loader.load(
-        'modelos/PisoTest.glb',
-        (gltf) => {
-            const model = gltf.scene;
-            model.scale.set(100, 100, 100);
-            model.position.y = 10;
+                model.traverse((child) => {
+                    if (!child.isMesh) return;
 
-            // 1. Agregar a la escena primero
-            scene.add(model);
-            // 2. Actualizar matrices con la posición/escala ya aplicadas
-            model.updateMatrixWorld(true);
-            // 3. Congelar auto-update (el modelo no se mueve)
-            model.traverse(c => { c.matrixAutoUpdate = false; });
+                    child.castShadow    = false;
+                    child.receiveShadow = false;
+                    child.frustumCulled = true;
 
-            // 4. Materiales + BVH en un solo traverse
-            model.traverse((child) => {
-                if (!child.isMesh) return;
-
-                child.castShadow    = false;
-                child.receiveShadow = false;
-                child.frustumCulled = true;
-
-                // Materiales
-                if (child.material) {
-                    const name = (child.material.name || '') + ' ' + (child.name || '');
-                    if (isGlass(name)) {
-                        child.material = createGlassMaterial(child.material);
-                    } else if (isMetal(name) || isOriginallyMetal(child.material)) {
-                        enhanceMetalMaterial(child.material);
-                    } else {
-                        child.material.envMapIntensity = 0.8;
-                        child.material.roughness = Math.max(child.material.roughness ?? 0.7, 0.4);
-                        child.material.needsUpdate = true;
+                    if (child.material) {
+                        const name = (child.material.name || '') + ' ' + (child.name || '');
+                        if (isGlass(name)) {
+                            child.material = createGlassMaterial(child.material);
+                        } else if (isMetal(name) || isOriginallyMetal(child.material)) {
+                            enhanceMetalMaterial(child.material);
+                        } else {
+                            child.material.envMapIntensity = 0.8;
+                            child.material.roughness = Math.max(child.material.roughness ?? 0.7, 0.4);
+                            child.material.needsUpdate = true;
+                        }
                     }
+
+                    child.updateWorldMatrix(true, false);
+                    child.geometry.boundsTree = new MeshBVH(child.geometry);
+                    child.layers.enable(LAYER_COLLIDABLE);
+                    collidableObjects.push(child);
+                });
+
+                if (gltf.animations.length > 0) {
+                    if (!mixer) mixer = new THREE.AnimationMixer(scene);
+                    mixer.clipAction(gltf.animations[0], model).play();
                 }
 
-                // BVH — forzar matriz del mundo antes de construir
-                child.updateWorldMatrix(true, false);
-                child.geometry.boundsTree = new MeshBVH(child.geometry);
-                child.layers.enable(LAYER_COLLIDABLE);
-                collidableObjects.push(child);
-            });
-
-            if (gltf.animations.length > 0) mixer = new THREE.AnimationMixer(model);
-
-            isModelLoaded = true;
-            if (statusText) statusText.style.display = 'none';
-            if (loadingBar?.parentElement) loadingBar.parentElement.style.display = 'none';
-            if (startBtn) startBtn.style.display = 'inline-block';
-        },
-        (xhr) => {
-            if (xhr.total > 0) {
-                const pct = (xhr.loaded / xhr.total * 100).toFixed(0);
-                if (loadingBar) loadingBar.style.width = `${pct}%`;
-                if (statusText) statusText.innerText   = `PREPARANDO CAMPUS: ${pct}%`;
-            }
-        },
-        (err) => {
-            console.error('Error al cargar GLB', err);
-            if (statusText) statusText.innerText = 'Error al cargar el modelo.';
-        }
-    );
+                resolve(model);
+            },
+            undefined, // Omitimos progreso individual
+            (err) => reject(err)
+        );
+    });
 }
-
-
-// ============================================================
-// CONTADOR DE FPS
-// ============================================================
-
-const stats = new Stats();
-    const fpsDisplay = document.getElementById('fps-value');
-
-    // We store the time to update the UI only once per second
-    let lastTime = performance.now();
-    let frames = 0;
 
 // ============================================================
 // LOOP DE ANIMACIÓN
 // ============================================================
 function animate() {
     requestAnimationFrame(animate);
-
-
     stats.begin();
 
     const dt = clock.getDelta();
@@ -436,23 +439,16 @@ function animate() {
         }
     }
 
-
-    
-
     composer.render();
-
     stats.end();
 
-    // Logic to update your custom DIV
     frames++;
     const now = performance.now();
     if (now >= lastTime + 1000) {
-        fpsDisplay.innerText = frames;
+        if (fpsDisplay) fpsDisplay.innerText = frames;
         frames = 0;
         lastTime = now;
     }
-
-    
 }
 
 // ── ARRANQUE ──────────────────────────────────────────────────
