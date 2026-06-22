@@ -45,8 +45,8 @@ document.addEventListener('keyup', e => {
 const FIXED_STEP         = 1 / 60;
 const MAX_SUBSTEPS       = 2;
 let   _accumulator       = 0;
-const moveSpeed          = 5.0;
-const gravity            = 25.0;
+const moveSpeed          = 30.0;
+const gravity            = 50.0;
 const jumpForce          = 10.0;
 const cameraHeight       = 1.3;
 const collisionThreshold = 0.5;
@@ -209,7 +209,7 @@ function init() {
 
     // ── CÁMARA ────────────────────────────────────────────────
     // [CAMBIO]: Reducido el Far Plane de 600 a 150 para no renderizar lo lejano
-    camera = new THREE.PerspectiveCamera(70, innerWidth / innerHeight, 0.1, 50);
+    camera = new THREE.PerspectiveCamera(70, innerWidth / innerHeight, 0.1, 350);
     camera.position.set(7, 8.41, 37);
 
     // ── RENDERER ──────────────────────────────────────────────
@@ -334,12 +334,35 @@ function loadEnvironmentAndModel() {
             try {
                 // Configuración modular de tus pedazos de mapa
                 await Promise.all([
-                    loadGLBModel('modelos/PisoTest_opt.glb', { x: 0, y: 10, z: 0, scale: 100 }),
-                    loadGLBModel('modelos/Estaci_SalaMaestros_opt.glb', { x: 0, y: 10, z: 0, scale: 100 }),
-                    loadGLBModel('modelos/EstacionamientoTest_opt.glb', { x: 0, y: 10, z: 0, scale: 100 }),
-                    loadGLBModel('modelos/Main_Entrada_opt.glb', { x: 0, y: 10, z: 0, scale: 100 }),
-                    loadGLBModel('modelos/Main_Edificio_opt.glb', { x: 0, y: 10, z: 0, scale: 100 }),
-                    loadGLBModel('modelos/Main_Pozo_opt.glb', { x: 0, y: 10, z: 0, scale: 100 }),
+                    
+                    loadGLBModel('modelos/Tras_Salones.glb', { x: 0, y: 10, z: 0, scale: 1 }),
+                    loadGLBModel('modelos/Tras_Posgrado.glb', { x: 0, y: 10, z: 0, scale: 1 }),
+                    loadGLBModel('modelos/Tras_Edificio.glb', { x: 0, y: 10, z: 0, scale: 1 }),
+
+                    loadGLBModel('modelos/Main_Pozo.glb', { x: 0, y: 10, z: 0, scale: 1 }),
+                    loadGLBModel('modelos/Main_Pilares.glb', { x: 0, y: 10, z: 0, scale: 1 }),
+                    loadGLBModel('modelos/Main_Edificio.glb', { x: 0, y: 10, z: 0, scale: 1 }),
+
+                    loadGLBModel('modelos/Usit_Edificio.glb', { x: 0, y: 10, z: 0, scale: 1 }),
+                    loadGLBModel('modelos/Usit_Banco.glb', { x: 0, y: 10, z: 0, scale: 1 }),
+
+                    loadGLBModel('modelos/Estaci_Sala.glb', { x: 0, y: 10, z: 0, scale: 1 }),
+                    loadGLBModel('modelos/Estaci_Frente.glb', { x: 0, y: 10, z: 0, scale: 1 }),
+
+                    loadGLBModel('modelos/General_piso.glb', { x: 0, y: 10, z: 0, scale: 1 }),
+                    
+                    
+                    //loadGLBModel('modelos/PisoTest_opt.glb', { x: 0, y: 10, z: 0, scale: 100 }),
+                    //loadGLBModel('modelos/Estaci_SalaMaestros_opt.glb', { x: 0, y: 10, z: 0, scale: 100 }),
+                    //loadGLBModel('modelos/EstacionamientoTest_opt.glb', { x: 0, y: 10, z: 0, scale: 100 }),
+                    //loadGLBModel('modelos/Main_Entrada_opt.glb', { x: 0, y: 10, z: 0, scale: 100 }),
+                    //loadGLBModel('modelos/Main_Edificio_opt.glb', { x: 0, y: 10, z: 0, scale: 100 }),
+                    //loadGLBModel('modelos/Main_Pozo_opt.glb', { x: 0, y: 10, z: 0, scale: 100 }),
+                    //loadGLBModel('modelos/USIT_Bancos_opt.glb', { x: 0, y: 10, z: 0, scale: 100 }),
+                    //loadGLBModel('modelos/USIT_Edificio_opt.glb', { x: 0, y: 10, z: 0, scale: 100 }),
+                    //loadGLBModel('modelos/Traseros_Edificio_opt.glb', { x: 0, y: 10, z: 0, scale: 100 }),
+                    
+                    
                     // Aquí puedes añadir más módulos en el futuro:
                     // loadGLBModel('modelos/PisoNorte.glb', { x: 0, y: 10, z: -100, scale: 100 }),
                 ]);
