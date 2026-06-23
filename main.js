@@ -35,11 +35,35 @@ const keys = { w: false, a: false, s: false, d: false, ' ': false };
 document.addEventListener('keydown', e => {
     const k = e.key === ' ' ? ' ' : e.key.toLowerCase();
     if (k in keys) keys[k] = true;
+
+    if (isModelLoaded && controls.isLocked) {
+        if (k === 'p') {
+            teletransportarA(new THREE.Vector3(7.0, 8.41, 37.0)); // Coordenadas de ejemplo 1
+        }
+        //if (k === 'o') {
+        //    teletransportarA(new THREE.Vector3(7.0, 8.41, 37.0));  // Coordenadas de inicio del juego
+        //}
+        
+    }
+
+
+
+
 });
 document.addEventListener('keyup', e => {
     const k = e.key === ' ' ? ' ' : e.key.toLowerCase();
     if (k in keys) keys[k] = false;
 });
+
+
+
+
+
+
+
+
+
+
 
 // ── FÍSICA ────────────────────────────────────────────────────
 const FIXED_STEP         = 1 / 60;
@@ -112,6 +136,26 @@ function createGlassMaterial(orig) {
         side: THREE.DoubleSide
     });
 }
+
+
+// ── FUNCIÓN DE TELETRANSPORTE REUTILIZABLE ────────────────────
+function teletransportarA(nuevaPosicion) {
+    const camObj = controls.getObject();
+
+    // 1. Copiamos la nueva posición al objeto de la cámara (el avatar del jugador)
+    camObj.position.copy(nuevaPosicion);
+
+    // 2. Reseteamos la velocidad vertical para evitar que herede gravedad acumulada
+    velocityY = 0;
+
+    // 3. Activamos el cooldown global de teletransporte que ya tienes en tu física
+    // Esto evita conflictos con los desencadenadores de los TPs automáticos del mapa
+    teleportCooldown = 1.5;
+
+    console.log(`Teletransportado con éxito a: X: ${nuevaPosicion.x} | Y: ${nuevaPosicion.y} | Z: ${nuevaPosicion.z}`);
+}
+
+
 
 // ============================================================
 // FÍSICA STEP
