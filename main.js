@@ -74,11 +74,8 @@ const gravity            = 50.0;
 const jumpForce          = 10.0;
 const cameraHeight       = 1.3;
 const collisionThreshold = 0.5;
-const COLLISION_EVERY    = 2;
 let   velocityY          = 0;
 let   isGrounded         = false;
-let   _collisionFrame    = 0;
-let   _lastCollisions    = { forward: false, backward: false, left: false, right: false };
 let   _lastCoordX, _lastCoordY, _lastCoordZ;
 
 // ── COLISIONES ────────────────────────────────────────────────
@@ -187,30 +184,7 @@ function physicsStep() {
     }
     camObj.position.y += velocityY * dt;
 
-    _collisionFrame++;
-    if (_collisionFrame >= COLLISION_EVERY) {
-        _collisionFrame = 0;
-        camera.getWorldDirection(_camDir);
-        _camDir.y = 0;
-        _camDir.normalize();
-
-        _fwd.copy(_camDir);
-        _bwd.copy(_camDir).negate();
-        _right.crossVectors(_camDir, camera.up).normalize();
-        _left.copy(_right).negate();
-        _rayOrigin.copy(camObj.position);
-
-        function blocked(dir) {
-            raycaster.set(_rayOrigin, dir);
-            const hits = raycaster.intersectObjects(collidableObjects, false);
-            return hits.length > 0 && hits[0].distance < collisionThreshold;
-        }
-        _lastCollisions.forward  = blocked(_fwd);
-        _lastCollisions.backward = blocked(_bwd);
-        _lastCollisions.right    = blocked(_right);
-        _lastCollisions.left     = blocked(_left);
-    }
-
+    // ── MOVIMIENTO CON DESLIZAMIENTO (slide) ──────────────────
     direction.set(0, 0, 0);
     if (keys['w']) direction.z -= 1;
     if (keys['s']) direction.z += 1;
@@ -218,13 +192,62 @@ function physicsStep() {
     if (keys['d']) direction.x += 1;
     direction.normalize();
 
-    if (_lastCollisions.forward  && direction.z < 0) direction.z = 0;
-    if (_lastCollisions.backward && direction.z > 0) direction.z = 0;
-    if (_lastCollisions.right    && direction.x > 0) direction.x = 0;
-    if (_lastCollisions.left     && direction.x < 0) direction.x = 0;
+    if (direction.lengthSq() > 0) {
+        camera.getWorldDirection(_camDir);
+        _camDir.y = 0;
+        _camDir.normalize();
+        _right.crossVectors(_camDir, camera.up).normalize();
 
-    if (direction.z !== 0) controls.moveForward(-direction.z * moveSpeed * dt);
-    if (direction.x !== 0) controls.moveRight(direction.x * moveSpeed * dt);
+        // Vector de movimiento en espacio mundo (XZ)
+        const moveVec = new THREE.Vector3();
+        moveVec.addScaledVector(_camDir, -direction.z * moveSpeed * dt);
+        moveVec.addScaledVector(_right,   direction.x * moveSpeed * dt);
+
+        const posAntes = camObj.position.clone();
+
+        // Intentar movimiento completo
+        camObj.position.x += moveVec.x;
+        camObj.position.z += moveVec.z;
+
+        // Revisar colision con rayos en abanico en direccion del movimiento
+        // Esto evita falsos positivos en esquinas exteriores (ej. puertas abiertas)
+        function detectarColision(pos) {
+            const moveDir2D = moveVec.clone().setY(0);
+            if (moveDir2D.lengthSq() === 0) return null;
+            moveDir2D.normalize();
+
+            // Abanico de rayos: frente, ±30°, ±60° en direccion de movimiento
+            const angulos = [0, Math.PI / 6, -Math.PI / 6, Math.PI / 3, -Math.PI / 3];
+            for (const ang of angulos) {
+                const rayDir = moveDir2D.clone().applyAxisAngle(new THREE.Vector3(0,1,0), ang);
+                raycaster.set(pos, rayDir);
+                const hits = raycaster.intersectObjects(collidableObjects, false);
+                if (hits.length > 0 && hits[0].distance < collisionThreshold) {
+                    // Normal = opuesta al rayo que golpeo
+                    return rayDir.clone().negate();
+                }
+            }
+            return null;
+        }
+
+        const normalColision = detectarColision(camObj.position);
+
+        if (normalColision) {
+            // Revertir y deslizar solo la componente paralela a la pared
+            camObj.position.copy(posAntes);
+
+            const dot = moveVec.dot(normalColision);
+            const slideVec = moveVec.clone().addScaledVector(normalColision, -dot);
+
+            camObj.position.x += slideVec.x;
+            camObj.position.z += slideVec.z;
+
+            // Segunda verificacion: si el slide tambien colisiona, quedarse quieto
+            if (detectarColision(camObj.position)) {
+                camObj.position.copy(posAntes);
+            }
+        }
+    }
 
     if (teleportCooldown > 0) {
         teleportCooldown -= dt;
@@ -384,7 +407,7 @@ function loadEnvironmentAndModel() {
                     
                     loadGLBModel('modelos/EdificioP_opt.glb', { x: 0, y: 10, z: -10, scale: 100 }),
                     loadGLBModel('modelos/EP_P1_opt.glb', { x: 0, y: 10, z: -10, scale: 100 }),
-                    loadGLBModel('modelos/300s_opt.glb', { x: 0, y: 8, z: -10, scale: 100 }),
+                    loadGLBModel('modelos/300s_opt.glb', { x: 0, y: 10, z: -10, scale: 100 }),
             
                     loadGLBModel('modelos/EP_P2_opt.glb', { x: 0, y: 10, z: -10, scale: 100 }),
                     loadGLBModel('modelos/EP_PB3_opt.glb', { x: 0, y: 10, z: -10, scale: 100 }),
@@ -396,6 +419,9 @@ function loadEnvironmentAndModel() {
                     loadGLBModel('modelos/USIT-Auditorio_opt.glb', { x: 0, y: 10, z: -10, scale: 100 }),
                     loadGLBModel('modelos/USIT-Bancas_opt.glb', { x: 0, y: 10, z: -10, scale: 100 }),
                     loadGLBModel('modelos/USIT-Edificio_opt.glb', { x: 0, y: 10, z: -10, scale: 100 }),
+                    loadGLBModel('modelos/Posgrado_opt.glb', { x: 0, y: 10, z: -10, scale: 100 }),
+                    loadGLBModel('modelos/Canchas_opt.glb', { x: 0, y: 10, z: -10, scale: 100 }),
+                    loadGLBModel('modelos/EdificioAtras_opt.glb', { x: 0, y: 10, z: -10, scale: 100 })
                     
 
 
