@@ -31,6 +31,17 @@ body, html {
     pointer-events: auto; /* Permite que el ratón interactúe con los paneles */
 }
 
+
+#info-panel{
+    font-size: 1.5rem
+}
+
+#Salon_Nombre{
+    color: var(--accent);
+    text-align: center;
+    font-weight: bold;
+}
+
 /* Contenedor HUD */
 #ui-container {
     position: fixed;

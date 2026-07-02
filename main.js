@@ -57,6 +57,149 @@ document.addEventListener('keyup', e => {
 
 
 
+// ── INFORMACION SALONES ────────────────────────────────────────────────────
+const infoPanel = document.getElementById('info-panel');
+const Salon_Nombre = document.getElementById('Salon_Nombre');
+const Salon_Descripcion = document.getElementById('Salon_Descripcion');
+let Salon_ID = 0;
+
+
+
+
+const Salones = Object.freeze({
+    //PISO 1
+    Princ_Salon_101: 'Princ_Salon_101',
+    Princ_Salon_102: 'Princ_Salon_102',
+    Princ_Salon_103: 'Princ_Salon_103',
+    Princ_Salon_104: 'Princ_Salon_104',
+    Princ_Salon_105: 'Princ_Salon_105',
+
+    Princ_Salon_201: 'Princ_Salon_201',
+    Princ_Salon_202: 'Princ_Salon_202',
+    Princ_Salon_203: 'Princ_Salon_203',
+    Princ_Salon_204: 'Princ_Salon_204',
+
+    Princ_Salon_401: 'Princ_Salon_401',
+    Princ_Salon_402: 'Princ_Salon_402',
+    Princ_Salon_403: 'Princ_Salon_403',
+    Princ_Salon_404: 'Princ_Salon_404',
+    Princ_Salon_405: 'Princ_Salon_405',
+
+    Princ_Audi_Eladio: 'Princ_Audi_Eladio',
+
+    Princ_Dep_Tutorias:          'Princ_Dep_Tutorias',
+    Princ_Dep_Tesoreria:         'Princ_Dep_Tesoreria',
+    Princ_Dep_Direccion:         'Princ_Dep_Direccion',
+    Princ_Dep_Servicios_General: 'Princ_Dep_Servicios_General',
+    Princ_Dep_Coordinacion:      'Princ_Dep_Coordinacion',
+
+    Princ_Cafeteria: 'Princ_Cafeteria',
+
+    //PISO 2
+    Princ_Salon_106: 'Princ_Salon_106',
+    Princ_Salon_107: 'Princ_Salon_107',
+    Princ_Salon_108: 'Princ_Salon_108',
+    Princ_Salon_109: 'Princ_Salon_109',
+    Princ_Salon_110: 'Princ_Salon_110',
+
+    Princ_Salon_205: 'Princ_Salon_205',
+    Princ_Salon_206: 'Princ_Salon_206',
+    Princ_Salon_207: 'Princ_Salon_207',
+    Princ_Salon_208: 'Princ_Salon_208',
+
+    Princ_Salon_406: 'Princ_Salon_406',
+    Princ_Salon_407: 'Princ_Salon_407',
+    Princ_Salon_408: 'Princ_Salon_408',
+    Princ_Salon_409: 'Princ_Salon_409',
+    Princ_Salon_410: 'Princ_Salon_410',
+
+    Princ_Audi_Jose: 'Princ_Audi_Jose',
+
+    Princ_Lab_Mecanica:      'Princ_Lab_Mecanica',
+    Princ_Lab_Fluidos:       'Princ_Lab_Fluidos',
+    Princ_Lab_Circuitos:     'Princ_Lab_Circuitos',
+    Princ_Lab_Fisica_III:    'Princ_Lab_Fisica_III',
+    Princ_Lab_Sistemas_Elec: 'Princ_Lab_Sistemas_Elec',
+    Princ_Lab_Optica:        'Princ_Lab_Optica',
+
+    Princ_Dep_Soci_Alumnos:    'Princ_Dep_Soci_Alumnos',
+    Princ_Dep_Copias:          'Princ_Dep_Copias',
+    Princ_Dep_RH:              'Princ_Dep_RH',
+    Princ_Dep_Escolar:         'Princ_Dep_Escolar',
+    Princ_Dep_Prefectura:      'Princ_Dep_Prefectura',
+    Princ_Dep_Servicio_Social: 'Princ_Dep_Servicio_Social',
+
+    //PISO 3
+    Princ_Salon_111: 'Princ_Salon_111',
+    Princ_Salon_112: 'Princ_Salon_112',
+    Princ_Salon_113: 'Princ_Salon_113',
+    Princ_Salon_114: 'Princ_Salon_114',
+    Princ_Salon_115: 'Princ_Salon_115',
+    Princ_Salon_116: 'Princ_Salon_116',
+    Princ_Salon_117: 'Princ_Salon_117',
+    Princ_Salon_118: 'Princ_Salon_118',
+    Princ_Salon_119: 'Princ_Salon_119',
+    Princ_Salon_120: 'Princ_Salon_120',
+    Princ_Salon_121: 'Princ_Salon_121',
+
+    Princ_Salon_209: 'Princ_Salon_209',
+    Princ_Salon_210: 'Princ_Salon_210',
+    Princ_Salon_211: 'Princ_Salon_211',
+    Princ_Salon_212: 'Princ_Salon_212',
+
+    Princ_Salon_411: 'Princ_Salon_411',
+    Princ_Salon_412: 'Princ_Salon_412',
+    Princ_Salon_413: 'Princ_Salon_413',
+    Princ_Salon_414: 'Princ_Salon_414',
+
+    Princ_Dep_Astronomia:       'Princ_Dep_Astronomia',
+    Princ_Dep_Soporte_Tecnico:  'Princ_Dep_Soporte_Tecnico',
+    Princ_Dep_Lab_Computo_Mat:  'Princ_Dep_Lab_Computo_Mat',
+    Princ_Dep_Ofici_Administra: 'Princ_Dep_Ofici_Administra',
+    Princ_Dep_CAADI:            'Princ_Dep_CAADI',
+    Princ_Dep_Biblioteca:       'Princ_Dep_Biblioteca',
+
+
+
+
+
+});
+
+
+
+
+
+function DisplaySalonInfo(ID_Salon_Seleccionado){
+    switch(ID_Salon_Seleccionado){
+        case Salones.Princ_Salon_101: {
+            Salon_Nombre.textContent        = "Salon 101"
+            Salon_Descripcion.textContent   = "Descripcion"
+            break;
+        }
+    }
+}
+
+
+
+
+
+window.addEventListener('keydown', (event) => {
+    
+    DisplaySalonInfo(Salones.Princ_Salon_101);
+    
+    
+    
+    // Check if the 'I' key was pressed (case-insensitive)
+    if (event.key.toLowerCase() === 'i') {
+        // Toggle the display style
+        if (infoPanel.style.display === 'none') {
+            infoPanel.style.display = 'block';
+        } else {
+            infoPanel.style.display = 'none';
+        }
+    }
+});
+
 
 
 

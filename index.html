@@ -21,6 +21,21 @@
 <body>
     <canvas id="webgl"></canvas>
 
+    <!-- <div class="glass-panel">
+        <strong>Salon 403</strong>
+        <p>Salon de clase</p>
+
+    </div> -->
+
+    <div id="three-container">
+    </div>
+    <div id="info-panel" style="display: none; position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); color: white; padding: 20px;"
+        class="glass-panel">
+        <div id="Salon_Nombre">Salon 405</div>
+        <div id="Salon_Descripcion"> Salon de clases regular</div>
+    </div>
+
+
     <div id="ui-container">
         <div id="coords" class="glass-panel">
             <span class="label">UBICACIÓN</span>
@@ -45,6 +60,8 @@
             <button id="start-btn" style="display: none;">EXPLORAR</button>
         </div>
     </div>
+
+    
 
     <script type="module" src="main.js"></script>
 </body>
