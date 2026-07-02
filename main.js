@@ -393,6 +393,9 @@ function teletransportarA(nuevaPosicion) {
 
 
 
+
+
+
 // ============================================================
 // FÍSICA STEP
 // ============================================================
@@ -587,6 +590,7 @@ function init() {
         composer.setSize(innerWidth, innerHeight);
     });
 
+
     animate();
 }
 
@@ -618,20 +622,22 @@ function loadEnvironmentAndModel() {
                 // Configuración modular de tus pedazos de mapa
                 await Promise.all([
                     
-                    loadGLBModel('modelos/EdificioP_opt.glb', { x: 0, y: 10, z: -10, scale: 100 }),
-                    loadGLBModel('modelos/EP_P1_opt.glb', { x: 0, y: 10, z: -10, scale: 100 }),
-                    loadGLBModel('modelos/300s_opt.glb', { x: 0, y: 8, z: -10, scale: 100 }),
-            
-                    loadGLBModel('modelos/EP_P2_opt.glb', { x: 0, y: 10, z: -10, scale: 100 }),
-                    loadGLBModel('modelos/EP_PB3_opt.glb', { x: 0, y: 10, z: -10, scale: 100 }),
-                    //loadGLBModel('modelos/EP_PB1_opt.glb', { x: 0, y: 10, z: -10, scale: 100 }),
-                    //loadGLBModel('modelos/EP_PB2_opt.glb', { x: 0, y: 10, z: -10, scale: 100 }),
-
                     loadGLBModel('modelos/Estacionamiento_opt.glb', { x: 0, y: 10, z: -10, scale: 100 }),
-                    loadGLBModel('modelos/Salas-Estudio_opt.glb', { x: 0, y: 10, z: -10, scale: 100 }),
-                    loadGLBModel('modelos/USIT-Auditorio_opt.glb', { x: 0, y: 10, z: -10, scale: 100 }),
-                    loadGLBModel('modelos/USIT-Bancas_opt.glb', { x: 0, y: 10, z: -10, scale: 100 }),
-                    loadGLBModel('modelos/USIT-Edificio_opt.glb', { x: 0, y: 10, z: -10, scale: 100 }),
+
+                    //loadGLBModel('modelos/EdificioP_opt.glb', { x: 0, y: 10, z: -10, scale: 100 }),
+                    //loadGLBModel('modelos/EP_P1_opt.glb', { x: 0, y: 10, z: -10, scale: 100 }),
+                    //loadGLBModel('modelos/300s_opt.glb', { x: 0, y: 8, z: -10, scale: 100 }),
+
+                    //loadGLBModel('modelos/EP_P2_opt.glb', { x: 0, y: 10, z: -10, scale: 100 }),
+                    //loadGLBModel('modelos/EP_PB3_opt.glb', { x: 0, y: 10, z: -10, scale: 100 }),
+                    ////loadGLBModel('modelos/EP_PB1_opt.glb', { x: 0, y: 10, z: -10, scale: 100 }),
+                    ////loadGLBModel('modelos/EP_PB2_opt.glb', { x: 0, y: 10, z: -10, scale: 100 }),
+
+                    //loadGLBModel('modelos/Estacionamiento_opt.glb', { x: 0, y: 10, z: -10, scale: 100 }),
+                    //loadGLBModel('modelos/Salas-Estudio_opt.glb', { x: 0, y: 10, z: -10, scale: 100 }),
+                    //loadGLBModel('modelos/USIT-Auditorio_opt.glb', { x: 0, y: 10, z: -10, scale: 100 }),
+                    //loadGLBModel('modelos/USIT-Bancas_opt.glb', { x: 0, y: 10, z: -10, scale: 100 }),
+                    //loadGLBModel('modelos/USIT-Edificio_opt.glb', { x: 0, y: 10, z: -10, scale: 100 }),
                     
 
 
@@ -749,6 +755,96 @@ function animate() {
             _lastCoordX = cx; _lastCoordY = cy; _lastCoordZ = cz;
         }
     }
+
+
+    
+    //--------------------------------------------------COLISION DE INFO--------------------------------------------------
+
+    // 1. Create a simple Box mesh. Make it the size of your room.
+    const triggerGeometry = new THREE.BoxGeometry(2, 2, 2); // Width, Height, Depth
+    const triggerMaterial = new THREE.MeshBasicMaterial({
+        color: 0xff0000,
+        wireframe: true // Keep this true while testing so you can see it!
+    });
+
+    // Once you are done positioning it, uncomment the line below to make it invisible:
+    // triggerMaterial.visible = false; 
+
+    const triggerMesh = new THREE.Mesh(triggerGeometry, triggerMaterial);
+
+    // Move the box to wherever Salon 101 is in your 3D world
+    triggerMesh.position.set(-2, 7.46, 34);
+    scene.add(triggerMesh);
+
+    // 2. Generate the mathematical Box3 (The actual collision logic)
+    // We force Three.js to calculate its world position immediately
+    triggerMesh.updateMatrixWorld();
+    const triggerBox = new THREE.Box3().setFromObject(triggerMesh);
+
+    // 3. Create a state variable to prevent console spam
+    // If we don't have this, it will print to the console 60 times a second while inside!
+    let isPlayerInside101 = false;
+
+
+    //const camObj = controls.getObject();
+
+
+
+    // Check if the player's current position is inside the trigger box
+    const isInside = triggerBox.containsPoint(controls.getObject().position);
+
+    if (isInside) {
+        // Only trigger this ONCE when they first enter the box
+        if (!isPlayerInside101) {
+            //console.log(Salones.Princ_Salon_101);
+            
+            // Eventually, you will call your function here:
+            // DisplaySalonInfo(Salones.Princ_Salon_101);
+            
+            DisplaySalonInfo(Salones.Princ_Dep_Servicio_Social);
+            infoPanel.style.display = 'block';
+            
+            isPlayerInside101 = true;
+        }
+    } else {
+        // If they stepped OUT of the box, reset the state
+
+        infoPanel.style.display = 'none';
+
+
+
+        if (isPlayerInside101) {
+            //console.log("El jugador salió del Salón 101");
+
+            
+            
+
+            // // Check if the 'I' key was pressed (case-insensitive)
+            // if (event.key.toLowerCase() === 'i') {
+            //     // Toggle the display style
+            //     if (infoPanel.style.display === 'none') {
+            //         infoPanel.style.display = 'block';
+            //     } else {
+            //         infoPanel.style.display = 'none';
+            //     }
+            // }
+
+
+
+
+
+            isPlayerInside101 = false;
+        }
+    }
+
+
+
+
+
+
+    //--------------------------------------------------COLISION DE INFO--------------------------------------------------
+
+
 
     composer.render();
     stats.end();
