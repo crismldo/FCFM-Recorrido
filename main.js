@@ -166,16 +166,109 @@ const Salones = Object.freeze({
 });
 
 
+const InformacionSalones = {
+    // --- PISO 1 ---
+    [Salones.Princ_Salon_101]: { nombre: "Salón 101", descripcion: "Aula de clases regulares." },
+    [Salones.Princ_Salon_102]: { nombre: "Salón 102", descripcion: "Aula de clases regulares." },
+    [Salones.Princ_Salon_103]: { nombre: "Salón 103", descripcion: "Aula de clases regulares." },
+    [Salones.Princ_Salon_104]: { nombre: "Salón 104", descripcion: "Aula de clases regulares." },
+    [Salones.Princ_Salon_105]: { nombre: "Salón 105", descripcion: "Aula de clases regulares." },
+
+    [Salones.Princ_Salon_201]: { nombre: "Salón 201", descripcion: "Aula de clases." },
+    [Salones.Princ_Salon_202]: { nombre: "Salón 202", descripcion: "Aula de clases." },
+    [Salones.Princ_Salon_203]: { nombre: "Salón 203", descripcion: "Aula de clases." },
+    [Salones.Princ_Salon_204]: { nombre: "Salón 204", descripcion: "Aula de clases." },
+
+    [Salones.Princ_Salon_401]: { nombre: "Salón 401", descripcion: "Aula de clases." },
+    [Salones.Princ_Salon_402]: { nombre: "Salón 402", descripcion: "Aula de clases." },
+    [Salones.Princ_Salon_403]: { nombre: "Salón 403", descripcion: "Aula de clases." },
+    [Salones.Princ_Salon_404]: { nombre: "Salón 404", descripcion: "Aula de clases." },
+    [Salones.Princ_Salon_405]: { nombre: "Salón 405", descripcion: "Aula de clases." },
+
+    [Salones.Princ_Audi_Eladio]: { nombre: "Auditorio Eladio", descripcion: "Auditorio principal para conferencias y eventos." },
+    [Salones.Princ_Dep_Tutorias]: { nombre: "Departamento de Tutorías", descripcion: "Atención y seguimiento académico." },
+    [Salones.Princ_Dep_Tesoreria]: { nombre: "Tesorería", descripcion: "Pagos de colegiaturas y trámites financieros." },
+    [Salones.Princ_Dep_Direccion]: { nombre: "Dirección", descripcion: "Oficina del director(a) de la facultad." },
+    [Salones.Princ_Dep_Servicios_General]: { nombre: "Servicios Generales", descripcion: "Mantenimiento y operaciones del edificio." },
+    [Salones.Princ_Dep_Coordinacion]: { nombre: "Coordinación", descripcion: "Coordinación académica." },
+    [Salones.Princ_Cafeteria]: { nombre: "Cafetería", descripcion: "Área de comida y descanso." },
+
+    // --- PISO 2 ---
+    [Salones.Princ_Salon_106]: { nombre: "Salón 106", descripcion: "Aula de clases regulares." },
+    [Salones.Princ_Salon_107]: { nombre: "Salón 107", descripcion: "Aula de clases regulares." },
+    [Salones.Princ_Salon_108]: { nombre: "Salón 108", descripcion: "Aula de clases regulares." },
+    [Salones.Princ_Salon_109]: { nombre: "Salón 109", descripcion: "Aula de clases regulares." },
+    [Salones.Princ_Salon_110]: { nombre: "Salón 110", descripcion: "Aula de clases regulares." },
+
+    [Salones.Princ_Salon_205]: { nombre: "Salón 205", descripcion: "Aula de clases." },
+    [Salones.Princ_Salon_206]: { nombre: "Salón 206", descripcion: "Aula de clases." },
+    [Salones.Princ_Salon_207]: { nombre: "Salón 207", descripcion: "Aula de clases." },
+    [Salones.Princ_Salon_208]: { nombre: "Salón 208", descripcion: "Aula de clases." },
+
+    [Salones.Princ_Salon_406]: { nombre: "Salón 406", descripcion: "Aula de clases." },
+    [Salones.Princ_Salon_407]: { nombre: "Salón 407", descripcion: "Aula de clases." },
+    [Salones.Princ_Salon_408]: { nombre: "Salón 408", descripcion: "Aula de clases." },
+    [Salones.Princ_Salon_409]: { nombre: "Salón 409", descripcion: "Aula de clases." },
+    [Salones.Princ_Salon_410]: { nombre: "Salón 410", descripcion: "Aula de clases." },
+
+    [Salones.Princ_Audi_Jose]: { nombre: "Auditorio José", descripcion: "Auditorio secundario para presentaciones." },
+
+    [Salones.Princ_Lab_Mecanica]: { nombre: "Laboratorio de Mecánica", descripcion: "Uso obligatorio de bata y lentes de seguridad." },
+    [Salones.Princ_Lab_Fluidos]: { nombre: "Laboratorio de Fluidos", descripcion: "Prácticas de hidrostática e hidrodinámica." },
+    [Salones.Princ_Lab_Circuitos]: { nombre: "Laboratorio de Circuitos", descripcion: "Mesas de trabajo con osciloscopios y fuentes." },
+    [Salones.Princ_Lab_Fisica_III]: { nombre: "Laboratorio de Física III", descripcion: "Prácticas de electromagnetismo." },
+    [Salones.Princ_Lab_Sistemas_Elec]: { nombre: "Lab. Sistemas Eléctricos", descripcion: "Prácticas de potencia y control." },
+    [Salones.Princ_Lab_Optica]: { nombre: "Laboratorio de Óptica", descripcion: "Experimentos con luz y lentes. Mantener puerta cerrada." },
+
+    [Salones.Princ_Dep_Soci_Alumnos]: { nombre: "Sociedad de Alumnos", descripcion: "Oficina de representación estudiantil." },
+    [Salones.Princ_Dep_Copias]: { nombre: "Centro de Copiado", descripcion: "Impresiones, copias y papelería básica." },
+    [Salones.Princ_Dep_RH]: { nombre: "Recursos Humanos", descripcion: "Atención al personal docente y administrativo." },
+    [Salones.Princ_Dep_Escolar]: { nombre: "Control Escolar", descripcion: "Kardex, constancias y trámites de titulación." },
+    [Salones.Princ_Dep_Prefectura]: { nombre: "Prefectura", descripcion: "Control de asistencias y reportes." },
+    [Salones.Princ_Dep_Servicio_Social]: { nombre: "Servicio Social", descripcion: "Registro y liberación de horas." },
+
+    // --- PISO 3 ---
+    [Salones.Princ_Salon_111]: { nombre: "Salón 111", descripcion: "Aula de clases regulares." },
+    [Salones.Princ_Salon_112]: { nombre: "Salón 112", descripcion: "Aula de clases regulares." },
+    [Salones.Princ_Salon_113]: { nombre: "Salón 113", descripcion: "Aula de clases regulares." },
+    [Salones.Princ_Salon_114]: { nombre: "Salón 114", descripcion: "Aula de clases regulares." },
+    [Salones.Princ_Salon_115]: { nombre: "Salón 115", descripcion: "Aula de clases regulares." },
+    [Salones.Princ_Salon_116]: { nombre: "Salón 116", descripcion: "Aula de clases regulares." },
+    [Salones.Princ_Salon_117]: { nombre: "Salón 117", descripcion: "Aula de clases regulares." },
+    [Salones.Princ_Salon_118]: { nombre: "Salón 118", descripcion: "Aula de clases regulares." },
+    [Salones.Princ_Salon_119]: { nombre: "Salón 119", descripcion: "Aula de clases regulares." },
+    [Salones.Princ_Salon_120]: { nombre: "Salón 120", descripcion: "Aula de clases regulares." },
+    [Salones.Princ_Salon_121]: { nombre: "Salón 121", descripcion: "Aula de clases regulares." },
+
+    [Salones.Princ_Salon_209]: { nombre: "Salón 209", descripcion: "Aula de clases." },
+    [Salones.Princ_Salon_210]: { nombre: "Salón 210", descripcion: "Aula de clases." },
+    [Salones.Princ_Salon_211]: { nombre: "Salón 211", descripcion: "Aula de clases." },
+    [Salones.Princ_Salon_212]: { nombre: "Salón 212", descripcion: "Aula de clases." },
+
+    [Salones.Princ_Salon_411]: { nombre: "Salón 411", descripcion: "Aula de clases." },
+    [Salones.Princ_Salon_412]: { nombre: "Salón 412", descripcion: "Aula de clases." },
+    [Salones.Princ_Salon_413]: { nombre: "Salón 413", descripcion: "Aula de clases." },
+    [Salones.Princ_Salon_414]: { nombre: "Salón 414", descripcion: "Aula de clases." },
+
+    [Salones.Princ_Dep_Astronomia]: { nombre: "Departamento de Astronomía", descripcion: "Oficinas e investigación astronómica." },
+    [Salones.Princ_Dep_Soporte_Tecnico]: { nombre: "Soporte Técnico", descripcion: "Ayuda con redes y equipo de cómputo." },
+    [Salones.Princ_Dep_Lab_Computo_Mat]: { nombre: "Lab. Cómputo Matemático", descripcion: "Computadoras con software especializado." },
+    [Salones.Princ_Dep_Ofici_Administra]: { nombre: "Oficinas Administrativas", descripcion: "Área administrativa general." },
+    [Salones.Princ_Dep_CAADI]: { nombre: "CAADI", descripcion: "Centro de Autoaprendizaje de Idiomas." },
+    [Salones.Princ_Dep_Biblioteca]: { nombre: "Biblioteca", descripcion: "Zona de silencio y estudio." }
+};
 
 
-
-function DisplaySalonInfo(ID_Salon_Seleccionado){
-    switch(ID_Salon_Seleccionado){
-        case Salones.Princ_Salon_101: {
-            Salon_Nombre.textContent        = "Salon 101"
-            Salon_Descripcion.textContent   = "Descripcion"
-            break;
-        }
+function DisplaySalonInfo(ID_Salon_Seleccionado) {
+    
+    const info = InformacionSalones[ID_Salon_Seleccionado];
+    
+    if (info) {
+        Salon_Nombre.textContent = info.nombre;
+        Salon_Descripcion.textContent = info.descripcion;
+    } else {
+        Salon_Nombre.textContent = "Área Desconocida";
+        Salon_Descripcion.textContent = "No hay información disponible para este lugar.";
     }
 }
 
@@ -185,7 +278,7 @@ function DisplaySalonInfo(ID_Salon_Seleccionado){
 
 window.addEventListener('keydown', (event) => {
     
-    DisplaySalonInfo(Salones.Princ_Salon_101);
+    DisplaySalonInfo(Salones.Princ_Dep_Servicio_Social);
     
     
     
