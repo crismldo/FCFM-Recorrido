@@ -276,22 +276,22 @@ function DisplaySalonInfo(ID_Salon_Seleccionado) {
 
 
 
-window.addEventListener('keydown', (event) => {
+// window.addEventListener('keydown', (event) => {
     
-    DisplaySalonInfo(Salones.Princ_Dep_Servicio_Social);
+//     DisplaySalonInfo(Salones.Princ_Dep_Servicio_Social);
     
     
     
-    // Check if the 'I' key was pressed (case-insensitive)
-    if (event.key.toLowerCase() === 'i') {
-        // Toggle the display style
-        if (infoPanel.style.display === 'none') {
-            infoPanel.style.display = 'block';
-        } else {
-            infoPanel.style.display = 'none';
-        }
-    }
-});
+//     // Check if the 'I' key was pressed (case-insensitive)
+//     if (event.key.toLowerCase() === 'i') {
+//         // Toggle the display style
+//         if (infoPanel.style.display === 'none') {
+//             infoPanel.style.display = 'block';
+//         } else {
+//             infoPanel.style.display = 'none';
+//         }
+//     }
+// });
 
 
 
@@ -507,7 +507,8 @@ function init() {
     renderer.setClearColor(FOG_COLOR, 1.0); 
 
     renderer.shadowMap.enabled = true;
-    renderer.shadowMap.type    = THREE.VSMShadowMap;
+    //renderer.shadowMap.type    = THREE.VSMShadowMap;
+    renderer.shadowMap.type    = THREE.PCFSoftShadowMap;
     renderer.toneMapping       = THREE.ACESFilmicToneMapping;
     renderer.toneMappingExposure = 1.1;
     renderer.outputColorSpace  = THREE.SRGBColorSpace;
@@ -640,7 +641,16 @@ function loadEnvironmentAndModel() {
                     //loadGLBModel('modelos/USIT-Edificio_opt.glb', { x: 0, y: 10, z: -10, scale: 100 }),
                     
 
-
+                    loadGLBModel('modelos/USIT-Opt/USIT-Bancas_.glb', { x: 0, y: 10, z: -10, scale: 100 }),
+                    loadGLBModel('modelos/USIT-Opt/USIT-P1_.glb', { x: 0, y: 10, z: -10, scale: 100 }),
+                    loadGLBModel('modelos/USIT-Opt/USIT-P1Lab_.glb', { x: 0, y: 10, z: -10, scale: 100 }),
+                    loadGLBModel('modelos/USIT-Opt/USIT-P2_.glb', { x: 0, y: 10, z: -10, scale: 100 }),
+                    loadGLBModel('modelos/USIT-Opt/USIT-P2Oro_.glb', { x: 0, y: 10, z: -10, scale: 100 }),
+                    loadGLBModel('modelos/USIT-Opt/USIT-P2Podcast_.glb', { x: 0, y: 10, z: -10, scale: 100 }),
+                    loadGLBModel('modelos/USIT-Opt/USIT-P2Soporte_.glb', { x: 0, y: 10, z: -10, scale: 100 }),
+                    loadGLBModel('modelos/USIT-Opt/USIT-PB_.glb', { x: 0, y: 10, z: -10, scale: 100 }),
+                    loadGLBModel('modelos/USIT-Opt/USIT-PBLab_.glb', { x: 0, y: 10, z: -10, scale: 100 }),
+                    loadGLBModel('modelos/USIT-Opt/USIT-PBMulti_.glb', { x: 0, y: 10, z: -10, scale: 100 }),
 
                     
                     //loadGLBModel('modelos/PisoTest_opt.glb', { x: 0, y: 10, z: 0, scale: 100 }),
@@ -692,6 +702,8 @@ function loadGLBModel(path, options = {}) {
 
                 model.traverse((child) => {
                     if (!child.isMesh) return;
+
+                    //child.geometry.computeBoundsTree();
 
                     child.castShadow    = false;
                     child.receiveShadow = false;
@@ -847,6 +859,9 @@ function animate() {
 
 
     composer.render();
+
+    //renderer.render(scene, camera);
+
     stats.end();
 
     frames++;
