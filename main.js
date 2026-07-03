@@ -478,6 +478,8 @@ function physicsStep() {
             }
         }
     }
+
+    verificarColisionSalones()
 }
 
 // ============================================================
@@ -583,6 +585,10 @@ function init() {
     // ── RELOJ + CARGA ─────────────────────────────────────────
     clock = new THREE.Clock();
     loadEnvironmentAndModel();
+
+    CrearSalonColision(Salones.Princ_Salon_101, -2.0, 2.0, 30.0, 2, 2, 2);
+    CrearSalonColision(Salones.Princ_Lab_Mecanica, 4.0, 2.0, 20.0, 2, 2, 2);
+
 
     window.addEventListener('resize', () => {
         camera.aspect = innerWidth / innerHeight;
@@ -743,6 +749,74 @@ function loadGLBModel(path, options = {}) {
     });
 }
 
+
+
+
+
+
+//=======================================Funcion para crear Colisiones de Informacion====================================
+
+// Arreglo para guardar todas las zonas de colisión de los salones
+const zonasSalones = [];
+
+// Variable de estado para evitar laguear el DOM actualizando el texto en cada frame
+let salonActualID = null;
+let isPlayerInside101 = false;
+
+function CrearSalonColision(id, centroX, centroY, centroZ, ancho, alto, profundidad) {
+    const centro = new THREE.Vector3(centroX, centroY, centroZ);
+    const tamaño = new THREE.Vector3(ancho, alto, profundidad);
+    
+    // Crear una caja matemática pura (sin mesh, rendimiento óptimo)
+    const cajaMatematica = new THREE.Box3().setFromCenterAndSize(centro, tamaño);
+    
+    // Empujamos el objeto con su ID al arreglo global
+    zonasSalones.push({
+        id: id,
+        box: cajaMatematica
+    });
+
+    // OPCIONAL: Si quieres ver las cajas para debugear dónde están paradas:
+    
+    const helper = new THREE.Box3Helper(cajaMatematica, 0x00ff00);
+    scene.add(helper);
+    
+}
+
+function verificarColisionSalones() {
+    const camObj = controls.getObject();
+    const playerPos = camObj.position;
+    let dentroDeAlgunSalon = false;
+
+    // Iteramos por todas las zonas guardadas
+    for (let i = 0; i < zonasSalones.length; i++) {
+        const zona = zonasSalones[i];
+
+        // Verificamos si la posición del jugador está dentro de la caja matemática
+        if (zona.box.containsPoint(playerPos)) {
+            dentroDeAlgunSalon = true;
+
+            // ¡CRÍTICO PARA EL RENDIMIENTO!: Solo actualiza si acabas de entrar a un salón NUEVO
+            if (salonActualID !== zona.id) {
+                salonActualID = zona.id;
+                
+                DisplaySalonInfo(zona.id); // Cambia el texto una sola vez
+                infoPanel.style.display = 'block'; // Muestra el panel
+                console.log(`Entraste a: ${zona.id}`);
+            }
+            
+            break; // Ya encontramos el salón actual, rompemos el bucle prematuramente
+        }
+    }
+
+    // Si no está en ningún salón, pero antes sí estaba en uno, ocultamos el panel
+    if (!dentroDeAlgunSalon && salonActualID !== null) {
+        salonActualID = null;
+        infoPanel.style.display = 'none';
+        console.log("Saliste de las zonas de salones.");
+    }
+}
+
 // ============================================================
 // LOOP DE ANIMACIÓN
 // ============================================================
@@ -774,83 +848,9 @@ function animate() {
     
     //--------------------------------------------------COLISION DE INFO--------------------------------------------------
 
-    // 1. Create a simple Box mesh. Make it the size of your room.
-    const triggerGeometry = new THREE.BoxGeometry(2, 2, 2); // Width, Height, Depth
-    const triggerMaterial = new THREE.MeshBasicMaterial({
-        color: 0xff0000,
-        wireframe: true // Keep this true while testing so you can see it!
-    });
-
-    // Once you are done positioning it, uncomment the line below to make it invisible:
-    // triggerMaterial.visible = false; 
-
-    const triggerMesh = new THREE.Mesh(triggerGeometry, triggerMaterial);
-
-    // Move the box to wherever Salon 101 is in your 3D world
-    triggerMesh.position.set(-2, 7.46, 34);
-    scene.add(triggerMesh);
-
-    // 2. Generate the mathematical Box3 (The actual collision logic)
-    // We force Three.js to calculate its world position immediately
-    triggerMesh.updateMatrixWorld();
-    const triggerBox = new THREE.Box3().setFromObject(triggerMesh);
-
-    // 3. Create a state variable to prevent console spam
-    // If we don't have this, it will print to the console 60 times a second while inside!
-    let isPlayerInside101 = false;
-
-
-    //const camObj = controls.getObject();
-
-
-
-    // Check if the player's current position is inside the trigger box
-    const isInside = triggerBox.containsPoint(controls.getObject().position);
-
-    if (isInside) {
-        // Only trigger this ONCE when they first enter the box
-        if (!isPlayerInside101) {
-            //console.log(Salones.Princ_Salon_101);
-            
-            // Eventually, you will call your function here:
-            // DisplaySalonInfo(Salones.Princ_Salon_101);
-            
-            DisplaySalonInfo(Salones.Princ_Dep_Servicio_Social);
-            infoPanel.style.display = 'block';
-            
-            isPlayerInside101 = true;
-        }
-    } else {
-        // If they stepped OUT of the box, reset the state
-
-        infoPanel.style.display = 'none';
-
-
-
-        if (isPlayerInside101) {
-            //console.log("El jugador salió del Salón 101");
-
-            
-            
-
-            // // Check if the 'I' key was pressed (case-insensitive)
-            // if (event.key.toLowerCase() === 'i') {
-            //     // Toggle the display style
-            //     if (infoPanel.style.display === 'none') {
-            //         infoPanel.style.display = 'block';
-            //     } else {
-            //         infoPanel.style.display = 'none';
-            //     }
-            // }
-
-
-
-
-
-            isPlayerInside101 = false;
-        }
-    }
-
+    
+    
+    
 
 
 
