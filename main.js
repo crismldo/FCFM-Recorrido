@@ -490,11 +490,11 @@ function init() {
     // ── ESCENA ────────────────────────────────────────────────
     scene = new THREE.Scene();
     
-    // [CAMBIO]: Niebla lineal. Empieza suave a los 80m y es total a los 150m
+   
     scene.fog = new THREE.Fog(FOG_COLOR, 80, 150);
 
     // ── CÁMARA ────────────────────────────────────────────────
-    // [CAMBIO]: Reducido el Far Plane de 600 a 150 para no renderizar lo lejano
+    
     camera = new THREE.PerspectiveCamera(70, innerWidth / innerHeight, 0.1, 350);
     camera.position.set(7, 8.41, 37);
 
@@ -503,7 +503,7 @@ function init() {
     renderer.setSize(innerWidth, innerHeight);
     renderer.setPixelRatio(Math.min(devicePixelRatio, 1.5));
     
-    // [CAMBIO]: Forzamos al fondo a ser del mismo color de la niebla
+    
     renderer.setClearColor(FOG_COLOR, 1.0); 
 
     renderer.shadowMap.enabled = true;
@@ -698,45 +698,47 @@ function loadGLBModel(path, options = {}) {
 
                 scene.add(model);
                 model.updateMatrixWorld(true);
+                
+                
                 model.traverse(c => { c.matrixAutoUpdate = false; });
 
                 model.traverse((child) => {
                     if (!child.isMesh) return;
 
-                    //child.geometry.computeBoundsTree();
+                    
+                    child.geometry.boundsTree = new MeshBVH(child.geometry);
 
+                    
+                    child.layers.enable(LAYER_COLLIDABLE);
+
+                    
+                    // colisiones
+                    collidableObjects.push(child);
+
+                    // Ajustes de rendimiento visual
                     child.castShadow    = false;
                     child.receiveShadow = false;
                     child.frustumCulled = true;
 
+                    // Detección de materiales
                     if (child.material) {
                         const name = (child.material.name || '') + ' ' + (child.name || '');
                         if (isGlass(name)) {
                             child.material = createGlassMaterial(child.material);
                         } else if (isMetal(name) || isOriginallyMetal(child.material)) {
                             enhanceMetalMaterial(child.material);
-                        } else {
-                            child.material.envMapIntensity = 0.8;
-                            child.material.roughness = Math.max(child.material.roughness ?? 0.7, 0.4);
-                            child.material.needsUpdate = true;
                         }
                     }
-
-                    child.updateWorldMatrix(true, false);
-                    child.geometry.boundsTree = new MeshBVH(child.geometry);
-                    child.layers.enable(LAYER_COLLIDABLE);
-                    collidableObjects.push(child);
                 });
 
-                if (gltf.animations.length > 0) {
-                    if (!mixer) mixer = new THREE.AnimationMixer(scene);
-                    mixer.clipAction(gltf.animations[0], model).play();
-                }
-
+                // Resolver la promesa para avanzar el Promise.all
                 resolve(model);
             },
             undefined,
-            (err) => reject(err)
+            (error) => {
+                console.error(`Error cargando el modelo ${path}:`, error);
+                reject(error);
+            }
         );
     });
 }
