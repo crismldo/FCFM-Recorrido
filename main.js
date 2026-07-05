@@ -39,6 +39,7 @@ document.addEventListener('keydown', e => {
     if (isModelLoaded && controls.isLocked) {
         if (k === 'p') {
             teletransportarA(new THREE.Vector3(7.0, 8.41, 37.0)); // Coordenadas de ejemplo 1
+            //teletransportarA(new THREE.Vector3(48.38, 8.41, -51.56)); // Coordenadas de ejemplo 1
         }
         //if (k === 'o') {
         //    teletransportarA(new THREE.Vector3(7.0, 8.41, 37.0));  // Coordenadas de inicio del juego
@@ -497,7 +498,7 @@ function init() {
 
     // ── CÁMARA ────────────────────────────────────────────────
     
-    camera = new THREE.PerspectiveCamera(70, innerWidth / innerHeight, 0.1, 350);
+    camera = new THREE.PerspectiveCamera(70, innerWidth / innerHeight, 0.1, 150);
     camera.position.set(7, 8.41, 37);
 
     // ── RENDERER ──────────────────────────────────────────────
@@ -586,9 +587,15 @@ function init() {
     clock = new THREE.Clock();
     loadEnvironmentAndModel();
 
-    CrearSalonColision(Salones.Princ_Salon_101, -2.0, 2.0, 30.0, 2, 2, 2);
-    CrearSalonColision(Salones.Princ_Lab_Mecanica, 4.0, 2.0, 20.0, 2, 2, 2);
 
+
+    //================ INFORMACION DE SALONES ================================================
+
+    CrearSalonColision(Salones.Princ_Salon_101, -10.0, 7.46, 40.0);
+    CrearSalonColision(Salones.Princ_Lab_Mecanica, -10.0, 7.46, 45.0);
+    CrearSalonColision(Salones.Princ_Dep_Biblioteca, -10.0, 7.46, 50.0);
+
+    //================ INFORMACION DE SALONES ================================================
 
     window.addEventListener('resize', () => {
         camera.aspect = innerWidth / innerHeight;
@@ -629,7 +636,9 @@ function loadEnvironmentAndModel() {
                 // Configuración modular de tus pedazos de mapa
                 await Promise.all([
                     
-                    loadGLBModel('modelos/Estacionamiento_opt.glb', { x: 0, y: 10, z: -10, scale: 100 }),
+                    //loadGLBModel('modelos/Estacionamiento_opt.glb', { x: 0, y: 10, z: -10, scale: 100 }),
+                    //loadGLBModel('modelos/A_test.glb', { x: 4, y: 6, z: 30, scale: 1 }),
+                    //4.0, 7.46, 30.0
 
                     //loadGLBModel('modelos/EdificioP_opt.glb', { x: 0, y: 10, z: -10, scale: 100 }),
                     //loadGLBModel('modelos/EP_P1_opt.glb', { x: 0, y: 10, z: -10, scale: 100 }),
@@ -647,6 +656,7 @@ function loadEnvironmentAndModel() {
                     //loadGLBModel('modelos/USIT-Edificio_opt.glb', { x: 0, y: 10, z: -10, scale: 100 }),
                     
 
+                    //===============================USIT===============================
                     loadGLBModel('modelos/USIT-Opt/USIT-Bancas_.glb', { x: 0, y: 10, z: -10, scale: 100 }),
                     loadGLBModel('modelos/USIT-Opt/USIT-P1_.glb', { x: 0, y: 10, z: -10, scale: 100 }),
                     loadGLBModel('modelos/USIT-Opt/USIT-P1Lab_.glb', { x: 0, y: 10, z: -10, scale: 100 }),
@@ -658,7 +668,33 @@ function loadEnvironmentAndModel() {
                     loadGLBModel('modelos/USIT-Opt/USIT-PBLab_.glb', { x: 0, y: 10, z: -10, scale: 100 }),
                     loadGLBModel('modelos/USIT-Opt/USIT-PBMulti_.glb', { x: 0, y: 10, z: -10, scale: 100 }),
 
+                    //===============================SALONES ATRAS===============================
+                    loadGLBModel('modelos/Salones-Opt/Salones_.glb', { x: 0, y: 10, z: -10, scale: 100 }),
+                    loadGLBModel('modelos/Salones-Opt/Salones-Plant_.glb', { x: 0, y: 10, z: -10, scale: 100 }),
+
+                    //===============================ESTACIONAMIENTO===============================
+                    loadGLBModel('modelos/Est-Opt/Est_.glb', { x: 0, y: 10, z: -10, scale: 100 }),
+                    loadGLBModel('modelos/Est-Opt/Est-Arboles_.glb', { x: 0, y: 10, z: -10, scale: 100 }),
+            
+                    //===============================FACU===============================
+                    //loadGLBModel('modelos/FACU/Est_.glb', { x: 0, y: 10, z: -10, scale: 100 }),
+
+                    loadGLBModel('modelos/FACU/EdificioP_opt.glb', { x: 0, y: 10, z: -10, scale: 100 }),
+                    loadGLBModel('modelos/FACU/EP_P1_opt.glb', { x: 0, y: 10, z: -10, scale: 100 }),
+                    loadGLBModel('modelos/FACU/300s_opt.glb', { x: 0, y: 8, z: -10, scale: 100 }),
+
+                    loadGLBModel('modelos/FACU/EP_P2_opt.glb', { x: 0, y: 10, z: -10, scale: 100 }),
+                    loadGLBModel('modelos/FACU/EP_PB3_opt.glb', { x: 0, y: 10, z: -10, scale: 100 }),
+                    loadGLBModel('modelos/FACU/EP_PB1_opt.glb', { x: 0, y: 10, z: -10, scale: 100 }),
+                    loadGLBModel('modelos/FACU/EP_PB2_opt.glb', { x: 0, y: 10, z: -10, scale: 100 }),
                     
+
+
+
+
+
+
+            
                     //loadGLBModel('modelos/PisoTest_opt.glb', { x: 0, y: 10, z: 0, scale: 100 }),
                     //loadGLBModel('modelos/Estaci_SalaMaestros_opt.glb', { x: 0, y: 10, z: 0, scale: 100 }),
                     //loadGLBModel('modelos/EstacionamientoTest_opt.glb', { x: 0, y: 10, z: 0, scale: 100 }),
@@ -763,9 +799,11 @@ const zonasSalones = [];
 let salonActualID = null;
 let isPlayerInside101 = false;
 
-function CrearSalonColision(id, centroX, centroY, centroZ, ancho, alto, profundidad) {
+function CrearSalonColision(id, centroX, centroY, centroZ) {
+
+    loadGLBModel('modelos/A_test.glb', { x: centroX, y: (centroY - 1.7), z: centroZ, scale: 1 });
     const centro = new THREE.Vector3(centroX, centroY, centroZ);
-    const tamaño = new THREE.Vector3(ancho, alto, profundidad);
+    const tamaño = new THREE.Vector3(2, 2, 2);
     
     // Crear una caja matemática pura (sin mesh, rendimiento óptimo)
     const cajaMatematica = new THREE.Box3().setFromCenterAndSize(centro, tamaño);
@@ -778,8 +816,8 @@ function CrearSalonColision(id, centroX, centroY, centroZ, ancho, alto, profundi
 
     // OPCIONAL: Si quieres ver las cajas para debugear dónde están paradas:
     
-    const helper = new THREE.Box3Helper(cajaMatematica, 0x00ff00);
-    scene.add(helper);
+    //const helper = new THREE.Box3Helper(cajaMatematica, 0x00ff00);
+    //scene.add(helper);
     
 }
 
@@ -796,13 +834,13 @@ function verificarColisionSalones() {
         if (zona.box.containsPoint(playerPos)) {
             dentroDeAlgunSalon = true;
 
-            // ¡CRÍTICO PARA EL RENDIMIENTO!: Solo actualiza si acabas de entrar a un salón NUEVO
+            // Solo actualiza si acabas de entrar a un salón NUEVO
             if (salonActualID !== zona.id) {
                 salonActualID = zona.id;
                 
                 DisplaySalonInfo(zona.id); // Cambia el texto una sola vez
                 infoPanel.style.display = 'block'; // Muestra el panel
-                console.log(`Entraste a: ${zona.id}`);
+                //console.log(`Entraste a: ${zona.id}`);
             }
             
             break; // Ya encontramos el salón actual, rompemos el bucle prematuramente
@@ -813,7 +851,7 @@ function verificarColisionSalones() {
     if (!dentroDeAlgunSalon && salonActualID !== null) {
         salonActualID = null;
         infoPanel.style.display = 'none';
-        console.log("Saliste de las zonas de salones.");
+        //console.log("Saliste de las zonas de salones.");
     }
 }
 
