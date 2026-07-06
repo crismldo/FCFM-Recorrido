@@ -17,6 +17,8 @@ THREE.Mesh.prototype.raycast = acceleratedRaycast;
 // VARIABLES GLOBALES
 // ============================================================
 let scene, camera, renderer, controls, composer, clock, mixer;
+const edificiosCargados = {};
+let isUsitVisible = true;
 let isModelLoaded = false;
 
 // ── DOM ───────────────────────────────────────────────────────
@@ -35,15 +37,18 @@ const keys = { w: false, a: false, s: false, d: false, ' ': false };
 document.addEventListener('keydown', e => {
     const k = e.key === ' ' ? ' ' : e.key.toLowerCase();
     if (k in keys) keys[k] = true;
+    
 
     if (isModelLoaded && controls.isLocked) {
         if (k === 'p') {
             teletransportarA(new THREE.Vector3(7.0, 8.41, 37.0)); // Coordenadas de ejemplo 1
             //teletransportarA(new THREE.Vector3(48.38, 8.41, -51.56)); // Coordenadas de ejemplo 1
         }
-        //if (k === 'o') {
-        //    teletransportarA(new THREE.Vector3(7.0, 8.41, 37.0));  // Coordenadas de inicio del juego
-        //}
+        
+        if (k === 'o') {
+            isUsitVisible = !isUsitVisible; // Invertimos el estado
+            toggleEdificio('USIT', isUsitVisible);
+        }
         
     }
 
@@ -382,6 +387,34 @@ function init() {
     CrearSalonColision(Salones.Princ_Lab_Mecanica, -10.0, 7.46, 45.0);
     CrearSalonColision(Salones.Princ_Dep_Biblioteca, -10.0, 7.46, 50.0);
 
+
+    CrearSalonColision(Salones.Sala_Maestros, 34.22, 7.46, 51.84);
+    CrearSalonColision(Salones.USIT_entrada, -24.80, 7.53, 20.87);
+    CrearSalonColision(Salones.Princ_Dep_Coordinacion, -8.54, 8.05, -22.25);
+    CrearSalonColision(Salones.Princ_Dep_Servicios_General, -8.77, 8.05, 3.59);
+    CrearSalonColision(Salones.Princ_Cafeteria, -9.14, 8.05, -7.87);
+    CrearSalonColision(Salones.Princ_Dep_Direccion, 14.33, 8.05, 6.22);
+    CrearSalonColision(Salones.Princ_Dep_Tesoreria, 14.50, 8.05, -7.28);
+    CrearSalonColision(Salones.Princ_Audi_Eladio, 17.72, 8.05, -13.97);
+    CrearSalonColision(Salones.Princ_Salon_401, 30.97, 8.05, -18.80);
+
+    //Piso 2
+    CrearSalonColision(Salones.Princ_Dep_Prefectura, 13.98, 11.77, 9.20);
+    CrearSalonColision(Salones.Princ_Dep_Servicio_Social, 14.06, 11.77, 4.30);
+    CrearSalonColision(Salones.Princ_Dep_Escolar, 14.15, 11.77, -2.25);
+    CrearSalonColision(Salones.Princ_Audi_Jose, 16.89, 11.77, -13.21);
+    //////////CrearSalonColision(Salones.Sala_inovacion_emprendimiento, 30.70, 11.77, -18.77);
+    CrearSalonColision(Salones.Princ_Lab_Optica, 20.37, 11.77, -22.62);
+    CrearSalonColision(Salones.Princ_Lab_Sistemas_Elec, 14.08, 11.77, -22.86);
+    CrearSalonColision(Salones.Princ_Lab_Fisica_III, 7.08, 11.77, -22.90);
+    CrearSalonColision(Salones.Princ_Lab_Circuitos, 0.41, 11.77, -22.86);
+    CrearSalonColision(Salones.Princ_Lab_Fluidos, -6.51, 11.77, -22.94);
+    CrearSalonColision(Salones.Princ_Lab_Mecanica, -13.38, 11.77, -22.85);
+    //////////CrearSalonColision(Salones.Lab_Actuaria, -30.15, 11.77, -11.86);
+    CrearSalonColision(Salones.Princ_Dep_Soci_Alumnos, -9.08, 11.77, -7.10);
+    CrearSalonColision(Salones.Princ_Dep_Copias, -9.12, 11.77, -5.24);
+    CrearSalonColision(Salones.Princ_Dep_RH, -9.16, 11.77, -2.05);
+
     //================ INFORMACION DE SALONES ================================================
 
 
@@ -412,6 +445,17 @@ let Salon_ID = 0;
 
 
 const Salones = Object.freeze({
+    
+    Sala_Maestros: 'Sala_Maestros',
+    
+    
+    
+    USIT_entrada: 'USIT_entrada',
+
+
+    
+    
+    
     //PISO 1
     Princ_Salon_101: 'Princ_Salon_101',
     Princ_Salon_102: 'Princ_Salon_102',
@@ -512,6 +556,10 @@ const Salones = Object.freeze({
 
 
 const InformacionSalones = {
+    [Salones.Sala_Maestros]: { nombre: "Sala de maestros", descripcion: " " },
+    [Salones.USIT_entrada]: { nombre: "USIT", descripcion: "Entrada al eficio USIT" },
+    
+    
     // --- PISO 1 ---
     [Salones.Princ_Salon_101]: { nombre: "Salón 101", descripcion: "Aula de clases regulares." },
     [Salones.Princ_Salon_102]: { nombre: "Salón 102", descripcion: "Aula de clases regulares." },
@@ -524,7 +572,7 @@ const InformacionSalones = {
     [Salones.Princ_Salon_203]: { nombre: "Salón 203", descripcion: "Aula de clases." },
     [Salones.Princ_Salon_204]: { nombre: "Salón 204", descripcion: "Aula de clases." },
 
-    [Salones.Princ_Salon_401]: { nombre: "Salón 401", descripcion: "Aula de clases." },
+    [Salones.Princ_Salon_401]: { nombre: "Salón 401", descripcion: "Sala Polivalente." },
     [Salones.Princ_Salon_402]: { nombre: "Salón 402", descripcion: "Aula de clases." },
     [Salones.Princ_Salon_403]: { nombre: "Salón 403", descripcion: "Aula de clases." },
     [Salones.Princ_Salon_404]: { nombre: "Salón 404", descripcion: "Aula de clases." },
@@ -626,7 +674,7 @@ let isPlayerInside101 = false;
 
 function CrearSalonColision(id, centroX, centroY, centroZ) {
 
-    loadGLBModel('modelos/A_test.glb', { x: centroX, y: (centroY - 1.7), z: centroZ, scale: 1 });
+    loadGLBModel('modelos/A_test.glb', { x: centroX, y: (centroY - 1.3), z: centroZ, scale: 1 });
     const centro = new THREE.Vector3(centroX, centroY, centroZ);
     const tamaño = new THREE.Vector3(2, 2, 2);
     
@@ -653,32 +701,36 @@ function verificarColisionSalones() {
     const playerPos = camObj.position;
     let dentroDeAlgunSalon = false;
 
-    // Iteramos por todas las zonas guardadas
     for (let i = 0; i < zonasSalones.length; i++) {
         const zona = zonasSalones[i];
 
-        // Verificamos si la posición del jugador está dentro de la caja matemática
         if (zona.box.containsPoint(playerPos)) {
             dentroDeAlgunSalon = true;
 
-            // Solo actualiza si acabas de entrar a un salón NUEVO
             if (salonActualID !== zona.id) {
                 salonActualID = zona.id;
-                
-                DisplaySalonInfo(zona.id); // Cambia el texto una sola vez
-                infoPanel.style.display = 'block'; // Muestra el panel
-                //console.log(`Entraste a: ${zona.id}`);
+
+                // 1. Mostrar texto
+                DisplaySalonInfo(zona.id);
+                infoPanel.style.display = 'block';
+
+                // 2. NUEVO: Lógica de Chunks automáticos
+                // Separamos el string (ej. "Princ_Salon_101" -> ["Princ", "Salon", "101"])
+                // y tomamos la primera parte ("Princ")
+                const prefijoSector = zona.id.split('_')[0];
+                actualizarSectores(prefijoSector);
             }
-            
-            break; // Ya encontramos el salón actual, rompemos el bucle prematuramente
+            break;
         }
     }
 
-    // Si no está en ningún salón, pero antes sí estaba en uno, ocultamos el panel
+    // Si salimos de todos los salones (estamos en el campus abierto)
     if (!dentroDeAlgunSalon && salonActualID !== null) {
         salonActualID = null;
         infoPanel.style.display = 'none';
-        //console.log("Saliste de las zonas de salones.");
+
+        // NUEVO: Volvemos a cargar todo el exterior
+        actualizarSectores('Exterior');
     }
 }
 
@@ -736,36 +788,36 @@ function loadEnvironmentAndModel() {
                     
 
                     //===============================USIT===============================
-                    loadGLBModel('modelos/USIT-Opt/USIT-Bancas_.glb', { x: 0, y: 10, z: -10, scale: 100 }),
-                    loadGLBModel('modelos/USIT-Opt/USIT-P1_.glb', { x: 0, y: 10, z: -10, scale: 100 }),
-                    loadGLBModel('modelos/USIT-Opt/USIT-P1Lab_.glb', { x: 0, y: 10, z: -10, scale: 100 }),
-                    loadGLBModel('modelos/USIT-Opt/USIT-P2_.glb', { x: 0, y: 10, z: -10, scale: 100 }),
-                    loadGLBModel('modelos/USIT-Opt/USIT-P2Oro_.glb', { x: 0, y: 10, z: -10, scale: 100 }),
-                    loadGLBModel('modelos/USIT-Opt/USIT-P2Podcast_.glb', { x: 0, y: 10, z: -10, scale: 100 }),
-                    loadGLBModel('modelos/USIT-Opt/USIT-P2Soporte_.glb', { x: 0, y: 10, z: -10, scale: 100 }),
-                    loadGLBModel('modelos/USIT-Opt/USIT-PB_.glb', { x: 0, y: 10, z: -10, scale: 100 }),
-                    loadGLBModel('modelos/USIT-Opt/USIT-PBLab_.glb', { x: 0, y: 10, z: -10, scale: 100 }),
-                    loadGLBModel('modelos/USIT-Opt/USIT-PBMulti_.glb', { x: 0, y: 10, z: -10, scale: 100 }),
+                    loadGLBModel('modelos/USIT-Opt/USIT-Bancas_.glb', { x: 0, y: 10, z: -10, scale: 100, tag: 'USIT' }),
+                    loadGLBModel('modelos/USIT-Opt/USIT-P1_.glb', { x: 0, y: 10, z: -10, scale: 100, tag: 'USIT' }),
+                    loadGLBModel('modelos/USIT-Opt/USIT-P1Lab_.glb', { x: 0, y: 10, z: -10, scale: 100, tag: 'USIT' }),
+                    loadGLBModel('modelos/USIT-Opt/USIT-P2_.glb', { x: 0, y: 10, z: -10, scale: 100, tag: 'USIT' }),
+                    loadGLBModel('modelos/USIT-Opt/USIT-P2Oro_.glb', { x: 0, y: 10, z: -10, scale: 100, tag: 'USIT' }),
+                    loadGLBModel('modelos/USIT-Opt/USIT-P2Podcast_.glb', { x: 0, y: 10, z: -10, scale: 100, tag: 'USIT' }),
+                    loadGLBModel('modelos/USIT-Opt/USIT-P2Soporte_.glb', { x: 0, y: 10, z: -10, scale: 100, tag: 'USIT' }),
+                    loadGLBModel('modelos/USIT-Opt/USIT-PB_.glb', { x: 0, y: 10, z: -10, scale: 100, tag: 'USIT' }),
+                    loadGLBModel('modelos/USIT-Opt/USIT-PBLab_.glb', { x: 0, y: 10, z: -10, scale: 100, tag: 'USIT' }),
+                    loadGLBModel('modelos/USIT-Opt/USIT-PBMulti_.glb', { x: 0, y: 10, z: -10, scale: 100, tag: 'USIT' }),
 
                     //===============================SALONES ATRAS===============================
-                    loadGLBModel('modelos/Salones-Opt/Salones_.glb', { x: 0, y: 10, z: -10, scale: 100 }),
-                    loadGLBModel('modelos/Salones-Opt/Salones-Plant_.glb', { x: 0, y: 10, z: -10, scale: 100 }),
+                    loadGLBModel('modelos/Salones-Opt/Salones_.glb', { x: 0, y: 10, z: -10, scale: 100, tag: 'ATRAS' }),
+                    loadGLBModel('modelos/Salones-Opt/Salones-Plant_.glb', { x: 0, y: 10, z: -10, scale: 100, tag: 'ATRAS' }),
 
                     //===============================ESTACIONAMIENTO===============================
-                    loadGLBModel('modelos/Est-Opt/Est_.glb', { x: 0, y: 10, z: -10, scale: 100 }),
-                    loadGLBModel('modelos/Est-Opt/Est-Arboles_.glb', { x: 0, y: 10, z: -10, scale: 100 }),
+                    loadGLBModel('modelos/Est-Opt/Est_.glb', { x: 0, y: 10, z: -10, scale: 100, tag: 'EST' }),
+                    loadGLBModel('modelos/Est-Opt/Est-Arboles_.glb', { x: 0, y: 10, z: -10, scale: 100, tag: 'EST' }),
             
                     //===============================FACU===============================
-                    loadGLBModel('modelos/FACU/Principal-PB_.glb', { x: 0, y: 10, z: -10, scale: 100 }),
-                    loadGLBModel('modelos/FACU/Principal-B_.glb', { x: 0, y: 10, z: -10, scale: 100 }),
-                    loadGLBModel('modelos/FACU/Principal-P1_.glb', { x: 0, y: 10, z: -10, scale: 100 }),
+                    loadGLBModel('modelos/FACU/Principal-PB_.glb', { x: 0, y: 10, z: -10, scale: 100, tag: 'FACU' }),
+                    loadGLBModel('modelos/FACU/Principal-B_.glb', { x: 0, y: 10, z: -10, scale: 100, tag: 'FACU' }),
+                    loadGLBModel('modelos/FACU/Principal-P1_.glb', { x: 0, y: 10, z: -10, scale: 100, tag: 'FACU' }),
                     
                     
-                    
-                    loadGLBModel('modelos/Atras/300s_.glb', { x: 0, y: 10, z: -10, scale: 100 }),
-                    loadGLBModel('modelos/Atras/canchas_.glb', { x: 0, y: 10, z: -10, scale: 100 }),
-                    loadGLBModel('modelos/Atras/deportivo_.glb', { x: 0, y: 10, z: -10, scale: 100 }),
-                    loadGLBModel('modelos/Atras/posgrado_.glb', { x: 0, y: 10, z: -10, scale: 100 }),
+                    //===============================ATRAS===============================
+                    loadGLBModel('modelos/Atras/300s_.glb', { x: 0, y: 10, z: -10, scale: 100, tag: 'ATRAS' }),
+                    loadGLBModel('modelos/Atras/canchas_.glb', { x: 0, y: 10, z: -10, scale: 100, tag: 'ATRAS' }),
+                    loadGLBModel('modelos/Atras/deportivo_.glb', { x: 0, y: 10, z: -10, scale: 100, tag: 'ATRAS' }),
+                    loadGLBModel('modelos/Atras/posgrado_.glb', { x: 0, y: 10, z: -10, scale: 100, tag: 'ATRAS' }),
                     
                     
                     
@@ -822,6 +874,9 @@ function loadGLBModel(path, options = {}) {
         const posZ  = options.z !== undefined ? options.z : 0;
         const scale = options.scale !== undefined ? options.scale : 100;
 
+        // Definir Tag, si no se define, se pone General
+        const tag = options.tag || 'general';
+
         gltfLoader.load(
             path,
             (gltf) => {
@@ -829,42 +884,38 @@ function loadGLBModel(path, options = {}) {
                 model.scale.set(scale, scale, scale);
                 model.position.set(posX, posY, posZ);
 
+                // Guardamos el modelo en nuestro diccionario global
+                if (!edificiosCargados[tag]) edificiosCargados[tag] = [];
+                edificiosCargados[tag].push(model);
+
                 scene.add(model);
                 model.updateMatrixWorld(true);
-                
-                
                 model.traverse(c => { c.matrixAutoUpdate = false; });
 
                 model.traverse((child) => {
                     if (!child.isMesh) return;
-
                     
+                    
+                    child.userData.tag = tag; 
+
                     child.geometry.boundsTree = new MeshBVH(child.geometry);
-
-                    
                     child.layers.enable(LAYER_COLLIDABLE);
-
-                    
-                    // colisiones
                     collidableObjects.push(child);
 
-                    // Ajustes de rendimiento visual
                     child.castShadow    = false;
                     child.receiveShadow = false;
                     child.frustumCulled = true;
 
-                    //// Detección de materiales
-                    //if (child.material) {
-                    //    const name = (child.material.name || '') + ' ' + (child.name || '');
-                    //    if (isGlass(name)) {
-                    //        child.material = createGlassMaterial(child.material);
-                    //    } else if (isMetal(name) || isOriginallyMetal(child.material)) {
-                    //        enhanceMetalMaterial(child.material);
-                    //    }
-                    //}
+                    if (child.material) {
+                        const name = (child.material.name || '') + ' ' + (child.name || '');
+                        if (isGlass(name)) {
+                            child.material = createGlassMaterial(child.material);
+                        } else if (isMetal(name) || isOriginallyMetal(child.material)) {
+                            enhanceMetalMaterial(child.material);
+                        }
+                    }
                 });
 
-                // Resolver la promesa para avanzar el Promise.all
                 resolve(model);
             },
             undefined,
@@ -876,6 +927,78 @@ function loadGLBModel(path, options = {}) {
     });
 }
 
+// ============================================================
+// GESTIÓN DE CHUNKS 
+// ============================================================
+
+// Lista maestra de todos los tags que usas en loadGLBModel
+//const TODOS_LOS_TAGS = ['Edificio_Principal', 'USIT', 'Estacionamiento'];
+
+const TODOS_LOS_TAGS = ['FACU', 'USIT', 'EST', 'ATRAS'];
+
+// Reglas: ¿Qué tags se deben renderizar cuando estamos en X sector?
+const ReglasVisibilidad = {
+    // Si entramos a un salón del Edificio Principal, ocultamos lo demás
+    'Princ': ['FACU'],
+
+    // Si entramos al USIT, solo necesitamos el USIT
+    'USIT': ['USIT'],
+
+    // Cuando estamos afuera (salonActualID === null), cargamos los exteriores
+    'Exterior': ['FACU', 'USIT', 'EST']
+};
+
+let sectorActivoActual = 'Exterior'; 
+
+function actualizarSectores(nuevoSector) {
+    if (sectorActivoActual === nuevoSector) return; // Evita cálculos innecesarios
+
+    sectorActivoActual = nuevoSector;
+    const tagsPermitidos = ReglasVisibilidad[nuevoSector] || ReglasVisibilidad['Exterior'];
+
+    TODOS_LOS_TAGS.forEach(tag => {
+        const debeEstarActivo = tagsPermitidos.includes(tag);
+
+        // Asumiendo que tu función toggleEdificio maneja si ya está activo/inactivo
+        toggleEdificio(tag, debeEstarActivo);
+    });
+}
+
+function toggleEdificio(tag, activar) {
+    const modelos = edificiosCargados[tag];
+    
+    if (!modelos) {
+        console.warn(`No se encontraron modelos con el tag: ${tag}`);
+        return;
+    }
+
+    if (activar) {
+        // VOLVER A CARGAR
+        modelos.forEach(model => {
+            scene.add(model);
+            
+            // COLISIONES
+            model.traverse(child => {
+                if (child.isMesh && !collidableObjects.includes(child)) {
+                    collidableObjects.push(child);
+                }
+            });
+        });
+        console.log(`[${tag}] Cargado y activo.`);
+        
+    } else {
+        // DESCARGAR
+        modelos.forEach(model => {
+            scene.remove(model);
+        });
+        
+        // Limpiar el arreglo de colisiones quitando solo los de este tag
+
+        collidableObjects = collidableObjects.filter(obj => obj.userData.tag !== tag);
+        
+        console.log(`[${tag}] Descargado y oculto.`);
+    }
+}
 
 
 
