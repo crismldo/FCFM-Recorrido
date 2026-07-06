@@ -58,220 +58,7 @@ document.addEventListener('keyup', e => {
 
 
 
-// ── INFORMACION SALONES ────────────────────────────────────────────────────
-const infoPanel = document.getElementById('info-panel');
-const Salon_Nombre = document.getElementById('Salon_Nombre');
-const Salon_Descripcion = document.getElementById('Salon_Descripcion');
-let Salon_ID = 0;
 
-
-
-
-const Salones = Object.freeze({
-    //PISO 1
-    Princ_Salon_101: 'Princ_Salon_101',
-    Princ_Salon_102: 'Princ_Salon_102',
-    Princ_Salon_103: 'Princ_Salon_103',
-    Princ_Salon_104: 'Princ_Salon_104',
-    Princ_Salon_105: 'Princ_Salon_105',
-
-    Princ_Salon_201: 'Princ_Salon_201',
-    Princ_Salon_202: 'Princ_Salon_202',
-    Princ_Salon_203: 'Princ_Salon_203',
-    Princ_Salon_204: 'Princ_Salon_204',
-
-    Princ_Salon_401: 'Princ_Salon_401',
-    Princ_Salon_402: 'Princ_Salon_402',
-    Princ_Salon_403: 'Princ_Salon_403',
-    Princ_Salon_404: 'Princ_Salon_404',
-    Princ_Salon_405: 'Princ_Salon_405',
-
-    Princ_Audi_Eladio: 'Princ_Audi_Eladio',
-
-    Princ_Dep_Tutorias:          'Princ_Dep_Tutorias',
-    Princ_Dep_Tesoreria:         'Princ_Dep_Tesoreria',
-    Princ_Dep_Direccion:         'Princ_Dep_Direccion',
-    Princ_Dep_Servicios_General: 'Princ_Dep_Servicios_General',
-    Princ_Dep_Coordinacion:      'Princ_Dep_Coordinacion',
-
-    Princ_Cafeteria: 'Princ_Cafeteria',
-
-    //PISO 2
-    Princ_Salon_106: 'Princ_Salon_106',
-    Princ_Salon_107: 'Princ_Salon_107',
-    Princ_Salon_108: 'Princ_Salon_108',
-    Princ_Salon_109: 'Princ_Salon_109',
-    Princ_Salon_110: 'Princ_Salon_110',
-
-    Princ_Salon_205: 'Princ_Salon_205',
-    Princ_Salon_206: 'Princ_Salon_206',
-    Princ_Salon_207: 'Princ_Salon_207',
-    Princ_Salon_208: 'Princ_Salon_208',
-
-    Princ_Salon_406: 'Princ_Salon_406',
-    Princ_Salon_407: 'Princ_Salon_407',
-    Princ_Salon_408: 'Princ_Salon_408',
-    Princ_Salon_409: 'Princ_Salon_409',
-    Princ_Salon_410: 'Princ_Salon_410',
-
-    Princ_Audi_Jose: 'Princ_Audi_Jose',
-
-    Princ_Lab_Mecanica:      'Princ_Lab_Mecanica',
-    Princ_Lab_Fluidos:       'Princ_Lab_Fluidos',
-    Princ_Lab_Circuitos:     'Princ_Lab_Circuitos',
-    Princ_Lab_Fisica_III:    'Princ_Lab_Fisica_III',
-    Princ_Lab_Sistemas_Elec: 'Princ_Lab_Sistemas_Elec',
-    Princ_Lab_Optica:        'Princ_Lab_Optica',
-
-    Princ_Dep_Soci_Alumnos:    'Princ_Dep_Soci_Alumnos',
-    Princ_Dep_Copias:          'Princ_Dep_Copias',
-    Princ_Dep_RH:              'Princ_Dep_RH',
-    Princ_Dep_Escolar:         'Princ_Dep_Escolar',
-    Princ_Dep_Prefectura:      'Princ_Dep_Prefectura',
-    Princ_Dep_Servicio_Social: 'Princ_Dep_Servicio_Social',
-
-    //PISO 3
-    Princ_Salon_111: 'Princ_Salon_111',
-    Princ_Salon_112: 'Princ_Salon_112',
-    Princ_Salon_113: 'Princ_Salon_113',
-    Princ_Salon_114: 'Princ_Salon_114',
-    Princ_Salon_115: 'Princ_Salon_115',
-    Princ_Salon_116: 'Princ_Salon_116',
-    Princ_Salon_117: 'Princ_Salon_117',
-    Princ_Salon_118: 'Princ_Salon_118',
-    Princ_Salon_119: 'Princ_Salon_119',
-    Princ_Salon_120: 'Princ_Salon_120',
-    Princ_Salon_121: 'Princ_Salon_121',
-
-    Princ_Salon_209: 'Princ_Salon_209',
-    Princ_Salon_210: 'Princ_Salon_210',
-    Princ_Salon_211: 'Princ_Salon_211',
-    Princ_Salon_212: 'Princ_Salon_212',
-
-    Princ_Salon_411: 'Princ_Salon_411',
-    Princ_Salon_412: 'Princ_Salon_412',
-    Princ_Salon_413: 'Princ_Salon_413',
-    Princ_Salon_414: 'Princ_Salon_414',
-
-    Princ_Dep_Astronomia:       'Princ_Dep_Astronomia',
-    Princ_Dep_Soporte_Tecnico:  'Princ_Dep_Soporte_Tecnico',
-    Princ_Dep_Lab_Computo_Mat:  'Princ_Dep_Lab_Computo_Mat',
-    Princ_Dep_Ofici_Administra: 'Princ_Dep_Ofici_Administra',
-    Princ_Dep_CAADI:            'Princ_Dep_CAADI',
-    Princ_Dep_Biblioteca:       'Princ_Dep_Biblioteca',
-
-
-
-
-
-});
-
-
-const InformacionSalones = {
-    // --- PISO 1 ---
-    [Salones.Princ_Salon_101]: { nombre: "Salón 101", descripcion: "Aula de clases regulares." },
-    [Salones.Princ_Salon_102]: { nombre: "Salón 102", descripcion: "Aula de clases regulares." },
-    [Salones.Princ_Salon_103]: { nombre: "Salón 103", descripcion: "Aula de clases regulares." },
-    [Salones.Princ_Salon_104]: { nombre: "Salón 104", descripcion: "Aula de clases regulares." },
-    [Salones.Princ_Salon_105]: { nombre: "Salón 105", descripcion: "Aula de clases regulares." },
-
-    [Salones.Princ_Salon_201]: { nombre: "Salón 201", descripcion: "Aula de clases." },
-    [Salones.Princ_Salon_202]: { nombre: "Salón 202", descripcion: "Aula de clases." },
-    [Salones.Princ_Salon_203]: { nombre: "Salón 203", descripcion: "Aula de clases." },
-    [Salones.Princ_Salon_204]: { nombre: "Salón 204", descripcion: "Aula de clases." },
-
-    [Salones.Princ_Salon_401]: { nombre: "Salón 401", descripcion: "Aula de clases." },
-    [Salones.Princ_Salon_402]: { nombre: "Salón 402", descripcion: "Aula de clases." },
-    [Salones.Princ_Salon_403]: { nombre: "Salón 403", descripcion: "Aula de clases." },
-    [Salones.Princ_Salon_404]: { nombre: "Salón 404", descripcion: "Aula de clases." },
-    [Salones.Princ_Salon_405]: { nombre: "Salón 405", descripcion: "Aula de clases." },
-
-    [Salones.Princ_Audi_Eladio]: { nombre: "Auditorio Eladio", descripcion: "Auditorio principal para conferencias y eventos." },
-    [Salones.Princ_Dep_Tutorias]: { nombre: "Departamento de Tutorías", descripcion: "Atención y seguimiento académico." },
-    [Salones.Princ_Dep_Tesoreria]: { nombre: "Tesorería", descripcion: "Pagos de colegiaturas y trámites financieros." },
-    [Salones.Princ_Dep_Direccion]: { nombre: "Dirección", descripcion: "Oficina del director(a) de la facultad." },
-    [Salones.Princ_Dep_Servicios_General]: { nombre: "Servicios Generales", descripcion: "Mantenimiento y operaciones del edificio." },
-    [Salones.Princ_Dep_Coordinacion]: { nombre: "Coordinación", descripcion: "Coordinación académica." },
-    [Salones.Princ_Cafeteria]: { nombre: "Cafetería", descripcion: "Área de comida y descanso." },
-
-    // --- PISO 2 ---
-    [Salones.Princ_Salon_106]: { nombre: "Salón 106", descripcion: "Aula de clases regulares." },
-    [Salones.Princ_Salon_107]: { nombre: "Salón 107", descripcion: "Aula de clases regulares." },
-    [Salones.Princ_Salon_108]: { nombre: "Salón 108", descripcion: "Aula de clases regulares." },
-    [Salones.Princ_Salon_109]: { nombre: "Salón 109", descripcion: "Aula de clases regulares." },
-    [Salones.Princ_Salon_110]: { nombre: "Salón 110", descripcion: "Aula de clases regulares." },
-
-    [Salones.Princ_Salon_205]: { nombre: "Salón 205", descripcion: "Aula de clases." },
-    [Salones.Princ_Salon_206]: { nombre: "Salón 206", descripcion: "Aula de clases." },
-    [Salones.Princ_Salon_207]: { nombre: "Salón 207", descripcion: "Aula de clases." },
-    [Salones.Princ_Salon_208]: { nombre: "Salón 208", descripcion: "Aula de clases." },
-
-    [Salones.Princ_Salon_406]: { nombre: "Salón 406", descripcion: "Aula de clases." },
-    [Salones.Princ_Salon_407]: { nombre: "Salón 407", descripcion: "Aula de clases." },
-    [Salones.Princ_Salon_408]: { nombre: "Salón 408", descripcion: "Aula de clases." },
-    [Salones.Princ_Salon_409]: { nombre: "Salón 409", descripcion: "Aula de clases." },
-    [Salones.Princ_Salon_410]: { nombre: "Salón 410", descripcion: "Aula de clases." },
-
-    [Salones.Princ_Audi_Jose]: { nombre: "Auditorio José", descripcion: "Auditorio secundario para presentaciones." },
-
-    [Salones.Princ_Lab_Mecanica]: { nombre: "Laboratorio de Mecánica", descripcion: "Uso obligatorio de bata y lentes de seguridad." },
-    [Salones.Princ_Lab_Fluidos]: { nombre: "Laboratorio de Fluidos", descripcion: "Prácticas de hidrostática e hidrodinámica." },
-    [Salones.Princ_Lab_Circuitos]: { nombre: "Laboratorio de Circuitos", descripcion: "Mesas de trabajo con osciloscopios y fuentes." },
-    [Salones.Princ_Lab_Fisica_III]: { nombre: "Laboratorio de Física III", descripcion: "Prácticas de electromagnetismo." },
-    [Salones.Princ_Lab_Sistemas_Elec]: { nombre: "Lab. Sistemas Eléctricos", descripcion: "Prácticas de potencia y control." },
-    [Salones.Princ_Lab_Optica]: { nombre: "Laboratorio de Óptica", descripcion: "Experimentos con luz y lentes. Mantener puerta cerrada." },
-
-    [Salones.Princ_Dep_Soci_Alumnos]: { nombre: "Sociedad de Alumnos", descripcion: "Oficina de representación estudiantil." },
-    [Salones.Princ_Dep_Copias]: { nombre: "Centro de Copiado", descripcion: "Impresiones, copias y papelería básica." },
-    [Salones.Princ_Dep_RH]: { nombre: "Recursos Humanos", descripcion: "Atención al personal docente y administrativo." },
-    [Salones.Princ_Dep_Escolar]: { nombre: "Control Escolar", descripcion: "Kardex, constancias y trámites de titulación." },
-    [Salones.Princ_Dep_Prefectura]: { nombre: "Prefectura", descripcion: "Control de asistencias y reportes." },
-    [Salones.Princ_Dep_Servicio_Social]: { nombre: "Servicio Social", descripcion: "Registro y liberación de horas." },
-
-    // --- PISO 3 ---
-    [Salones.Princ_Salon_111]: { nombre: "Salón 111", descripcion: "Aula de clases regulares." },
-    [Salones.Princ_Salon_112]: { nombre: "Salón 112", descripcion: "Aula de clases regulares." },
-    [Salones.Princ_Salon_113]: { nombre: "Salón 113", descripcion: "Aula de clases regulares." },
-    [Salones.Princ_Salon_114]: { nombre: "Salón 114", descripcion: "Aula de clases regulares." },
-    [Salones.Princ_Salon_115]: { nombre: "Salón 115", descripcion: "Aula de clases regulares." },
-    [Salones.Princ_Salon_116]: { nombre: "Salón 116", descripcion: "Aula de clases regulares." },
-    [Salones.Princ_Salon_117]: { nombre: "Salón 117", descripcion: "Aula de clases regulares." },
-    [Salones.Princ_Salon_118]: { nombre: "Salón 118", descripcion: "Aula de clases regulares." },
-    [Salones.Princ_Salon_119]: { nombre: "Salón 119", descripcion: "Aula de clases regulares." },
-    [Salones.Princ_Salon_120]: { nombre: "Salón 120", descripcion: "Aula de clases regulares." },
-    [Salones.Princ_Salon_121]: { nombre: "Salón 121", descripcion: "Aula de clases regulares." },
-
-    [Salones.Princ_Salon_209]: { nombre: "Salón 209", descripcion: "Aula de clases." },
-    [Salones.Princ_Salon_210]: { nombre: "Salón 210", descripcion: "Aula de clases." },
-    [Salones.Princ_Salon_211]: { nombre: "Salón 211", descripcion: "Aula de clases." },
-    [Salones.Princ_Salon_212]: { nombre: "Salón 212", descripcion: "Aula de clases." },
-
-    [Salones.Princ_Salon_411]: { nombre: "Salón 411", descripcion: "Aula de clases." },
-    [Salones.Princ_Salon_412]: { nombre: "Salón 412", descripcion: "Aula de clases." },
-    [Salones.Princ_Salon_413]: { nombre: "Salón 413", descripcion: "Aula de clases." },
-    [Salones.Princ_Salon_414]: { nombre: "Salón 414", descripcion: "Aula de clases." },
-
-    [Salones.Princ_Dep_Astronomia]: { nombre: "Departamento de Astronomía", descripcion: "Oficinas e investigación astronómica." },
-    [Salones.Princ_Dep_Soporte_Tecnico]: { nombre: "Soporte Técnico", descripcion: "Ayuda con redes y equipo de cómputo." },
-    [Salones.Princ_Dep_Lab_Computo_Mat]: { nombre: "Lab. Cómputo Matemático", descripcion: "Computadoras con software especializado." },
-    [Salones.Princ_Dep_Ofici_Administra]: { nombre: "Oficinas Administrativas", descripcion: "Área administrativa general." },
-    [Salones.Princ_Dep_CAADI]: { nombre: "CAADI", descripcion: "Centro de Autoaprendizaje de Idiomas." },
-    [Salones.Princ_Dep_Biblioteca]: { nombre: "Biblioteca", descripcion: "Zona de silencio y estudio." }
-};
-
-
-function DisplaySalonInfo(ID_Salon_Seleccionado) {
-    
-    const info = InformacionSalones[ID_Salon_Seleccionado];
-    
-    if (info) {
-        Salon_Nombre.textContent = info.nombre;
-        Salon_Descripcion.textContent = info.descripcion;
-    } else {
-        Salon_Nombre.textContent = "Área Desconocida";
-        Salon_Descripcion.textContent = "No hay información disponible para este lugar.";
-    }
-}
 
 
 
@@ -597,6 +384,10 @@ function init() {
 
     //================ INFORMACION DE SALONES ================================================
 
+
+
+    
+
     window.addEventListener('resize', () => {
         camera.aspect = innerWidth / innerHeight;
         camera.updateProjectionMatrix();
@@ -607,6 +398,294 @@ function init() {
 
     animate();
 }
+
+
+//=======================================Funcion para crear Colisiones de Informacion====================================
+
+// ── INFORMACION SALONES ────────────────────────────────────────────────────
+const infoPanel = document.getElementById('info-panel');
+const Salon_Nombre = document.getElementById('Salon_Nombre');
+const Salon_Descripcion = document.getElementById('Salon_Descripcion');
+let Salon_ID = 0;
+
+
+
+
+const Salones = Object.freeze({
+    //PISO 1
+    Princ_Salon_101: 'Princ_Salon_101',
+    Princ_Salon_102: 'Princ_Salon_102',
+    Princ_Salon_103: 'Princ_Salon_103',
+    Princ_Salon_104: 'Princ_Salon_104',
+    Princ_Salon_105: 'Princ_Salon_105',
+
+    Princ_Salon_201: 'Princ_Salon_201',
+    Princ_Salon_202: 'Princ_Salon_202',
+    Princ_Salon_203: 'Princ_Salon_203',
+    Princ_Salon_204: 'Princ_Salon_204',
+
+    Princ_Salon_401: 'Princ_Salon_401',
+    Princ_Salon_402: 'Princ_Salon_402',
+    Princ_Salon_403: 'Princ_Salon_403',
+    Princ_Salon_404: 'Princ_Salon_404',
+    Princ_Salon_405: 'Princ_Salon_405',
+
+    Princ_Audi_Eladio: 'Princ_Audi_Eladio',
+
+    Princ_Dep_Tutorias:          'Princ_Dep_Tutorias',
+    Princ_Dep_Tesoreria:         'Princ_Dep_Tesoreria',
+    Princ_Dep_Direccion:         'Princ_Dep_Direccion',
+    Princ_Dep_Servicios_General: 'Princ_Dep_Servicios_General',
+    Princ_Dep_Coordinacion:      'Princ_Dep_Coordinacion',
+
+    Princ_Cafeteria: 'Princ_Cafeteria',
+
+    //PISO 2
+    Princ_Salon_106: 'Princ_Salon_106',
+    Princ_Salon_107: 'Princ_Salon_107',
+    Princ_Salon_108: 'Princ_Salon_108',
+    Princ_Salon_109: 'Princ_Salon_109',
+    Princ_Salon_110: 'Princ_Salon_110',
+
+    Princ_Salon_205: 'Princ_Salon_205',
+    Princ_Salon_206: 'Princ_Salon_206',
+    Princ_Salon_207: 'Princ_Salon_207',
+    Princ_Salon_208: 'Princ_Salon_208',
+
+    Princ_Salon_406: 'Princ_Salon_406',
+    Princ_Salon_407: 'Princ_Salon_407',
+    Princ_Salon_408: 'Princ_Salon_408',
+    Princ_Salon_409: 'Princ_Salon_409',
+    Princ_Salon_410: 'Princ_Salon_410',
+
+    Princ_Audi_Jose: 'Princ_Audi_Jose',
+
+    Princ_Lab_Mecanica:      'Princ_Lab_Mecanica',
+    Princ_Lab_Fluidos:       'Princ_Lab_Fluidos',
+    Princ_Lab_Circuitos:     'Princ_Lab_Circuitos',
+    Princ_Lab_Fisica_III:    'Princ_Lab_Fisica_III',
+    Princ_Lab_Sistemas_Elec: 'Princ_Lab_Sistemas_Elec',
+    Princ_Lab_Optica:        'Princ_Lab_Optica',
+
+    Princ_Dep_Soci_Alumnos:    'Princ_Dep_Soci_Alumnos',
+    Princ_Dep_Copias:          'Princ_Dep_Copias',
+    Princ_Dep_RH:              'Princ_Dep_RH',
+    Princ_Dep_Escolar:         'Princ_Dep_Escolar',
+    Princ_Dep_Prefectura:      'Princ_Dep_Prefectura',
+    Princ_Dep_Servicio_Social: 'Princ_Dep_Servicio_Social',
+
+    //PISO 3
+    Princ_Salon_111: 'Princ_Salon_111',
+    Princ_Salon_112: 'Princ_Salon_112',
+    Princ_Salon_113: 'Princ_Salon_113',
+    Princ_Salon_114: 'Princ_Salon_114',
+    Princ_Salon_115: 'Princ_Salon_115',
+    Princ_Salon_116: 'Princ_Salon_116',
+    Princ_Salon_117: 'Princ_Salon_117',
+    Princ_Salon_118: 'Princ_Salon_118',
+    Princ_Salon_119: 'Princ_Salon_119',
+    Princ_Salon_120: 'Princ_Salon_120',
+    Princ_Salon_121: 'Princ_Salon_121',
+
+    Princ_Salon_209: 'Princ_Salon_209',
+    Princ_Salon_210: 'Princ_Salon_210',
+    Princ_Salon_211: 'Princ_Salon_211',
+    Princ_Salon_212: 'Princ_Salon_212',
+
+    Princ_Salon_411: 'Princ_Salon_411',
+    Princ_Salon_412: 'Princ_Salon_412',
+    Princ_Salon_413: 'Princ_Salon_413',
+    Princ_Salon_414: 'Princ_Salon_414',
+
+    Princ_Dep_Astronomia:       'Princ_Dep_Astronomia',
+    Princ_Dep_Soporte_Tecnico:  'Princ_Dep_Soporte_Tecnico',
+    Princ_Dep_Lab_Computo_Mat:  'Princ_Dep_Lab_Computo_Mat',
+    Princ_Dep_Ofici_Administra: 'Princ_Dep_Ofici_Administra',
+    Princ_Dep_CAADI:            'Princ_Dep_CAADI',
+    Princ_Dep_Biblioteca:       'Princ_Dep_Biblioteca',
+
+
+
+
+
+});
+
+
+const InformacionSalones = {
+    // --- PISO 1 ---
+    [Salones.Princ_Salon_101]: { nombre: "Salón 101", descripcion: "Aula de clases regulares." },
+    [Salones.Princ_Salon_102]: { nombre: "Salón 102", descripcion: "Aula de clases regulares." },
+    [Salones.Princ_Salon_103]: { nombre: "Salón 103", descripcion: "Aula de clases regulares." },
+    [Salones.Princ_Salon_104]: { nombre: "Salón 104", descripcion: "Aula de clases regulares." },
+    [Salones.Princ_Salon_105]: { nombre: "Salón 105", descripcion: "Aula de clases regulares." },
+
+    [Salones.Princ_Salon_201]: { nombre: "Salón 201", descripcion: "Aula de clases." },
+    [Salones.Princ_Salon_202]: { nombre: "Salón 202", descripcion: "Aula de clases." },
+    [Salones.Princ_Salon_203]: { nombre: "Salón 203", descripcion: "Aula de clases." },
+    [Salones.Princ_Salon_204]: { nombre: "Salón 204", descripcion: "Aula de clases." },
+
+    [Salones.Princ_Salon_401]: { nombre: "Salón 401", descripcion: "Aula de clases." },
+    [Salones.Princ_Salon_402]: { nombre: "Salón 402", descripcion: "Aula de clases." },
+    [Salones.Princ_Salon_403]: { nombre: "Salón 403", descripcion: "Aula de clases." },
+    [Salones.Princ_Salon_404]: { nombre: "Salón 404", descripcion: "Aula de clases." },
+    [Salones.Princ_Salon_405]: { nombre: "Salón 405", descripcion: "Aula de clases." },
+
+    [Salones.Princ_Audi_Eladio]: { nombre: "Auditorio Eladio", descripcion: "Auditorio principal para conferencias y eventos." },
+    [Salones.Princ_Dep_Tutorias]: { nombre: "Departamento de Tutorías", descripcion: "Atención y seguimiento académico." },
+    [Salones.Princ_Dep_Tesoreria]: { nombre: "Tesorería", descripcion: "Pagos de colegiaturas y trámites financieros." },
+    [Salones.Princ_Dep_Direccion]: { nombre: "Dirección", descripcion: "Oficina del director(a) de la facultad." },
+    [Salones.Princ_Dep_Servicios_General]: { nombre: "Servicios Generales", descripcion: "Mantenimiento y operaciones del edificio." },
+    [Salones.Princ_Dep_Coordinacion]: { nombre: "Coordinación", descripcion: "Coordinación académica." },
+    [Salones.Princ_Cafeteria]: { nombre: "Cafetería", descripcion: "Área de comida y descanso." },
+
+    // --- PISO 2 ---
+    [Salones.Princ_Salon_106]: { nombre: "Salón 106", descripcion: "Aula de clases regulares." },
+    [Salones.Princ_Salon_107]: { nombre: "Salón 107", descripcion: "Aula de clases regulares." },
+    [Salones.Princ_Salon_108]: { nombre: "Salón 108", descripcion: "Aula de clases regulares." },
+    [Salones.Princ_Salon_109]: { nombre: "Salón 109", descripcion: "Aula de clases regulares." },
+    [Salones.Princ_Salon_110]: { nombre: "Salón 110", descripcion: "Aula de clases regulares." },
+
+    [Salones.Princ_Salon_205]: { nombre: "Salón 205", descripcion: "Aula de clases." },
+    [Salones.Princ_Salon_206]: { nombre: "Salón 206", descripcion: "Aula de clases." },
+    [Salones.Princ_Salon_207]: { nombre: "Salón 207", descripcion: "Aula de clases." },
+    [Salones.Princ_Salon_208]: { nombre: "Salón 208", descripcion: "Aula de clases." },
+
+    [Salones.Princ_Salon_406]: { nombre: "Salón 406", descripcion: "Aula de clases." },
+    [Salones.Princ_Salon_407]: { nombre: "Salón 407", descripcion: "Aula de clases." },
+    [Salones.Princ_Salon_408]: { nombre: "Salón 408", descripcion: "Aula de clases." },
+    [Salones.Princ_Salon_409]: { nombre: "Salón 409", descripcion: "Aula de clases." },
+    [Salones.Princ_Salon_410]: { nombre: "Salón 410", descripcion: "Aula de clases." },
+
+    [Salones.Princ_Audi_Jose]: { nombre: "Auditorio José", descripcion: "Auditorio secundario para presentaciones." },
+
+    [Salones.Princ_Lab_Mecanica]: { nombre: "Laboratorio de Mecánica", descripcion: "Uso obligatorio de bata y lentes de seguridad." },
+    [Salones.Princ_Lab_Fluidos]: { nombre: "Laboratorio de Fluidos", descripcion: "Prácticas de hidrostática e hidrodinámica." },
+    [Salones.Princ_Lab_Circuitos]: { nombre: "Laboratorio de Circuitos", descripcion: "Mesas de trabajo con osciloscopios y fuentes." },
+    [Salones.Princ_Lab_Fisica_III]: { nombre: "Laboratorio de Física III", descripcion: "Prácticas de electromagnetismo." },
+    [Salones.Princ_Lab_Sistemas_Elec]: { nombre: "Lab. Sistemas Eléctricos", descripcion: "Prácticas de potencia y control." },
+    [Salones.Princ_Lab_Optica]: { nombre: "Laboratorio de Óptica", descripcion: "Experimentos con luz y lentes. Mantener puerta cerrada." },
+
+    [Salones.Princ_Dep_Soci_Alumnos]: { nombre: "Sociedad de Alumnos", descripcion: "Oficina de representación estudiantil." },
+    [Salones.Princ_Dep_Copias]: { nombre: "Centro de Copiado", descripcion: "Impresiones, copias y papelería básica." },
+    [Salones.Princ_Dep_RH]: { nombre: "Recursos Humanos", descripcion: "Atención al personal docente y administrativo." },
+    [Salones.Princ_Dep_Escolar]: { nombre: "Control Escolar", descripcion: "Kardex, constancias y trámites de titulación." },
+    [Salones.Princ_Dep_Prefectura]: { nombre: "Prefectura", descripcion: "Control de asistencias y reportes." },
+    [Salones.Princ_Dep_Servicio_Social]: { nombre: "Servicio Social", descripcion: "Registro y liberación de horas." },
+
+    // --- PISO 3 ---
+    [Salones.Princ_Salon_111]: { nombre: "Salón 111", descripcion: "Aula de clases regulares." },
+    [Salones.Princ_Salon_112]: { nombre: "Salón 112", descripcion: "Aula de clases regulares." },
+    [Salones.Princ_Salon_113]: { nombre: "Salón 113", descripcion: "Aula de clases regulares." },
+    [Salones.Princ_Salon_114]: { nombre: "Salón 114", descripcion: "Aula de clases regulares." },
+    [Salones.Princ_Salon_115]: { nombre: "Salón 115", descripcion: "Aula de clases regulares." },
+    [Salones.Princ_Salon_116]: { nombre: "Salón 116", descripcion: "Aula de clases regulares." },
+    [Salones.Princ_Salon_117]: { nombre: "Salón 117", descripcion: "Aula de clases regulares." },
+    [Salones.Princ_Salon_118]: { nombre: "Salón 118", descripcion: "Aula de clases regulares." },
+    [Salones.Princ_Salon_119]: { nombre: "Salón 119", descripcion: "Aula de clases regulares." },
+    [Salones.Princ_Salon_120]: { nombre: "Salón 120", descripcion: "Aula de clases regulares." },
+    [Salones.Princ_Salon_121]: { nombre: "Salón 121", descripcion: "Aula de clases regulares." },
+
+    [Salones.Princ_Salon_209]: { nombre: "Salón 209", descripcion: "Aula de clases." },
+    [Salones.Princ_Salon_210]: { nombre: "Salón 210", descripcion: "Aula de clases." },
+    [Salones.Princ_Salon_211]: { nombre: "Salón 211", descripcion: "Aula de clases." },
+    [Salones.Princ_Salon_212]: { nombre: "Salón 212", descripcion: "Aula de clases." },
+
+    [Salones.Princ_Salon_411]: { nombre: "Salón 411", descripcion: "Aula de clases." },
+    [Salones.Princ_Salon_412]: { nombre: "Salón 412", descripcion: "Aula de clases." },
+    [Salones.Princ_Salon_413]: { nombre: "Salón 413", descripcion: "Aula de clases." },
+    [Salones.Princ_Salon_414]: { nombre: "Salón 414", descripcion: "Aula de clases." },
+
+    [Salones.Princ_Dep_Astronomia]: { nombre: "Departamento de Astronomía", descripcion: "Oficinas e investigación astronómica." },
+    [Salones.Princ_Dep_Soporte_Tecnico]: { nombre: "Soporte Técnico", descripcion: "Ayuda con redes y equipo de cómputo." },
+    [Salones.Princ_Dep_Lab_Computo_Mat]: { nombre: "Lab. Cómputo Matemático", descripcion: "Computadoras con software especializado." },
+    [Salones.Princ_Dep_Ofici_Administra]: { nombre: "Oficinas Administrativas", descripcion: "Área administrativa general." },
+    [Salones.Princ_Dep_CAADI]: { nombre: "CAADI", descripcion: "Centro de Autoaprendizaje de Idiomas." },
+    [Salones.Princ_Dep_Biblioteca]: { nombre: "Biblioteca", descripcion: "Zona de silencio y estudio." }
+};
+
+
+function DisplaySalonInfo(ID_Salon_Seleccionado) {
+    
+    const info = InformacionSalones[ID_Salon_Seleccionado];
+    
+    if (info) {
+        Salon_Nombre.textContent = info.nombre;
+        Salon_Descripcion.textContent = info.descripcion;
+    } else {
+        Salon_Nombre.textContent = "Área Desconocida";
+        Salon_Descripcion.textContent = "No hay información disponible para este lugar.";
+    }
+}
+
+// Arreglo para guardar todas las zonas de colisión de los salones
+const zonasSalones = [];
+
+// Variable de estado para evitar laguear el DOM actualizando el texto en cada frame
+let salonActualID = null;
+let isPlayerInside101 = false;
+
+function CrearSalonColision(id, centroX, centroY, centroZ) {
+
+    loadGLBModel('modelos/A_test.glb', { x: centroX, y: (centroY - 1.7), z: centroZ, scale: 1 });
+    const centro = new THREE.Vector3(centroX, centroY, centroZ);
+    const tamaño = new THREE.Vector3(2, 2, 2);
+    
+    // Crear una caja matemática pura (sin mesh, rendimiento óptimo)
+    const cajaMatematica = new THREE.Box3().setFromCenterAndSize(centro, tamaño);
+    
+    // Empujamos el objeto con su ID al arreglo global
+    zonasSalones.push({
+        id: id,
+        box: cajaMatematica
+    });
+
+    // OPCIONAL: Si quieres ver las cajas para debugear dónde están paradas:
+    
+    //const helper = new THREE.Box3Helper(cajaMatematica, 0x00ff00);
+    //scene.add(helper);
+    
+}
+
+
+
+function verificarColisionSalones() {
+    const camObj = controls.getObject();
+    const playerPos = camObj.position;
+    let dentroDeAlgunSalon = false;
+
+    // Iteramos por todas las zonas guardadas
+    for (let i = 0; i < zonasSalones.length; i++) {
+        const zona = zonasSalones[i];
+
+        // Verificamos si la posición del jugador está dentro de la caja matemática
+        if (zona.box.containsPoint(playerPos)) {
+            dentroDeAlgunSalon = true;
+
+            // Solo actualiza si acabas de entrar a un salón NUEVO
+            if (salonActualID !== zona.id) {
+                salonActualID = zona.id;
+                
+                DisplaySalonInfo(zona.id); // Cambia el texto una sola vez
+                infoPanel.style.display = 'block'; // Muestra el panel
+                //console.log(`Entraste a: ${zona.id}`);
+            }
+            
+            break; // Ya encontramos el salón actual, rompemos el bucle prematuramente
+        }
+    }
+
+    // Si no está en ningún salón, pero antes sí estaba en uno, ocultamos el panel
+    if (!dentroDeAlgunSalon && salonActualID !== null) {
+        salonActualID = null;
+        infoPanel.style.display = 'none';
+        //console.log("Saliste de las zonas de salones.");
+    }
+}
+
+
+
+
+
 
 // ============================================================
 // CARGA HDR + MODELOS MÚLTIPLES
@@ -677,16 +756,28 @@ function loadEnvironmentAndModel() {
                     loadGLBModel('modelos/Est-Opt/Est-Arboles_.glb', { x: 0, y: 10, z: -10, scale: 100 }),
             
                     //===============================FACU===============================
+                    loadGLBModel('modelos/FACU/Principal-PB_.glb', { x: 0, y: 10, z: -10, scale: 100 }),
+                    loadGLBModel('modelos/FACU/Principal-B_.glb', { x: 0, y: 10, z: -10, scale: 100 }),
+                    loadGLBModel('modelos/FACU/Principal-P1_.glb', { x: 0, y: 10, z: -10, scale: 100 }),
+                    
+                    
+                    
+                    loadGLBModel('modelos/Atras/300s_.glb', { x: 0, y: 10, z: -10, scale: 100 }),
+                    loadGLBModel('modelos/Atras/canchas_.glb', { x: 0, y: 10, z: -10, scale: 100 }),
+                    loadGLBModel('modelos/Atras/deportivo_.glb', { x: 0, y: 10, z: -10, scale: 100 }),
+                    loadGLBModel('modelos/Atras/posgrado_.glb', { x: 0, y: 10, z: -10, scale: 100 }),
+                    
+                    
+                    
                     //loadGLBModel('modelos/FACU/Est_.glb', { x: 0, y: 10, z: -10, scale: 100 }),
 
-                    loadGLBModel('modelos/FACU/EdificioP_opt.glb', { x: 0, y: 10, z: -10, scale: 100 }),
-                    loadGLBModel('modelos/FACU/EP_P1_opt.glb', { x: 0, y: 10, z: -10, scale: 100 }),
-                    loadGLBModel('modelos/FACU/300s_opt.glb', { x: 0, y: 8, z: -10, scale: 100 }),
-
-                    loadGLBModel('modelos/FACU/EP_P2_opt.glb', { x: 0, y: 10, z: -10, scale: 100 }),
-                    loadGLBModel('modelos/FACU/EP_PB3_opt.glb', { x: 0, y: 10, z: -10, scale: 100 }),
-                    loadGLBModel('modelos/FACU/EP_PB1_opt.glb', { x: 0, y: 10, z: -10, scale: 100 }),
-                    loadGLBModel('modelos/FACU/EP_PB2_opt.glb', { x: 0, y: 10, z: -10, scale: 100 }),
+                    //loadGLBModel('modelos/FACU/EdificioP_opt.glb', { x: 0, y: 10, z: -10, scale: 100 }),
+                    //loadGLBModel('modelos/FACU/EP_P1_opt.glb', { x: 0, y: 10, z: -10, scale: 100 }),
+                    //loadGLBModel('modelos/FACU/300s_opt.glb', { x: 0, y: 8, z: -10, scale: 100 }),
+                    //loadGLBModel('modelos/FACU/EP_P2_opt.glb', { x: 0, y: 10, z: -10, scale: 100 }),
+                    //loadGLBModel('modelos/FACU/EP_PB3_opt.glb', { x: 0, y: 10, z: -10, scale: 100 }),
+                    //loadGLBModel('modelos/FACU/EP_PB1_opt.glb', { x: 0, y: 10, z: -10, scale: 100 }),
+                    //loadGLBModel('modelos/FACU/EP_PB2_opt.glb', { x: 0, y: 10, z: -10, scale: 100 }),
                     
 
 
@@ -762,15 +853,15 @@ function loadGLBModel(path, options = {}) {
                     child.receiveShadow = false;
                     child.frustumCulled = true;
 
-                    // Detección de materiales
-                    if (child.material) {
-                        const name = (child.material.name || '') + ' ' + (child.name || '');
-                        if (isGlass(name)) {
-                            child.material = createGlassMaterial(child.material);
-                        } else if (isMetal(name) || isOriginallyMetal(child.material)) {
-                            enhanceMetalMaterial(child.material);
-                        }
-                    }
+                    //// Detección de materiales
+                    //if (child.material) {
+                    //    const name = (child.material.name || '') + ' ' + (child.name || '');
+                    //    if (isGlass(name)) {
+                    //        child.material = createGlassMaterial(child.material);
+                    //    } else if (isMetal(name) || isOriginallyMetal(child.material)) {
+                    //        enhanceMetalMaterial(child.material);
+                    //    }
+                    //}
                 });
 
                 // Resolver la promesa para avanzar el Promise.all
@@ -790,70 +881,7 @@ function loadGLBModel(path, options = {}) {
 
 
 
-//=======================================Funcion para crear Colisiones de Informacion====================================
 
-// Arreglo para guardar todas las zonas de colisión de los salones
-const zonasSalones = [];
-
-// Variable de estado para evitar laguear el DOM actualizando el texto en cada frame
-let salonActualID = null;
-let isPlayerInside101 = false;
-
-function CrearSalonColision(id, centroX, centroY, centroZ) {
-
-    loadGLBModel('modelos/A_test.glb', { x: centroX, y: (centroY - 1.7), z: centroZ, scale: 1 });
-    const centro = new THREE.Vector3(centroX, centroY, centroZ);
-    const tamaño = new THREE.Vector3(2, 2, 2);
-    
-    // Crear una caja matemática pura (sin mesh, rendimiento óptimo)
-    const cajaMatematica = new THREE.Box3().setFromCenterAndSize(centro, tamaño);
-    
-    // Empujamos el objeto con su ID al arreglo global
-    zonasSalones.push({
-        id: id,
-        box: cajaMatematica
-    });
-
-    // OPCIONAL: Si quieres ver las cajas para debugear dónde están paradas:
-    
-    //const helper = new THREE.Box3Helper(cajaMatematica, 0x00ff00);
-    //scene.add(helper);
-    
-}
-
-function verificarColisionSalones() {
-    const camObj = controls.getObject();
-    const playerPos = camObj.position;
-    let dentroDeAlgunSalon = false;
-
-    // Iteramos por todas las zonas guardadas
-    for (let i = 0; i < zonasSalones.length; i++) {
-        const zona = zonasSalones[i];
-
-        // Verificamos si la posición del jugador está dentro de la caja matemática
-        if (zona.box.containsPoint(playerPos)) {
-            dentroDeAlgunSalon = true;
-
-            // Solo actualiza si acabas de entrar a un salón NUEVO
-            if (salonActualID !== zona.id) {
-                salonActualID = zona.id;
-                
-                DisplaySalonInfo(zona.id); // Cambia el texto una sola vez
-                infoPanel.style.display = 'block'; // Muestra el panel
-                //console.log(`Entraste a: ${zona.id}`);
-            }
-            
-            break; // Ya encontramos el salón actual, rompemos el bucle prematuramente
-        }
-    }
-
-    // Si no está en ningún salón, pero antes sí estaba en uno, ocultamos el panel
-    if (!dentroDeAlgunSalon && salonActualID !== null) {
-        salonActualID = null;
-        infoPanel.style.display = 'none';
-        //console.log("Saliste de las zonas de salones.");
-    }
-}
 
 // ============================================================
 // LOOP DE ANIMACIÓN
@@ -879,6 +907,19 @@ function animate() {
             const posDisplay = document.getElementById('pos-values');
             if (posDisplay) posDisplay.innerText = `X: ${cx} | Y: ${cy} | Z: ${cz}`;
             _lastCoordX = cx; _lastCoordY = cy; _lastCoordZ = cz;
+        }
+
+        const playerObj = controls.getObject();
+
+        // Si el jugador cae por debajo de Y = 0 (ajusta este número según tu mapa)
+        if (playerObj.position.y < 5.0) {
+            console.log("¡Jugador se cayó del mapa! Teletransportando...");
+
+            // Resetear la posición a la entrada (usando las coords de tu init)
+            playerObj.position.set(7, 8.41, 37);
+
+            // OPCIONAL: Si tu 'physicsStep' usa una variable de velocidad (ej. velocity.y), 
+            // asegúrate de resetearla a 0 aquí para que no siga cayendo rápido al reaparecer.
         }
     }
 
