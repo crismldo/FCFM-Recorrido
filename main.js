@@ -383,43 +383,48 @@ function init() {
 
     //================ INFORMACION DE SALONES ================================================
 
-    CrearSalonColision(Salones.Princ_Salon_101, -10.0, 7.46, 40.0);
-    CrearSalonColision(Salones.Princ_Lab_Mecanica, -10.0, 7.46, 45.0);
-    CrearSalonColision(Salones.Princ_Dep_Biblioteca, -10.0, 7.46, 50.0);
+    CrearBuildingColision('Princ', -22.06, 10.0, -11.95, 90, 40, 44.5);
+
+    // Caja gigante que envuelve el USIT
+    //CrearBuildingColision('USIT', -30.0, 10.0, 30.0, 60, 30, 60);
+    
+    
+    CrearSalonColision(Salones.Princ_Salon_101, -10.0, 7.46, 40.0, false);
+    CrearSalonColision(Salones.Princ_Lab_Mecanica, -10.0, 7.46, 45.0, false);
+    CrearSalonColision(Salones.Princ_Dep_Biblioteca, -10.0, 7.46, 50.0, false);
 
 
-    CrearSalonColision(Salones.Sala_Maestros, 34.22, 7.46, 51.84);
-    CrearSalonColision(Salones.USIT_entrada, -24.80, 7.53, 20.87);
-    CrearSalonColision(Salones.Princ_Dep_Coordinacion, -8.54, 8.05, -22.25);
-    CrearSalonColision(Salones.Princ_Dep_Servicios_General, -8.77, 8.05, 3.59);
-    CrearSalonColision(Salones.Princ_Cafeteria, -9.14, 8.05, -7.87);
-    CrearSalonColision(Salones.Princ_Dep_Direccion, 14.33, 8.05, 6.22);
-    CrearSalonColision(Salones.Princ_Dep_Tesoreria, 14.50, 8.05, -7.28);
-    CrearSalonColision(Salones.Princ_Audi_Eladio, 17.72, 8.05, -13.97);
-    CrearSalonColision(Salones.Princ_Salon_401, 30.97, 8.05, -18.80);
+    CrearSalonColision(Salones.Sala_Maestros, 34.22, 7.46, 51.84, false);
+    CrearSalonColision(Salones.USIT_entrada, -24.80, 7.53, 20.87, false);
+
+    CrearSalonColision(Salones.Princ_Dep_Coordinacion, -8.54, 8.05, -22.25, false);
+    CrearSalonColision(Salones.Princ_Dep_Servicios_General, -8.77, 8.05, 3.59, false);
+    CrearSalonColision(Salones.Princ_Cafeteria, -9.14, 8.05, -7.87, false);
+    CrearSalonColision(Salones.Princ_Dep_Direccion, 14.33, 8.05, 6.22, false);
+    CrearSalonColision(Salones.Princ_Dep_Tesoreria, 14.50, 8.05, -7.28, false);
+    CrearSalonColision(Salones.Princ_Audi_Eladio, 17.72, 8.05, -13.97, false);
+    CrearSalonColision(Salones.Princ_Salon_401, 30.97, 8.05, -18.80, false);
 
     //Piso 2
-    CrearSalonColision(Salones.Princ_Dep_Prefectura, 13.98, 11.77, 9.20);
-    CrearSalonColision(Salones.Princ_Dep_Servicio_Social, 14.06, 11.77, 4.30);
-    CrearSalonColision(Salones.Princ_Dep_Escolar, 14.15, 11.77, -2.25);
-    CrearSalonColision(Salones.Princ_Audi_Jose, 16.89, 11.77, -13.21);
-    //////////CrearSalonColision(Salones.Sala_inovacion_emprendimiento, 30.70, 11.77, -18.77);
-    CrearSalonColision(Salones.Princ_Lab_Optica, 20.37, 11.77, -22.62);
-    CrearSalonColision(Salones.Princ_Lab_Sistemas_Elec, 14.08, 11.77, -22.86);
-    CrearSalonColision(Salones.Princ_Lab_Fisica_III, 7.08, 11.77, -22.90);
-    CrearSalonColision(Salones.Princ_Lab_Circuitos, 0.41, 11.77, -22.86);
-    CrearSalonColision(Salones.Princ_Lab_Fluidos, -6.51, 11.77, -22.94);
-    CrearSalonColision(Salones.Princ_Lab_Mecanica, -13.38, 11.77, -22.85);
-    //////////CrearSalonColision(Salones.Lab_Actuaria, -30.15, 11.77, -11.86);
-    CrearSalonColision(Salones.Princ_Dep_Soci_Alumnos, -9.08, 11.77, -7.10);
-    CrearSalonColision(Salones.Princ_Dep_Copias, -9.12, 11.77, -5.24);
-    CrearSalonColision(Salones.Princ_Dep_RH, -9.16, 11.77, -2.05);
-
-    //================ INFORMACION DE SALONES ================================================
-
-
+    CrearSalonColision(Salones.Princ_Dep_Prefectura, 13.98, 11.77, 9.20, false);
+    CrearSalonColision(Salones.Princ_Dep_Servicio_Social, 14.06, 11.77, 4.30, false);
+    CrearSalonColision(Salones.Princ_Dep_Escolar, 14.15, 11.77, -2.25, false);
+    CrearSalonColision(Salones.Princ_Audi_Jose, 16.89, 11.77, -13.21, false);
+    //////////CrearSalonColision(Salones.Sala_inovacion_emprendimiento, 30.70, 11.77, -18.77, false);
+    CrearSalonColision(Salones.Princ_Lab_Optica, 20.37, 11.77, -22.62, false);
+    CrearSalonColision(Salones.Princ_Lab_Sistemas_Elec, 14.08, 11.77, -22.86, false);
+    CrearSalonColision(Salones.Princ_Lab_Fisica_III, 7.08, 11.77, -22.90, false);
+    CrearSalonColision(Salones.Princ_Lab_Circuitos, 0.41, 11.77, -22.86, false);
+    CrearSalonColision(Salones.Princ_Lab_Fluidos, -6.51, 11.77, -22.94, false);
+    CrearSalonColision(Salones.Princ_Lab_Mecanica, -13.38, 11.77, -22.85, false);
+    //////////CrearSalonColision(Salones.Lab_Actuaria, -30.15, 11.77, -11.86, false);
+    CrearSalonColision(Salones.Princ_Dep_Soci_Alumnos, -9.08, 11.77, -7.10, false);
+    CrearSalonColision(Salones.Princ_Dep_Copias, -9.12, 11.77, -5.24, false);
+    CrearSalonColision(Salones.Princ_Dep_RH, -9.16, 11.77, -2.05, false);
 
     
+
+    //================ INFORMACION DE SALONES ================================================    
 
     window.addEventListener('resize', () => {
         camera.aspect = innerWidth / innerHeight;
@@ -427,10 +432,32 @@ function init() {
         renderer.setSize(innerWidth, innerHeight);
         composer.setSize(innerWidth, innerHeight);
     });
-
-
     animate();
 }
+
+// Arreglo para guardar las grandes zonas de carga (Trigger Volumes)
+const zonasEdificios = [];
+
+function CrearBuildingColision(prefijo, centroX, centroY, centroZ, w, h, d) {
+    const centro = new THREE.Vector3(centroX, centroY, centroZ);
+    const tamaño = new THREE.Vector3(w, h, d);
+    
+    const cajaMatematica = new THREE.Box3().setFromCenterAndSize(centro, tamaño);
+    
+    zonasEdificios.push({
+        prefijo: prefijo, // ej: 'Princ' o 'USIT'
+        box: cajaMatematica
+    });
+
+    // Descomenta esto para ver las cajas amarillas gigantes y ajustarlas visualmente
+    const helper = new THREE.Box3Helper(cajaMatematica, 0xffff00);
+    scene.add(helper);
+}
+
+
+
+
+
 
 
 //=======================================Funcion para crear Colisiones de Informacion====================================
@@ -672,7 +699,7 @@ const zonasSalones = [];
 let salonActualID = null;
 let isPlayerInside101 = false;
 
-function CrearSalonColision(id, centroX, centroY, centroZ) {
+function CrearSalonColision(id, centroX, centroY, centroZ, isBuildingZone) {
 
     loadGLBModel('modelos/A_test.glb', { x: centroX, y: (centroY - 1.3), z: centroZ, scale: 1 });
     const centro = new THREE.Vector3(centroX, centroY, centroZ);
@@ -695,6 +722,23 @@ function CrearSalonColision(id, centroX, centroY, centroZ) {
 }
 
 
+function verificarColisionEdificios() {
+    const playerPos = controls.getObject().position;
+    let sectorActual = 'Exterior'; // Asumimos que está afuera por defecto
+
+    // Revisamos si el jugador está dentro de alguna caja gigante de edificio
+    for (let i = 0; i < zonasEdificios.length; i++) {
+        if (zonasEdificios[i].box.containsPoint(playerPos)) {
+            sectorActual = zonasEdificios[i].prefijo;
+            break; // Ya sabemos en qué edificio está, dejamos de buscar
+        }
+    }
+
+    // Llamamos a la función que hicimos en el paso anterior
+    // (Si el sector no cambió, la función actualizarSectores ya sabe ignorarlo)
+    actualizarSectores(sectorActual);
+}
+
 
 function verificarColisionSalones() {
     const camObj = controls.getObject();
@@ -709,28 +753,16 @@ function verificarColisionSalones() {
 
             if (salonActualID !== zona.id) {
                 salonActualID = zona.id;
-
-                // 1. Mostrar texto
-                DisplaySalonInfo(zona.id);
-                infoPanel.style.display = 'block';
-
-                // 2. NUEVO: Lógica de Chunks automáticos
-                // Separamos el string (ej. "Princ_Salon_101" -> ["Princ", "Salon", "101"])
-                // y tomamos la primera parte ("Princ")
-                const prefijoSector = zona.id.split('_')[0];
-                actualizarSectores(prefijoSector);
+                DisplaySalonInfo(zona.id); 
+                infoPanel.style.display = 'block'; 
             }
-            break;
+            break; 
         }
     }
 
-    // Si salimos de todos los salones (estamos en el campus abierto)
     if (!dentroDeAlgunSalon && salonActualID !== null) {
         salonActualID = null;
         infoPanel.style.display = 'none';
-
-        // NUEVO: Volvemos a cargar todo el exterior
-        actualizarSectores('Exterior');
     }
 }
 
@@ -936,16 +968,20 @@ function loadGLBModel(path, options = {}) {
 
 const TODOS_LOS_TAGS = ['FACU', 'USIT', 'EST', 'ATRAS'];
 
-// Reglas: ¿Qué tags se deben renderizar cuando estamos en X sector?
+// Reglas de Visibilidad
 const ReglasVisibilidad = {
-    // Si entramos a un salón del Edificio Principal, ocultamos lo demás
+    // Al entrar a la caja "Princ", solo se muestra la facultad
     'Princ': ['FACU'],
 
-    // Si entramos al USIT, solo necesitamos el USIT
-    'USIT': ['USIT'],
+    // Al entrar a la caja "back", solo se muestra la parte de atrás
+    'back': ['ATRAS'],
 
-    // Cuando estamos afuera (salonActualID === null), cargamos los exteriores
-    'Exterior': ['FACU', 'USIT', 'EST']
+    // Al entrar a la caja "usitbuild", solo se muestra el USIT
+    'usitbuild': ['USIT'],
+
+    // En el exterior, vemos todos los edificios desde afuera, 
+    // y cargamos "EST" (estacionamiento) que es exclusivo de esta vista
+    'Exterior': ['FACU', 'ATRAS', 'USIT', 'EST']
 };
 
 let sectorActivoActual = 'Exterior'; 
@@ -1023,7 +1059,7 @@ function animate() {
             physicsStep();
             _accumulator -= FIXED_STEP;
         }
-
+        verificarColisionEdificios();
         const p = controls.getObject().position;
         const cx = p.x.toFixed(2), cy = p.y.toFixed(2), cz = p.z.toFixed(2);
         if (cx !== _lastCoordX || cy !== _lastCoordY || cz !== _lastCoordZ) {
