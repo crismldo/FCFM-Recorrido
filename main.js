@@ -1,3 +1,6 @@
+// ============================================================
+//#region  IMPORTS
+// ============================================================
 import * as THREE from 'three';
 import { GLTFLoader }          from 'three/addons/loaders/GLTFLoader.js';
 import { DRACOLoader }         from 'three/addons/loaders/DRACOLoader.js';
@@ -10,12 +13,15 @@ import { OutputPass }          from 'three/addons/postprocessing/OutputPass.js';
 import { MeshBVH, acceleratedRaycast } from 'three-mesh-bvh';
 import  Stats                  from 'three/addons/libs/stats.module.js';
 
-// Parchea el raycast global para usar BVH automáticamente
-THREE.Mesh.prototype.raycast = acceleratedRaycast;
+//#endregion 
+
 
 // ============================================================
-// VARIABLES GLOBALES
+//#region VARIABLES GLOBALES
 // ============================================================
+
+
+THREE.Mesh.prototype.raycast = acceleratedRaycast;
 let scene, camera, renderer, controls, composer, clock, mixer;
 const edificiosCargados = {};
 let isUsitVisible = true;
@@ -32,7 +38,15 @@ const fpsDisplay   = document.getElementById('fps-value');
 let lastTime = performance.now();
 let frames = 0;
 
-// ── TECLADO ───────────────────────────────────────────────────
+const ModoDebugActivado = false;
+
+
+//#endregion 
+
+
+// ============================================================
+//#region CONTROLES
+// ============================================================
 const keys = { w: false, a: false, s: false, d: false, ' ': false };
 document.addEventListener('keydown', e => {
     const k = e.key === ' ' ? ' ' : e.key.toLowerCase();
@@ -52,109 +66,51 @@ document.addEventListener('keydown', e => {
         
     }
 
-    const vectorMovimiento = new THREE.Vector3(0, 0, 0);
+    // ── HERRAMIENTAS DEBUG ───────────────────────────────────────────────
 
-    // Mapeo de teclas
-    if (k === 'i') vectorMovimiento.z -= debugPaso; // Mover adelante
-    if (k === 'k') vectorMovimiento.z += debugPaso; // Mover atrás
-    if (k === 'j') vectorMovimiento.x -= debugPaso; // Mover izquierda
-    if (k === 'l') vectorMovimiento.x += debugPaso; // Mover derecha
-    if (k === 'u') vectorMovimiento.y -= debugPaso; // Mover abajo
-    if (k === 'o') vectorMovimiento.y += debugPaso; // Mover arriba
+    if (ModoDebugActivado == true) {
+        const vectorMovimiento = new THREE.Vector3(0, 0, 0);
 
-    // Aplicar el movimiento a la caja
-    //debugBox.translate(vectorMovimiento);
+        // Mapeo de teclas Debug
+        if (k === 'i') vectorMovimiento.z -= debugPaso; // Mover adelante
+        if (k === 'k') vectorMovimiento.z += debugPaso; // Mover atrás
+        if (k === 'j') vectorMovimiento.x -= debugPaso; // Mover izquierda
+        if (k === 'l') vectorMovimiento.x += debugPaso; // Mover derecha
+        if (k === 'u') vectorMovimiento.y -= debugPaso; // Mover abajo
+        if (k === 'o') vectorMovimiento.y += debugPaso; // Mover arriba
 
-    // IMPRIMIR COORDENADAS CON 'P'
-    if (k === 'm') {
-        const centroActual = new THREE.Vector3();
-        debugBox.getCenter(centroActual); // Extraemos el centro exacto
-        
-        const size = new THREE.Vector3();
-        debugBox.getSize(size); // Extraemos el tamaño por si lo olvidaste
+        // Aplicar el movimiento a la caja
+        //debugBox.translate(vectorMovimiento);
 
-        const cX = centroActual.x.toFixed(2);
-        const cY = centroActual.y.toFixed(2);
-        const cZ = centroActual.z.toFixed(2);
+        // IMPRIMIR COORDENADAS CON 'M'
+        if (k === 'm') {
+            const centroActual = new THREE.Vector3();
+            debugBox.getCenter(centroActual); // Extraemos el centro exacto
 
-        console.log("=====================================");
-        console.log("Copia y pega esta línea en tu código:");
-        console.log(`CrearBuildingColision('TAG_AQUI', ${cX}, ${cY}, ${cZ}, ${size.x}, ${size.y}, ${size.z});`);
-        console.log("=====================================");
+            const size = new THREE.Vector3();
+            debugBox.getSize(size); // Extraemos el tamaño por si lo olvidaste
+
+            const cX = centroActual.x.toFixed(2);
+            const cY = centroActual.y.toFixed(2);
+            const cZ = centroActual.z.toFixed(2);
+
+            console.log("=====================================");
+            console.log("Copia y pega esta línea en tu código:");
+            console.log(`CrearBuildingColision('TAG_AQUI', ${cX}, ${cY}, ${cZ}, ${size.x}, ${size.y}, ${size.z});`);
+            console.log("=====================================");
+        }
     }
+    
 
 
 
 
 });
+
 document.addEventListener('keyup', e => {
     const k = e.key === ' ' ? ' ' : e.key.toLowerCase();
     if (k in keys) keys[k] = false;
 });
-
-
-
-
-
-
-
-
-
-// window.addEventListener('keydown', (event) => {
-    
-//     DisplaySalonInfo(Salones.Princ_Dep_Servicio_Social);
-    
-    
-    
-//     // Check if the 'I' key was pressed (case-insensitive)
-//     if (event.key.toLowerCase() === 'i') {
-//         // Toggle the display style
-//         if (infoPanel.style.display === 'none') {
-//             infoPanel.style.display = 'block';
-//         } else {
-//             infoPanel.style.display = 'none';
-//         }
-//     }
-// });
-
-
-
-
-
-
-
-
-
-// ── FÍSICA ────────────────────────────────────────────────────
-const FIXED_STEP         = 1 / 60;
-const MAX_SUBSTEPS       = 2;
-let   _accumulator       = 0;
-const moveSpeed          = 8.0;
-const gravity            = 50.0;
-//const gravity            = 0.0;
-const jumpForce          = 10.0;
-const cameraHeight       = 1.3;
-const collisionThreshold = 0.5;
-const COLLISION_EVERY    = 2;
-let   velocityY          = 0;
-let   isGrounded         = false;
-let   _collisionFrame    = 0;
-let   _lastCollisions    = { forward: false, backward: false, left: false, right: false };
-let   _lastCoordX, _lastCoordY, _lastCoordZ;
-
-// ── COLISIONES ────────────────────────────────────────────────
-let collidableObjects  = [];
-const LAYER_COLLIDABLE   = 1;
-let   raycaster;
-
-const _rayOrigin = new THREE.Vector3();
-const _camDir    = new THREE.Vector3();
-const _fwd  = new THREE.Vector3();
-const _bwd  = new THREE.Vector3();
-const _right = new THREE.Vector3();
-const _left  = new THREE.Vector3();
-const _down  = new THREE.Vector3(0, -1, 0);
-const direction = new THREE.Vector3();
 
 // ── TELEPORTERS ───────────────────────────────────────────────
 let teleportCooldown = 0;
@@ -163,8 +119,29 @@ const teleportList = [
     { name: "TP_2", position: new THREE.Vector3(22.6, 8.4, 24.6), target: new THREE.Vector3(20.5, 8.4, 24.8) },
 ];
 
+
+function teletransportarA(nuevaPosicion) {
+    const camObj = controls.getObject();
+
+    // 1. Copiamos la nueva posición al objeto de la cámara (el avatar del jugador)
+    camObj.position.copy(nuevaPosicion);
+
+    // 2. Reseteamos la velocidad vertical para evitar que herede gravedad acumulada
+    velocityY = 0;
+
+    // 3. Activamos el cooldown global de teletransporte que ya tienes en tu física
+    // Esto evita conflictos con los desencadenadores de los TPs automáticos del mapa
+    teleportCooldown = 1.5;
+
+    console.log(`Teletransportado con éxito a: X: ${nuevaPosicion.x} | Y: ${nuevaPosicion.y} | Z: ${nuevaPosicion.z}`);
+}
+
+
+//#endregion 
+
+
 // ============================================================
-// CONFIGURACIÓN DE LOADERS
+//#region MATERIALES
 // ============================================================
 const dracoLoader = new DRACOLoader();
 dracoLoader.setDecoderPath('https://www.gstatic.com/draco/versioned/decoders/1.5.6/');
@@ -179,6 +156,8 @@ const GLASS_KEYWORDS = ['glass','cristal','vidrio','window','ventana','glazing']
 function isMetal(name = '') { return METAL_KEYWORDS.some(k => name.toLowerCase().includes(k)); }
 function isGlass(name = '') { return GLASS_KEYWORDS.some(k => name.toLowerCase().includes(k)); }
 function isOriginallyMetal(mat) { return mat && mat.metalness !== undefined && mat.metalness >= 0.5; }
+
+// ── FUNCIONES ──────────────────────────────────────────────────
 
 function enhanceMetalMaterial(mat) {
     mat.metalness = 1.0;
@@ -198,345 +177,43 @@ function createGlassMaterial(orig) {
     });
 }
 
-
-// ── FUNCIÓN DE TELETRANSPORTE REUTILIZABLE ────────────────────
-function teletransportarA(nuevaPosicion) {
-    const camObj = controls.getObject();
-
-    // 1. Copiamos la nueva posición al objeto de la cámara (el avatar del jugador)
-    camObj.position.copy(nuevaPosicion);
-
-    // 2. Reseteamos la velocidad vertical para evitar que herede gravedad acumulada
-    velocityY = 0;
-
-    // 3. Activamos el cooldown global de teletransporte que ya tienes en tu física
-    // Esto evita conflictos con los desencadenadores de los TPs automáticos del mapa
-    teleportCooldown = 1.5;
-
-    console.log(`Teletransportado con éxito a: X: ${nuevaPosicion.x} | Y: ${nuevaPosicion.y} | Z: ${nuevaPosicion.z}`);
-}
-
-
-
-
+//#endregion 
 
 
 // ============================================================
-// FÍSICA STEP
+//#region FÍSICAS
 // ============================================================
-function physicsStep() {
-    const dt     = FIXED_STEP;
-    const camObj = controls.getObject();
 
-    _rayOrigin.copy(camObj.position);
-    raycaster.set(_rayOrigin, _down);
-    const groundHits = raycaster.intersectObjects(collidableObjects, false);
-    const groundDist = groundHits.length > 0 ? groundHits[0].distance : Infinity;
-
-    if (groundDist <= cameraHeight + 0.05) {
-        isGrounded = true;
-        velocityY  = 0;
-        camObj.position.y = groundHits[0].point.y + cameraHeight;
-    } else {
-        isGrounded = false;
-    }
-
-    if (keys[' '] && isGrounded) {
-        velocityY  = jumpForce;
-        isGrounded = false;
-    }
-
-    if (!isGrounded) {
-        velocityY -= gravity * dt;
-    }
-    camObj.position.y += velocityY * dt;
-
-    _collisionFrame++;
-    if (_collisionFrame >= COLLISION_EVERY) {
-        _collisionFrame = 0;
-        camera.getWorldDirection(_camDir);
-        _camDir.y = 0;
-        _camDir.normalize();
-
-        _fwd.copy(_camDir);
-        _bwd.copy(_camDir).negate();
-        _right.crossVectors(_camDir, camera.up).normalize();
-        _left.copy(_right).negate();
-        _rayOrigin.copy(camObj.position);
-
-        function blocked(dir) {
-            raycaster.set(_rayOrigin, dir);
-            const hits = raycaster.intersectObjects(collidableObjects, false);
-            return hits.length > 0 && hits[0].distance < collisionThreshold;
-        }
-        _lastCollisions.forward  = blocked(_fwd);
-        _lastCollisions.backward = blocked(_bwd);
-        _lastCollisions.right    = blocked(_right);
-        _lastCollisions.left     = blocked(_left);
-    }
-
-    direction.set(0, 0, 0);
-    if (keys['w']) direction.z -= 1;
-    if (keys['s']) direction.z += 1;
-    if (keys['a']) direction.x -= 1;
-    if (keys['d']) direction.x += 1;
-    direction.normalize();
-
-    if (_lastCollisions.forward  && direction.z < 0) direction.z = 0;
-    if (_lastCollisions.backward && direction.z > 0) direction.z = 0;
-    if (_lastCollisions.right    && direction.x > 0) direction.x = 0;
-    if (_lastCollisions.left     && direction.x < 0) direction.x = 0;
-
-    if (direction.z !== 0) controls.moveForward(-direction.z * moveSpeed * dt);
-    if (direction.x !== 0) controls.moveRight(direction.x * moveSpeed * dt);
-
-    if (teleportCooldown > 0) {
-        teleportCooldown -= dt;
-    } else {
-        const playerPos = camObj.position;
-        for (const tp of teleportList) {
-            if (playerPos.distanceTo(tp.position) < 1.5) {
-                camObj.position.copy(tp.target);
-                velocityY = 0;
-                teleportCooldown = 2.0;
-                break;
-            }
-        }
-    }
-
-    verificarColisionSalones()
-}
-
-// ============================================================
-// INIT
-// ============================================================
-function init() {
-    // Definimos el color base para el horizonte y la niebla
-    const FOG_COLOR = 0xffe6d1;
-
-    // ── ESCENA ────────────────────────────────────────────────
-    scene = new THREE.Scene();
-    
-   
-    scene.fog = new THREE.Fog(FOG_COLOR, 80, 150);
-
-    // ── CÁMARA ────────────────────────────────────────────────
-    
-    camera = new THREE.PerspectiveCamera(70, innerWidth / innerHeight, 0.1, 50);
-    camera.position.set(7, 8.41, 37);
-    //camera.position.set(6.31, 20, 52.96);
-
-    // ── RENDERER ──────────────────────────────────────────────
-    renderer = new THREE.WebGLRenderer({ canvas, antialias: false, powerPreference: 'high-performance' });
-    renderer.setSize(innerWidth, innerHeight);
-    renderer.setPixelRatio(Math.min(devicePixelRatio, 1.5));
-    
-    
-    renderer.setClearColor(FOG_COLOR, 1.0); 
-
-    renderer.shadowMap.enabled = true;
-    //renderer.shadowMap.type    = THREE.VSMShadowMap;
-    renderer.shadowMap.type    = THREE.PCFSoftShadowMap;
-    renderer.toneMapping       = THREE.ACESFilmicToneMapping;
-    renderer.toneMappingExposure = 1.1;
-    renderer.outputColorSpace  = THREE.SRGBColorSpace;
-
-    // ── POST-PROCESADO ────────────────────────────────────────
-    composer = new EffectComposer(renderer);
-    composer.addPass(new RenderPass(scene, camera));
-    composer.addPass(new OutputPass());
-
-    // ── CONTROLES ─────────────────────────────────────────────
-    controls = new PointerLockControls(camera, renderer.domElement);
-    scene.add(controls.getObject());
-
-    const startBtn = document.getElementById('start-btn');
-    if (startBtn) {
-        startBtn.addEventListener('click', () => {
-            if (isModelLoaded) controls.lock();
-        });
-    }
-
-    controls.addEventListener('lock', () => {
-        if (instructions) instructions.style.display = 'none';
-        if (blocker)      blocker.style.display      = 'none';
-    });
-    controls.addEventListener('unlock', () => {
-        if (blocker)      blocker.style.display      = 'flex';
-        if (instructions) instructions.style.display = '';
-    });
-
-    // ── RAYCASTER ─────────────────────────────────────────────
-    raycaster = new THREE.Raycaster();
-    raycaster.far = 50;
-    raycaster.layers.set(LAYER_COLLIDABLE);
-    raycaster.firstHitOnly = true;
-
-    // ── ILUMINACIÓN ───────────────────────────────────────────
-    const hemi = new THREE.HemisphereLight(0xffeeb1, 0x3a5f8a, 1.5);
-    hemi.position.set(0, 50, 0);
-    scene.add(hemi);
-
-    const sun = new THREE.DirectionalLight(0xffaa33, 2.5);
-    sun.position.set(50, 80, 50);
-    sun.castShadow = false;
-    sun.shadow.mapSize.set(1024, 1024);
-    sun.shadow.camera.near = 1;
-    sun.shadow.camera.far  = 150;
-    sun.shadow.bias        = -0.001;
-    sun.shadow.radius      = 4;
-    const d = 60;
-    sun.shadow.camera.left = -d; sun.shadow.camera.right = d;
-    sun.shadow.camera.top  =  d; sun.shadow.camera.bottom = -d;
-    scene.add(sun);
-
-    const fill = new THREE.DirectionalLight(0x8ab4d4, 0.4);
-    fill.position.set(-40, 20, -30);
-    scene.add(fill);
-
-    scene.add(new THREE.AmbientLight(0xffffff, 0.15));
-
-    // ── PISO BASE ─────────────────────────────────────────────
-    const ground = new THREE.Mesh(
-        new THREE.PlaneGeometry(500, 500),
-        new THREE.MeshStandardMaterial({ color: 0x111111, roughness: 0.8 })
-    );
-    ground.rotation.x = -Math.PI / 2;
-    ground.receiveShadow = true;
-    ground.geometry.boundsTree = new MeshBVH(ground.geometry);
-    ground.layers.enable(LAYER_COLLIDABLE);
-    scene.add(ground);
-    collidableObjects.push(ground);
-
-    // ── RELOJ + CARGA ─────────────────────────────────────────
-    clock = new THREE.Clock();
-    loadEnvironmentAndModel();
+// ── FISICA ──────────────────────────────────────────────────
+const FIXED_STEP         = 1 / 60;
+const MAX_SUBSTEPS       = 2;
+let   _accumulator       = 0;
+const moveSpeed          = 8.0;
+const gravity            = 50.0;
+const jumpForce          = 10.0;
+const cameraHeight       = 1.3;
+const collisionThreshold = 0.5;
+const COLLISION_EVERY    = 2;
+let   velocityY          = 0;
+let   isGrounded         = false;
+let   _collisionFrame    = 0;
+let   _lastCollisions    = { forward: false, backward: false, left: false, right: false };
+let   _lastCoordX, _lastCoordY, _lastCoordZ;
 
 
+// ── COLISIONES ────────────────────────────────────────────────
+let collidableObjects  = [];
+const LAYER_COLLIDABLE   = 1;
+let   raycaster;
+const _rayOrigin = new THREE.Vector3();
+const _camDir    = new THREE.Vector3();
+const _fwd  = new THREE.Vector3();
+const _bwd  = new THREE.Vector3();
+const _right = new THREE.Vector3();
+const _left  = new THREE.Vector3();
+const _down  = new THREE.Vector3(0, -1, 0);
+const direction = new THREE.Vector3();
 
-    //================ INFORMACION DE SALONES ================================================
-
-    
-
-    
-    
-    
-    CrearSalonColision(Salones.Princ_Salon_101, -10.0, 7.46, 40.0, false);
-    CrearSalonColision(Salones.Princ_Lab_Mecanica, -10.0, 7.46, 45.0, false);
-    CrearSalonColision(Salones.Princ_Dep_Biblioteca, -10.0, 7.46, 50.0, false);
-
-
-    CrearSalonColision(Salones.Sala_Maestros, 34.22, 7.46, 51.84, false);
-    CrearSalonColision(Salones.USIT_entrada, -24.80, 7.53, 20.87, false);
-
-    CrearSalonColision(Salones.Princ_Dep_Coordinacion, -8.54, 8.05, -22.25, false);
-    CrearSalonColision(Salones.Princ_Dep_Servicios_General, -8.77, 8.05, 3.59, false);
-    CrearSalonColision(Salones.Princ_Cafeteria, -9.14, 8.05, -7.87, false);
-    CrearSalonColision(Salones.Princ_Dep_Direccion, 14.33, 8.05, 6.22, false);
-    CrearSalonColision(Salones.Princ_Dep_Tesoreria, 14.50, 8.05, -7.28, false);
-    CrearSalonColision(Salones.Princ_Audi_Eladio, 17.72, 8.05, -13.97, false);
-    CrearSalonColision(Salones.Princ_Salon_401, 30.97, 8.05, -18.80, false);
-
-    //Piso 2
-    CrearSalonColision(Salones.Princ_Dep_Prefectura, 13.98, 11.77, 9.20, false);
-    CrearSalonColision(Salones.Princ_Dep_Servicio_Social, 14.06, 11.77, 4.30, false);
-    CrearSalonColision(Salones.Princ_Dep_Escolar, 14.15, 11.77, -2.25, false);
-    CrearSalonColision(Salones.Princ_Audi_Jose, 16.89, 11.77, -13.21, false);
-    //////////CrearSalonColision(Salones.Sala_inovacion_emprendimiento, 30.70, 11.77, -18.77, false);
-    CrearSalonColision(Salones.Princ_Lab_Optica, 20.37, 11.77, -22.62, false);
-    CrearSalonColision(Salones.Princ_Lab_Sistemas_Elec, 14.08, 11.77, -22.86, false);
-    CrearSalonColision(Salones.Princ_Lab_Fisica_III, 7.08, 11.77, -22.90, false);
-    CrearSalonColision(Salones.Princ_Lab_Circuitos, 0.41, 11.77, -22.86, false);
-    CrearSalonColision(Salones.Princ_Lab_Fluidos, -6.51, 11.77, -22.94, false);
-    CrearSalonColision(Salones.Princ_Lab_Mecanica, -13.38, 11.77, -22.85, false);
-    //////////CrearSalonColision(Salones.Lab_Actuaria, -30.15, 11.77, -11.86, false);
-    CrearSalonColision(Salones.Princ_Dep_Soci_Alumnos, -9.08, 11.77, -7.10, false);
-    CrearSalonColision(Salones.Princ_Dep_Copias, -9.12, 11.77, -5.24, false);
-    CrearSalonColision(Salones.Princ_Dep_RH, -9.16, 11.77, -2.05, false);
-    
-
-    
-    CrearBuildingColision('Princ', 3.94, 16.00, -10.95, 35, 20, 44.5);
-    CrearBuildingColision('Princ', -42.06, 16.00, -16.95, 35, 20, 30.3);
-    CrearBuildingColision('Princ', -19.06, 16.00, -26.95, 11.5, 20, 10);
-    CrearBuildingColision('Princ', 30.94, 16.00, -23.95, 11.5, 20, 32);
-    CrearBuildingColision('Princ', 19.94, 16.00, 5.05, 10, 20, 18);
-
-    CrearBuildingColision('usitbuild', -46.06, 16.00, 18.05, 30, 20, 30);
-    CrearBuildingColision('usitbuild', -30.06, 16.00, 17.55, 2.5, 20, 9.5);
-    CrearBuildingColision('usitbuild', -28.06, 16.00, 17.55, 3, 20, 4);
-
-    CrearBuildingColision('back', 13.27, 16.00, -108.11, 60, 20, 80);
-
-    CrearBuildingColision('front', 12.27, 16.00, 44.89, 60, 20, 40);
-    CrearBuildingColision('front', -40.23, 16.00, 49.89, 45, 20, 30);
-
-    //SpawnDebugBox(45, 20, 30)
-    
-
-    //================ INFORMACION DE SALONES ================================================    
-
-    window.addEventListener('resize', () => {
-        camera.aspect = innerWidth / innerHeight;
-        camera.updateProjectionMatrix();
-        renderer.setSize(innerWidth, innerHeight);
-        composer.setSize(innerWidth, innerHeight);
-    });
-    animate();
-}
-
-// Arreglo para guardar las grandes zonas de carga (Trigger Volumes)
-const zonasEdificios = [];
-
-function CrearBuildingColision(prefijo, centroX, centroY, centroZ, w, h, d) {
-    const centro = new THREE.Vector3(centroX, centroY, centroZ);
-    const tamaño = new THREE.Vector3(w, h, d);
-    
-    const cajaMatematica = new THREE.Box3().setFromCenterAndSize(centro, tamaño);
-    
-    zonasEdificios.push({
-        prefijo: prefijo, // ej: 'Princ' o 'USIT'
-        box: cajaMatematica
-    });
-
-    // Descomenta esto para ver las cajas amarillas gigantes y ajustarlas visualmente
-    //const helper = new THREE.Box3Helper(cajaMatematica, 0xffff00);
-    //scene.add(helper);
-}
-
-// ==========================================
-// HERRAMIENTA DE DEBUG PARA CAJAS DE CARGA
-// ==========================================
-let debugBox = null;
-let debugBoxHelper = null;
-let debugPaso = 0.5; // Cuántos metros se mueve con cada tecla
-
-function SpawnDebugBox(w, h, d) {
-    // Si ya existe una caja de debug, la borramos primero
-    if (debugBoxHelper) {
-        scene.remove(debugBoxHelper);
-    }
-
-    //const centroInicial = new THREE.Vector3(0, 10, 0); // Empieza en el centro del mundo
-    const centroInicial = new THREE.Vector3(-47.23, 16.00, 48.89); // Empieza en el centro del mundo
-    const tamaño = new THREE.Vector3(w, h, d);
-    
-    // Creamos la caja matemática
-    debugBox = new THREE.Box3().setFromCenterAndSize(centroInicial, tamaño);
-    
-    // Le ponemos un color llamativo (Cyan) para diferenciarla de las rojas/verdes
-    //debugBoxHelper = new THREE.Box3Helper(debugBox, 0x00ffff); 
-    //scene.add(debugBoxHelper);
-
-    //console.log(`Caja Debug Creada: ${w}x${h}x${d}`);
-    //console.log("Controles: I/K (Adelante/Atrás), J/L (Izquierda/Derecha), U/O (Abajo/Arriba). Presiona 'P' para imprimir.");
-}
-
-
-
-
-
-//=======================================Funcion para crear Colisiones de Informacion====================================
 
 // ── INFORMACION SALONES ────────────────────────────────────────────────────
 const infoPanel = document.getElementById('info-panel');
@@ -755,6 +432,99 @@ const InformacionSalones = {
 };
 
 
+// Arreglo para guardar todas las zonas de colisión de los salones
+const zonasSalones = [];
+
+// Variable de estado para evitar laguear el DOM actualizando el texto en cada frame
+let salonActualID = null;
+let isPlayerInside101 = false;
+
+// ── FUNCIONES ──────────────────────────────────────────────────
+
+function physicsStep() {
+    const dt     = FIXED_STEP;
+    const camObj = controls.getObject();
+
+    _rayOrigin.copy(camObj.position);
+    raycaster.set(_rayOrigin, _down);
+    const groundHits = raycaster.intersectObjects(collidableObjects, false);
+    const groundDist = groundHits.length > 0 ? groundHits[0].distance : Infinity;
+
+    if (groundDist <= cameraHeight + 0.05) {
+        isGrounded = true;
+        velocityY  = 0;
+        camObj.position.y = groundHits[0].point.y + cameraHeight;
+    } else {
+        isGrounded = false;
+    }
+
+    if (keys[' '] && isGrounded) {
+        velocityY  = jumpForce;
+        isGrounded = false;
+    }
+
+    if (!isGrounded) {
+        velocityY -= gravity * dt;
+    }
+    camObj.position.y += velocityY * dt;
+
+    _collisionFrame++;
+    if (_collisionFrame >= COLLISION_EVERY) {
+        _collisionFrame = 0;
+        camera.getWorldDirection(_camDir);
+        _camDir.y = 0;
+        _camDir.normalize();
+
+        _fwd.copy(_camDir);
+        _bwd.copy(_camDir).negate();
+        _right.crossVectors(_camDir, camera.up).normalize();
+        _left.copy(_right).negate();
+        _rayOrigin.copy(camObj.position);
+
+        function blocked(dir) {
+            raycaster.set(_rayOrigin, dir);
+            const hits = raycaster.intersectObjects(collidableObjects, false);
+            return hits.length > 0 && hits[0].distance < collisionThreshold;
+        }
+        _lastCollisions.forward  = blocked(_fwd);
+        _lastCollisions.backward = blocked(_bwd);
+        _lastCollisions.right    = blocked(_right);
+        _lastCollisions.left     = blocked(_left);
+    }
+
+    direction.set(0, 0, 0);
+    if (keys['w']) direction.z -= 1;
+    if (keys['s']) direction.z += 1;
+    if (keys['a']) direction.x -= 1;
+    if (keys['d']) direction.x += 1;
+    direction.normalize();
+
+    if (_lastCollisions.forward  && direction.z < 0) direction.z = 0;
+    if (_lastCollisions.backward && direction.z > 0) direction.z = 0;
+    if (_lastCollisions.right    && direction.x > 0) direction.x = 0;
+    if (_lastCollisions.left     && direction.x < 0) direction.x = 0;
+
+    if (direction.z !== 0) controls.moveForward(-direction.z * moveSpeed * dt);
+    if (direction.x !== 0) controls.moveRight(direction.x * moveSpeed * dt);
+
+    if (teleportCooldown > 0) {
+        teleportCooldown -= dt;
+    } else {
+        const playerPos = camObj.position;
+        for (const tp of teleportList) {
+            if (playerPos.distanceTo(tp.position) < 1.5) {
+                camObj.position.copy(tp.target);
+                velocityY = 0;
+                teleportCooldown = 2.0;
+                break;
+            }
+        }
+    }
+
+    verificarColisionSalones()
+}
+
+
 function DisplaySalonInfo(ID_Salon_Seleccionado) {
     
     const info = InformacionSalones[ID_Salon_Seleccionado];
@@ -767,13 +537,6 @@ function DisplaySalonInfo(ID_Salon_Seleccionado) {
         Salon_Descripcion.textContent = "No hay información disponible para este lugar.";
     }
 }
-
-// Arreglo para guardar todas las zonas de colisión de los salones
-const zonasSalones = [];
-
-// Variable de estado para evitar laguear el DOM actualizando el texto en cada frame
-let salonActualID = null;
-let isPlayerInside101 = false;
 
 function CrearSalonColision(id, centroX, centroY, centroZ, isBuildingZone) {
 
@@ -796,25 +559,6 @@ function CrearSalonColision(id, centroX, centroY, centroZ, isBuildingZone) {
     //scene.add(helper);
     
 }
-
-
-function verificarColisionEdificios() {
-    const playerPos = controls.getObject().position;
-    let sectorActual = 'Exterior'; // Asumimos que está afuera por defecto
-
-    // Revisamos si el jugador está dentro de alguna caja gigante de edificio
-    for (let i = 0; i < zonasEdificios.length; i++) {
-        if (zonasEdificios[i].box.containsPoint(playerPos)) {
-            sectorActual = zonasEdificios[i].prefijo;
-            break; // Ya sabemos en qué edificio está, dejamos de buscar
-        }
-    }
-
-    // Llamamos a la función que hicimos en el paso anterior
-    // (Si el sector no cambió, la función actualizarSectores ya sabe ignorarlo)
-    actualizarSectores(sectorActual);
-}
-
 
 function verificarColisionSalones() {
     const camObj = controls.getObject();
@@ -842,14 +586,83 @@ function verificarColisionSalones() {
     }
 }
 
+// ── FUNCIONES DEBUG ──────────────────────────────────────────────────
+
+// Arreglo para guardar las grandes zonas de carga (Trigger Volumes)
+const zonasEdificios = [];
 
 
 
+// ==========================================
+// HERRAMIENTA DE DEBUG
+// ==========================================
+let debugBox = null;
+let debugBoxHelper = null;
+let debugPaso = 0.5; // Cuántos metros se mueve con cada tecla
+
+function SpawnDebugBox(w, h, d) {
+    // Si ya existe una caja de debug, la borramos primero
+    if (debugBoxHelper) {
+        scene.remove(debugBoxHelper);
+    }
+
+    //const centroInicial = new THREE.Vector3(0, 10, 0); // Empieza en el centro del mundo
+    const centroInicial = new THREE.Vector3(-47.23, 16.00, 48.89); // Empieza en el centro del mundo
+    const tamaño = new THREE.Vector3(w, h, d);
+    
+    // Creamos la caja matemática
+    debugBox = new THREE.Box3().setFromCenterAndSize(centroInicial, tamaño);
+    
+    // Le ponemos un color llamativo (Cyan) para diferenciarla de las rojas/verdes
+    //debugBoxHelper = new THREE.Box3Helper(debugBox, 0x00ffff); 
+    //scene.add(debugBoxHelper);
+
+    //console.log(`Caja Debug Creada: ${w}x${h}x${d}`);
+    //console.log("Controles: I/K (Adelante/Atrás), J/L (Izquierda/Derecha), U/O (Abajo/Arriba). Presiona 'P' para imprimir.");
+}
+
+function CrearBuildingColision(prefijo, centroX, centroY, centroZ, w, h, d) {
+    const centro = new THREE.Vector3(centroX, centroY, centroZ);
+    const tamaño = new THREE.Vector3(w, h, d);
+    
+    const cajaMatematica = new THREE.Box3().setFromCenterAndSize(centro, tamaño);
+    
+    zonasEdificios.push({
+        prefijo: prefijo, // ej: 'Princ' o 'USIT'
+        box: cajaMatematica
+    });
+
+    // Descomenta esto para ver las cajas amarillas gigantes y ajustarlas visualmente
+    //const helper = new THREE.Box3Helper(cajaMatematica, 0xffff00);
+    //scene.add(helper);
+}
+
+function verificarColisionEdificios() {
+    const playerPos = controls.getObject().position;
+    let sectorActual = 'Exterior'; // Asumimos que está afuera por defecto
+
+    // Revisamos si el jugador está dentro de alguna caja gigante de edificio
+    for (let i = 0; i < zonasEdificios.length; i++) {
+        if (zonasEdificios[i].box.containsPoint(playerPos)) {
+            sectorActual = zonasEdificios[i].prefijo;
+            break; // Ya sabemos en qué edificio está, dejamos de buscar
+        }
+    }
+
+    // Llamamos a la función que hicimos en el paso anterior
+    // (Si el sector no cambió, la función actualizarSectores ya sabe ignorarlo)
+    actualizarSectores(sectorActual);
+}
+
+//#endregion 
 
 
 // ============================================================
-// CARGA HDR + MODELOS MÚLTIPLES
+//#region CARGA HDR + MODELOS MÚLTIPLES
 // ============================================================
+
+
+// ── FUNCIONES ──────────────────────────────────────────────────
 function loadEnvironmentAndModel() {
     new RGBELoader().load(
         'https://dl.polyhaven.org/file/ph-assets/HDRIs/hdr/1k/kloofendal_48d_partly_cloudy_puresky_1k.hdr',
@@ -982,13 +795,17 @@ function loadGLBModel(path, options = {}) {
     });
 }
 
+//#endregion 
+
+
 // ============================================================
-// GESTIÓN DE CHUNKS 
+//#region GESTIÓN DE CHUNKS 
 // ============================================================
 
-// Lista maestra de todos los tags que usas en loadGLBModel
-//const TODOS_LOS_TAGS = ['Edificio_Principal', 'USIT', 'Estacionamiento'];
 
+// ── DEFINICION DE CHUNKS ──────────────────────────────────────────────────
+
+//  LISTA DE TAGS QUE SE USAN EN LOS MODELOS
 const TODOS_LOS_TAGS = ['FACU', 'USIT', 'EST', 'ATRAS'];
 
 // Reglas de Visibilidad
@@ -1011,6 +828,8 @@ const ReglasVisibilidad = {
 
 let sectorActivoActual = 'Exterior'; 
 
+// ── FUNCIONES ──────────────────────────────────────────────────
+
 function actualizarSectores(nuevoSector) {
     if (sectorActivoActual === nuevoSector) return; // Evita cálculos innecesarios
 
@@ -1026,6 +845,7 @@ function actualizarSectores(nuevoSector) {
 }
 
 function toggleEdificio(tag, activar) {
+    
     const modelos = edificiosCargados[tag];
     
     if (!modelos) {
@@ -1045,6 +865,7 @@ function toggleEdificio(tag, activar) {
                 }
             });
         });
+        console.clear()
         console.log(`[${tag}] Cargado y activo.`);
         
     } else {
@@ -1061,14 +882,187 @@ function toggleEdificio(tag, activar) {
     }
 }
 
-
-
-
-
+//#endregion 
 
 
 // ============================================================
-// LOOP DE ANIMACIÓN
+//#region INIT
+// ============================================================
+function init() {
+    // Definimos el color base para el horizonte y la niebla
+    const FOG_COLOR = 0xffe6d1;
+
+    // ── ESCENA ────────────────────────────────────────────────
+    scene = new THREE.Scene();
+    
+   
+    scene.fog = new THREE.Fog(FOG_COLOR, 80, 150);
+
+    // ── CÁMARA ────────────────────────────────────────────────
+    
+    camera = new THREE.PerspectiveCamera(70, innerWidth / innerHeight, 0.1, 50);
+    camera.position.set(7, 8.41, 37);
+    //camera.position.set(6.31, 20, 52.96);
+
+    // ── RENDERER ──────────────────────────────────────────────
+    renderer = new THREE.WebGLRenderer({ canvas, antialias: false, powerPreference: 'high-performance' });
+    renderer.setSize(innerWidth, innerHeight);
+    renderer.setPixelRatio(Math.min(devicePixelRatio, 1.5));
+    
+    
+    renderer.setClearColor(FOG_COLOR, 1.0); 
+
+    renderer.shadowMap.enabled = true;
+    //renderer.shadowMap.type    = THREE.VSMShadowMap;
+    renderer.shadowMap.type    = THREE.PCFSoftShadowMap;
+    renderer.toneMapping       = THREE.ACESFilmicToneMapping;
+    renderer.toneMappingExposure = 1.1;
+    renderer.outputColorSpace  = THREE.SRGBColorSpace;
+
+    // ── POST-PROCESADO ────────────────────────────────────────
+    composer = new EffectComposer(renderer);
+    composer.addPass(new RenderPass(scene, camera));
+    composer.addPass(new OutputPass());
+
+    // ── CONTROLES ─────────────────────────────────────────────
+    controls = new PointerLockControls(camera, renderer.domElement);
+    scene.add(controls.getObject());
+
+    const startBtn = document.getElementById('start-btn');
+    if (startBtn) {
+        startBtn.addEventListener('click', () => {
+            if (isModelLoaded) controls.lock();
+        });
+    }
+
+    controls.addEventListener('lock', () => {
+        if (instructions) instructions.style.display = 'none';
+        if (blocker)      blocker.style.display      = 'none';
+    });
+    controls.addEventListener('unlock', () => {
+        if (blocker)      blocker.style.display      = 'flex';
+        if (instructions) instructions.style.display = '';
+    });
+
+    // ── RAYCASTER ─────────────────────────────────────────────
+    raycaster = new THREE.Raycaster();
+    raycaster.far = 50;
+    raycaster.layers.set(LAYER_COLLIDABLE);
+    raycaster.firstHitOnly = true;
+
+    // ── ILUMINACIÓN ───────────────────────────────────────────
+    const hemi = new THREE.HemisphereLight(0xffeeb1, 0x3a5f8a, 1.5);
+    hemi.position.set(0, 50, 0);
+    scene.add(hemi);
+
+    const sun = new THREE.DirectionalLight(0xffaa33, 2.5);
+    sun.position.set(50, 80, 50);
+    sun.castShadow = false;
+    sun.shadow.mapSize.set(1024, 1024);
+    sun.shadow.camera.near = 1;
+    sun.shadow.camera.far  = 150;
+    sun.shadow.bias        = -0.001;
+    sun.shadow.radius      = 4;
+    const d = 60;
+    sun.shadow.camera.left = -d; sun.shadow.camera.right = d;
+    sun.shadow.camera.top  =  d; sun.shadow.camera.bottom = -d;
+    scene.add(sun);
+
+    const fill = new THREE.DirectionalLight(0x8ab4d4, 0.4);
+    fill.position.set(-40, 20, -30);
+    scene.add(fill);
+
+    scene.add(new THREE.AmbientLight(0xffffff, 0.15));
+
+    // ── PISO BASE ─────────────────────────────────────────────
+    const ground = new THREE.Mesh(
+        new THREE.PlaneGeometry(500, 500),
+        new THREE.MeshStandardMaterial({ color: 0x111111, roughness: 0.8 })
+    );
+    ground.rotation.x = -Math.PI / 2;
+    ground.receiveShadow = true;
+    ground.geometry.boundsTree = new MeshBVH(ground.geometry);
+    ground.layers.enable(LAYER_COLLIDABLE);
+    scene.add(ground);
+    collidableObjects.push(ground);
+
+    // ── RELOJ + CARGA ─────────────────────────────────────────
+    clock = new THREE.Clock();
+    loadEnvironmentAndModel();
+
+
+
+    //── INFORMACION DE SALONES ─────────────────────────────────────────
+
+    CrearSalonColision(Salones.Sala_Maestros, 34.22, 7.46, 51.84, false);
+    CrearSalonColision(Salones.USIT_entrada, -24.80, 7.53, 20.87, false);
+
+    CrearSalonColision(Salones.Princ_Dep_Coordinacion, -8.54, 8.05, -22.25, false);
+    CrearSalonColision(Salones.Princ_Dep_Servicios_General, -8.77, 8.05, 3.59, false);
+    CrearSalonColision(Salones.Princ_Cafeteria, -9.14, 8.05, -7.87, false);
+    CrearSalonColision(Salones.Princ_Dep_Direccion, 14.33, 8.05, 6.22, false);
+    CrearSalonColision(Salones.Princ_Dep_Tesoreria, 14.50, 8.05, -7.28, false);
+    CrearSalonColision(Salones.Princ_Audi_Eladio, 17.72, 8.05, -13.97, false);
+    CrearSalonColision(Salones.Princ_Salon_401, 30.97, 8.05, -18.80, false);
+
+    //Piso 2
+    CrearSalonColision(Salones.Princ_Dep_Prefectura, 13.98, 11.77, 9.20, false);
+    CrearSalonColision(Salones.Princ_Dep_Servicio_Social, 14.06, 11.77, 4.30, false);
+    CrearSalonColision(Salones.Princ_Dep_Escolar, 14.15, 11.77, -2.25, false);
+    CrearSalonColision(Salones.Princ_Audi_Jose, 16.89, 11.77, -13.21, false);
+    //////////CrearSalonColision(Salones.Sala_inovacion_emprendimiento, 30.70, 11.77, -18.77, false);
+    CrearSalonColision(Salones.Princ_Lab_Optica, 20.37, 11.77, -22.62, false);
+    CrearSalonColision(Salones.Princ_Lab_Sistemas_Elec, 14.08, 11.77, -22.86, false);
+    CrearSalonColision(Salones.Princ_Lab_Fisica_III, 7.08, 11.77, -22.90, false);
+    CrearSalonColision(Salones.Princ_Lab_Circuitos, 0.41, 11.77, -22.86, false);
+    CrearSalonColision(Salones.Princ_Lab_Fluidos, -6.51, 11.77, -22.94, false);
+    CrearSalonColision(Salones.Princ_Lab_Mecanica, -13.38, 11.77, -22.85, false);
+    //////////CrearSalonColision(Salones.Lab_Actuaria, -30.15, 11.77, -11.86, false);
+    CrearSalonColision(Salones.Princ_Dep_Soci_Alumnos, -9.08, 11.77, -7.10, false);
+    CrearSalonColision(Salones.Princ_Dep_Copias, -9.12, 11.77, -5.24, false);
+    CrearSalonColision(Salones.Princ_Dep_RH, -9.16, 11.77, -2.05, false);
+    
+    CrearBuildingColision('Princ', 3.94, 16.00, -10.95, 35, 20, 44.5);
+    CrearBuildingColision('Princ', -42.06, 16.00, -16.95, 35, 20, 30.3);
+    CrearBuildingColision('Princ', -19.06, 16.00, -26.95, 11.5, 20, 10);
+    CrearBuildingColision('Princ', 30.94, 16.00, -23.95, 11.5, 20, 32);
+    CrearBuildingColision('Princ', 19.94, 16.00, 5.05, 10, 20, 18);
+
+    CrearBuildingColision('usitbuild', -46.06, 16.00, 18.05, 30, 20, 30);
+    CrearBuildingColision('usitbuild', -30.06, 16.00, 17.55, 2.5, 20, 9.5);
+    CrearBuildingColision('usitbuild', -28.06, 16.00, 17.55, 3, 20, 4);
+
+    CrearBuildingColision('back', 13.27, 16.00, -108.11, 60, 20, 80);
+
+    CrearBuildingColision('front', 12.27, 16.00, 44.89, 60, 20, 40);
+    CrearBuildingColision('front', -40.23, 16.00, 49.89, 45, 20, 30);
+
+    if (ModoDebugActivado == true){
+        SpawnDebugBox(45, 20, 30)
+    }
+    
+    
+    
+
+    //── RE SIZE ─────────────────────────────────────────
+
+    window.addEventListener('resize', () => {
+        camera.aspect = innerWidth / innerHeight;
+        camera.updateProjectionMatrix();
+        renderer.setSize(innerWidth, innerHeight);
+        composer.setSize(innerWidth, innerHeight);
+    });
+
+    //── EMPEZAR A ANIMAR ─────────────────────────────────────────
+
+    animate();
+}
+
+//#endregion 
+
+
+// ============================================================
+//#region ANIMATE
 // ============================================================
 function animate() {
     requestAnimationFrame(animate);
@@ -1108,19 +1102,6 @@ function animate() {
     }
 
 
-    
-    //--------------------------------------------------COLISION DE INFO--------------------------------------------------
-
-    
-    
-    
-
-
-
-
-
-    //--------------------------------------------------COLISION DE INFO--------------------------------------------------
-
 
 
     composer.render();
@@ -1138,5 +1119,15 @@ function animate() {
     }
 }
 
-// ── ARRANQUE ──────────────────────────────────────────────────
+
+//#endregion 
+
+
+// ============================================================
+// EMPEZAR EL PROGRAMA
+// ============================================================
+
 init();
+
+// ============================================================
+
