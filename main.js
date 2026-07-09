@@ -45,11 +45,42 @@ document.addEventListener('keydown', e => {
             //teletransportarA(new THREE.Vector3(48.38, 8.41, -51.56)); // Coordenadas de ejemplo 1
         }
         
-        if (k === 'o') {
-            isUsitVisible = !isUsitVisible; // Invertimos el estado
-            toggleEdificio('USIT', isUsitVisible);
-        }
+        //if (k === 'o') {
+        //    isUsitVisible = !isUsitVisible; // Invertimos el estado
+        //    toggleEdificio('USIT', isUsitVisible);
+        //}
         
+    }
+
+    const vectorMovimiento = new THREE.Vector3(0, 0, 0);
+
+    // Mapeo de teclas
+    if (k === 'i') vectorMovimiento.z -= debugPaso; // Mover adelante
+    if (k === 'k') vectorMovimiento.z += debugPaso; // Mover atrás
+    if (k === 'j') vectorMovimiento.x -= debugPaso; // Mover izquierda
+    if (k === 'l') vectorMovimiento.x += debugPaso; // Mover derecha
+    if (k === 'u') vectorMovimiento.y -= debugPaso; // Mover abajo
+    if (k === 'o') vectorMovimiento.y += debugPaso; // Mover arriba
+
+    // Aplicar el movimiento a la caja
+    //debugBox.translate(vectorMovimiento);
+
+    // IMPRIMIR COORDENADAS CON 'P'
+    if (k === 'm') {
+        const centroActual = new THREE.Vector3();
+        debugBox.getCenter(centroActual); // Extraemos el centro exacto
+        
+        const size = new THREE.Vector3();
+        debugBox.getSize(size); // Extraemos el tamaño por si lo olvidaste
+
+        const cX = centroActual.x.toFixed(2);
+        const cY = centroActual.y.toFixed(2);
+        const cZ = centroActual.z.toFixed(2);
+
+        console.log("=====================================");
+        console.log("Copia y pega esta línea en tu código:");
+        console.log(`CrearBuildingColision('TAG_AQUI', ${cX}, ${cY}, ${cZ}, ${size.x}, ${size.y}, ${size.z});`);
+        console.log("=====================================");
     }
 
 
@@ -100,6 +131,7 @@ const MAX_SUBSTEPS       = 2;
 let   _accumulator       = 0;
 const moveSpeed          = 8.0;
 const gravity            = 50.0;
+//const gravity            = 0.0;
 const jumpForce          = 10.0;
 const cameraHeight       = 1.3;
 const collisionThreshold = 0.5;
@@ -111,7 +143,7 @@ let   _lastCollisions    = { forward: false, backward: false, left: false, right
 let   _lastCoordX, _lastCoordY, _lastCoordZ;
 
 // ── COLISIONES ────────────────────────────────────────────────
-const collidableObjects  = [];
+let collidableObjects  = [];
 const LAYER_COLLIDABLE   = 1;
 let   raycaster;
 
@@ -290,8 +322,9 @@ function init() {
 
     // ── CÁMARA ────────────────────────────────────────────────
     
-    camera = new THREE.PerspectiveCamera(70, innerWidth / innerHeight, 0.1, 150);
+    camera = new THREE.PerspectiveCamera(70, innerWidth / innerHeight, 0.1, 50);
     camera.position.set(7, 8.41, 37);
+    //camera.position.set(6.31, 20, 52.96);
 
     // ── RENDERER ──────────────────────────────────────────────
     renderer = new THREE.WebGLRenderer({ canvas, antialias: false, powerPreference: 'high-performance' });
@@ -383,10 +416,9 @@ function init() {
 
     //================ INFORMACION DE SALONES ================================================
 
-    CrearBuildingColision('Princ', -22.06, 10.0, -11.95, 90, 40, 44.5);
+    
 
-    // Caja gigante que envuelve el USIT
-    //CrearBuildingColision('USIT', -30.0, 10.0, 30.0, 60, 30, 60);
+    
     
     
     CrearSalonColision(Salones.Princ_Salon_101, -10.0, 7.46, 40.0, false);
@@ -421,7 +453,25 @@ function init() {
     CrearSalonColision(Salones.Princ_Dep_Soci_Alumnos, -9.08, 11.77, -7.10, false);
     CrearSalonColision(Salones.Princ_Dep_Copias, -9.12, 11.77, -5.24, false);
     CrearSalonColision(Salones.Princ_Dep_RH, -9.16, 11.77, -2.05, false);
+    
 
+    
+    CrearBuildingColision('Princ', 3.94, 16.00, -10.95, 35, 20, 44.5);
+    CrearBuildingColision('Princ', -42.06, 16.00, -16.95, 35, 20, 30.3);
+    CrearBuildingColision('Princ', -19.06, 16.00, -26.95, 11.5, 20, 10);
+    CrearBuildingColision('Princ', 30.94, 16.00, -23.95, 11.5, 20, 32);
+    CrearBuildingColision('Princ', 19.94, 16.00, 5.05, 10, 20, 18);
+
+    CrearBuildingColision('usitbuild', -46.06, 16.00, 18.05, 30, 20, 30);
+    CrearBuildingColision('usitbuild', -30.06, 16.00, 17.55, 2.5, 20, 9.5);
+    CrearBuildingColision('usitbuild', -28.06, 16.00, 17.55, 3, 20, 4);
+
+    CrearBuildingColision('back', 13.27, 16.00, -108.11, 60, 20, 80);
+
+    CrearBuildingColision('front', 12.27, 16.00, 44.89, 60, 20, 40);
+    CrearBuildingColision('front', -40.23, 16.00, 49.89, 45, 20, 30);
+
+    //SpawnDebugBox(45, 20, 30)
     
 
     //================ INFORMACION DE SALONES ================================================    
@@ -450,11 +500,37 @@ function CrearBuildingColision(prefijo, centroX, centroY, centroZ, w, h, d) {
     });
 
     // Descomenta esto para ver las cajas amarillas gigantes y ajustarlas visualmente
-    const helper = new THREE.Box3Helper(cajaMatematica, 0xffff00);
-    scene.add(helper);
+    //const helper = new THREE.Box3Helper(cajaMatematica, 0xffff00);
+    //scene.add(helper);
 }
 
+// ==========================================
+// HERRAMIENTA DE DEBUG PARA CAJAS DE CARGA
+// ==========================================
+let debugBox = null;
+let debugBoxHelper = null;
+let debugPaso = 0.5; // Cuántos metros se mueve con cada tecla
 
+function SpawnDebugBox(w, h, d) {
+    // Si ya existe una caja de debug, la borramos primero
+    if (debugBoxHelper) {
+        scene.remove(debugBoxHelper);
+    }
+
+    //const centroInicial = new THREE.Vector3(0, 10, 0); // Empieza en el centro del mundo
+    const centroInicial = new THREE.Vector3(-47.23, 16.00, 48.89); // Empieza en el centro del mundo
+    const tamaño = new THREE.Vector3(w, h, d);
+    
+    // Creamos la caja matemática
+    debugBox = new THREE.Box3().setFromCenterAndSize(centroInicial, tamaño);
+    
+    // Le ponemos un color llamativo (Cyan) para diferenciarla de las rojas/verdes
+    //debugBoxHelper = new THREE.Box3Helper(debugBox, 0x00ffff); 
+    //scene.add(debugBoxHelper);
+
+    //console.log(`Caja Debug Creada: ${w}x${h}x${d}`);
+    //console.log("Controles: I/K (Adelante/Atrás), J/L (Izquierda/Derecha), U/O (Abajo/Arriba). Presiona 'P' para imprimir.");
+}
 
 
 
@@ -797,27 +873,7 @@ function loadEnvironmentAndModel() {
 
             try {
                 // Configuración modular de tus pedazos de mapa
-                await Promise.all([
-                    
-                    //loadGLBModel('modelos/Estacionamiento_opt.glb', { x: 0, y: 10, z: -10, scale: 100 }),
-                    //loadGLBModel('modelos/A_test.glb', { x: 4, y: 6, z: 30, scale: 1 }),
-                    //4.0, 7.46, 30.0
-
-                    //loadGLBModel('modelos/EdificioP_opt.glb', { x: 0, y: 10, z: -10, scale: 100 }),
-                    //loadGLBModel('modelos/EP_P1_opt.glb', { x: 0, y: 10, z: -10, scale: 100 }),
-                    //loadGLBModel('modelos/300s_opt.glb', { x: 0, y: 8, z: -10, scale: 100 }),
-
-                    //loadGLBModel('modelos/EP_P2_opt.glb', { x: 0, y: 10, z: -10, scale: 100 }),
-                    //loadGLBModel('modelos/EP_PB3_opt.glb', { x: 0, y: 10, z: -10, scale: 100 }),
-                    ////loadGLBModel('modelos/EP_PB1_opt.glb', { x: 0, y: 10, z: -10, scale: 100 }),
-                    ////loadGLBModel('modelos/EP_PB2_opt.glb', { x: 0, y: 10, z: -10, scale: 100 }),
-
-                    //loadGLBModel('modelos/Estacionamiento_opt.glb', { x: 0, y: 10, z: -10, scale: 100 }),
-                    //loadGLBModel('modelos/Salas-Estudio_opt.glb', { x: 0, y: 10, z: -10, scale: 100 }),
-                    //loadGLBModel('modelos/USIT-Auditorio_opt.glb', { x: 0, y: 10, z: -10, scale: 100 }),
-                    //loadGLBModel('modelos/USIT-Bancas_opt.glb', { x: 0, y: 10, z: -10, scale: 100 }),
-                    //loadGLBModel('modelos/USIT-Edificio_opt.glb', { x: 0, y: 10, z: -10, scale: 100 }),
-                    
+                await Promise.all([                                        
 
                     //===============================USIT===============================
                     loadGLBModel('modelos/USIT-Opt/USIT-Bancas_.glb', { x: 0, y: 10, z: -10, scale: 100, tag: 'USIT' }),
@@ -831,9 +887,7 @@ function loadEnvironmentAndModel() {
                     loadGLBModel('modelos/USIT-Opt/USIT-PBLab_.glb', { x: 0, y: 10, z: -10, scale: 100, tag: 'USIT' }),
                     loadGLBModel('modelos/USIT-Opt/USIT-PBMulti_.glb', { x: 0, y: 10, z: -10, scale: 100, tag: 'USIT' }),
 
-                    //===============================SALONES ATRAS===============================
-                    loadGLBModel('modelos/Salones-Opt/Salones_.glb', { x: 0, y: 10, z: -10, scale: 100, tag: 'ATRAS' }),
-                    loadGLBModel('modelos/Salones-Opt/Salones-Plant_.glb', { x: 0, y: 10, z: -10, scale: 100, tag: 'ATRAS' }),
+                    
 
                     //===============================ESTACIONAMIENTO===============================
                     loadGLBModel('modelos/Est-Opt/Est_.glb', { x: 0, y: 10, z: -10, scale: 100, tag: 'EST' }),
@@ -843,46 +897,15 @@ function loadEnvironmentAndModel() {
                     loadGLBModel('modelos/FACU/Principal-PB_.glb', { x: 0, y: 10, z: -10, scale: 100, tag: 'FACU' }),
                     loadGLBModel('modelos/FACU/Principal-B_.glb', { x: 0, y: 10, z: -10, scale: 100, tag: 'FACU' }),
                     loadGLBModel('modelos/FACU/Principal-P1_.glb', { x: 0, y: 10, z: -10, scale: 100, tag: 'FACU' }),
-                    
-                    
-                    //===============================ATRAS===============================
+
+                    //===============================SALONES ATRAS===============================
+                    loadGLBModel('modelos/Salones-Opt/Salones_.glb', { x: 0, y: 10, z: -10, scale: 100, tag: 'ATRAS' }),
+                    loadGLBModel('modelos/Salones-Opt/Salones-Plant_.glb', { x: 0, y: 10, z: -10, scale: 100, tag: 'ATRAS' }),                
                     loadGLBModel('modelos/Atras/300s_.glb', { x: 0, y: 10, z: -10, scale: 100, tag: 'ATRAS' }),
                     loadGLBModel('modelos/Atras/canchas_.glb', { x: 0, y: 10, z: -10, scale: 100, tag: 'ATRAS' }),
                     loadGLBModel('modelos/Atras/deportivo_.glb', { x: 0, y: 10, z: -10, scale: 100, tag: 'ATRAS' }),
                     loadGLBModel('modelos/Atras/posgrado_.glb', { x: 0, y: 10, z: -10, scale: 100, tag: 'ATRAS' }),
-                    
-                    
-                    
-                    //loadGLBModel('modelos/FACU/Est_.glb', { x: 0, y: 10, z: -10, scale: 100 }),
-
-                    //loadGLBModel('modelos/FACU/EdificioP_opt.glb', { x: 0, y: 10, z: -10, scale: 100 }),
-                    //loadGLBModel('modelos/FACU/EP_P1_opt.glb', { x: 0, y: 10, z: -10, scale: 100 }),
-                    //loadGLBModel('modelos/FACU/300s_opt.glb', { x: 0, y: 8, z: -10, scale: 100 }),
-                    //loadGLBModel('modelos/FACU/EP_P2_opt.glb', { x: 0, y: 10, z: -10, scale: 100 }),
-                    //loadGLBModel('modelos/FACU/EP_PB3_opt.glb', { x: 0, y: 10, z: -10, scale: 100 }),
-                    //loadGLBModel('modelos/FACU/EP_PB1_opt.glb', { x: 0, y: 10, z: -10, scale: 100 }),
-                    //loadGLBModel('modelos/FACU/EP_PB2_opt.glb', { x: 0, y: 10, z: -10, scale: 100 }),
-                    
-
-
-
-
-
-
-            
-                    //loadGLBModel('modelos/PisoTest_opt.glb', { x: 0, y: 10, z: 0, scale: 100 }),
-                    //loadGLBModel('modelos/Estaci_SalaMaestros_opt.glb', { x: 0, y: 10, z: 0, scale: 100 }),
-                    //loadGLBModel('modelos/EstacionamientoTest_opt.glb', { x: 0, y: 10, z: 0, scale: 100 }),
-                    //loadGLBModel('modelos/Main_Entrada_opt.glb', { x: 0, y: 10, z: 0, scale: 100 }),
-                    //loadGLBModel('modelos/Main_Edificio_opt.glb', { x: 0, y: 10, z: 0, scale: 100 }),
-                    //loadGLBModel('modelos/Main_Pozo_opt.glb', { x: 0, y: 10, z: 0, scale: 100 }),
-                    //loadGLBModel('modelos/USIT_Bancos_opt.glb', { x: 0, y: 10, z: 0, scale: 100 }),
-                    //loadGLBModel('modelos/USIT_Edificio_opt.glb', { x: 0, y: 10, z: 0, scale: 100 }),
-                    //loadGLBModel('modelos/Traseros_Edificio_opt.glb', { x: 0, y: 10, z: 0, scale: 100 }),
-                    
-                    
-                    // Aquí puedes añadir más módulos en el futuro:
-                    // loadGLBModel('modelos/PisoNorte.glb', { x: 0, y: 10, z: -100, scale: 100 }),
+                                                                                
                 ]);
 
                 isModelLoaded = true;
@@ -975,6 +998,8 @@ const ReglasVisibilidad = {
 
     // Al entrar a la caja "back", solo se muestra la parte de atrás
     'back': ['ATRAS'],
+
+    'front': ['FACU', 'USIT', 'EST'],
 
     // Al entrar a la caja "usitbuild", solo se muestra el USIT
     'usitbuild': ['USIT'],
