@@ -538,7 +538,7 @@ function DisplaySalonInfo(ID_Salon_Seleccionado) {
     }
 }
 
-function CrearSalonColision(id, centroX, centroY, centroZ, isBuildingZone) {
+function CrearSalonColision(id, centroX, centroY, centroZ) {
 
     loadGLBModel('modelos/A_test.glb', { x: centroX, y: (centroY - 1.3), z: centroZ, scale: 1 });
     const centro = new THREE.Vector3(centroX, centroY, centroZ);
@@ -742,8 +742,8 @@ function loadGLBModel(path, options = {}) {
         const posZ  = options.z !== undefined ? options.z : 0;
         const scale = options.scale !== undefined ? options.scale : 100;
 
-        // Definir Tag, si no se define, se pone General
-        const tag = options.tag || 'general';
+        // Definir Tag, si no se define, se pone EST
+        const tag = options.tag || 'EST';
 
         gltfLoader.load(
             path,
@@ -810,19 +810,16 @@ const TODOS_LOS_TAGS = ['FACU', 'USIT', 'EST', 'ATRAS'];
 
 // Reglas de Visibilidad
 const ReglasVisibilidad = {
-    // Al entrar a la caja "Princ", solo se muestra la facultad
-    'Princ': ['FACU'],
+    
+    'Princ': ['FACU'], // Al entrar a la caja "Princ", solo se muestra la facultad
+    
+    'back': ['ATRAS'], // Al entrar a la caja "back", solo se muestra la parte de atrás
 
-    // Al entrar a la caja "back", solo se muestra la parte de atrás
-    'back': ['ATRAS'],
+    'front': ['FACU', 'USIT', 'EST'], // Muestra los edificios de Adelante pero oculta los salones de Atras
+    
+    'usitbuild': ['USIT'], // Al entrar a la caja "usitbuild", solo se muestra el USIT
 
-    'front': ['FACU', 'USIT', 'EST'],
-
-    // Al entrar a la caja "usitbuild", solo se muestra el USIT
-    'usitbuild': ['USIT'],
-
-    // En el exterior, vemos todos los edificios desde afuera, 
-    // y cargamos "EST" (estacionamiento) que es exclusivo de esta vista
+    // Exterior es la Regla Default, es para cargar todos los modelos
     'Exterior': ['FACU', 'ATRAS', 'USIT', 'EST']
 };
 
@@ -994,33 +991,33 @@ function init() {
 
     //── INFORMACION DE SALONES ─────────────────────────────────────────
 
-    CrearSalonColision(Salones.Sala_Maestros, 34.22, 7.46, 51.84, false);
-    CrearSalonColision(Salones.USIT_entrada, -24.80, 7.53, 20.87, false);
+    CrearSalonColision(Salones.Sala_Maestros, 34.22, 7.46, 51.84);
+    CrearSalonColision(Salones.USIT_entrada, -24.80, 7.53, 20.87);
 
-    CrearSalonColision(Salones.Princ_Dep_Coordinacion, -8.54, 8.05, -22.25, false);
-    CrearSalonColision(Salones.Princ_Dep_Servicios_General, -8.77, 8.05, 3.59, false);
-    CrearSalonColision(Salones.Princ_Cafeteria, -9.14, 8.05, -7.87, false);
-    CrearSalonColision(Salones.Princ_Dep_Direccion, 14.33, 8.05, 6.22, false);
-    CrearSalonColision(Salones.Princ_Dep_Tesoreria, 14.50, 8.05, -7.28, false);
-    CrearSalonColision(Salones.Princ_Audi_Eladio, 17.72, 8.05, -13.97, false);
-    CrearSalonColision(Salones.Princ_Salon_401, 30.97, 8.05, -18.80, false);
+    CrearSalonColision(Salones.Princ_Dep_Coordinacion, -8.54, 8.05, -22.25);
+    CrearSalonColision(Salones.Princ_Dep_Servicios_General, -8.77, 8.05, 3.59);
+    CrearSalonColision(Salones.Princ_Cafeteria, -9.14, 8.05, -7.87);
+    CrearSalonColision(Salones.Princ_Dep_Direccion, 14.33, 8.05, 6.22);
+    CrearSalonColision(Salones.Princ_Dep_Tesoreria, 14.50, 8.05, -7.28);
+    CrearSalonColision(Salones.Princ_Audi_Eladio, 17.72, 8.05, -13.97);
+    CrearSalonColision(Salones.Princ_Salon_401, 30.97, 8.05, -18.80);
 
     //Piso 2
-    CrearSalonColision(Salones.Princ_Dep_Prefectura, 13.98, 11.77, 9.20, false);
-    CrearSalonColision(Salones.Princ_Dep_Servicio_Social, 14.06, 11.77, 4.30, false);
-    CrearSalonColision(Salones.Princ_Dep_Escolar, 14.15, 11.77, -2.25, false);
-    CrearSalonColision(Salones.Princ_Audi_Jose, 16.89, 11.77, -13.21, false);
-    //////////CrearSalonColision(Salones.Sala_inovacion_emprendimiento, 30.70, 11.77, -18.77, false);
-    CrearSalonColision(Salones.Princ_Lab_Optica, 20.37, 11.77, -22.62, false);
-    CrearSalonColision(Salones.Princ_Lab_Sistemas_Elec, 14.08, 11.77, -22.86, false);
-    CrearSalonColision(Salones.Princ_Lab_Fisica_III, 7.08, 11.77, -22.90, false);
-    CrearSalonColision(Salones.Princ_Lab_Circuitos, 0.41, 11.77, -22.86, false);
-    CrearSalonColision(Salones.Princ_Lab_Fluidos, -6.51, 11.77, -22.94, false);
-    CrearSalonColision(Salones.Princ_Lab_Mecanica, -13.38, 11.77, -22.85, false);
-    //////////CrearSalonColision(Salones.Lab_Actuaria, -30.15, 11.77, -11.86, false);
-    CrearSalonColision(Salones.Princ_Dep_Soci_Alumnos, -9.08, 11.77, -7.10, false);
-    CrearSalonColision(Salones.Princ_Dep_Copias, -9.12, 11.77, -5.24, false);
-    CrearSalonColision(Salones.Princ_Dep_RH, -9.16, 11.77, -2.05, false);
+    CrearSalonColision(Salones.Princ_Dep_Prefectura, 13.98, 11.77, 9.20);
+    CrearSalonColision(Salones.Princ_Dep_Servicio_Social, 14.06, 11.77, 4.30);
+    CrearSalonColision(Salones.Princ_Dep_Escolar, 14.15, 11.77, -2.25);
+    CrearSalonColision(Salones.Princ_Audi_Jose, 16.89, 11.77, -13.21);
+    //////////CrearSalonColision(Salones.Sala_inovacion_emprendimiento, 30.70, 11.77, -18.77);
+    CrearSalonColision(Salones.Princ_Lab_Optica, 20.37, 11.77, -22.62);
+    CrearSalonColision(Salones.Princ_Lab_Sistemas_Elec, 14.08, 11.77, -22.86);
+    CrearSalonColision(Salones.Princ_Lab_Fisica_III, 7.08, 11.77, -22.90);
+    CrearSalonColision(Salones.Princ_Lab_Circuitos, 0.41, 11.77, -22.86);
+    CrearSalonColision(Salones.Princ_Lab_Fluidos, -6.51, 11.77, -22.94);
+    CrearSalonColision(Salones.Princ_Lab_Mecanica, -13.38, 11.77, -22.85);
+    //////////CrearSalonColision(Salones.Lab_Actuaria, -30.15, 11.77, -11.86);
+    CrearSalonColision(Salones.Princ_Dep_Soci_Alumnos, -9.08, 11.77, -7.10);
+    CrearSalonColision(Salones.Princ_Dep_Copias, -9.12, 11.77, -5.24);
+    CrearSalonColision(Salones.Princ_Dep_RH, -9.16, 11.77, -2.05);
     
     CrearBuildingColision('Princ', 3.94, 16.00, -10.95, 35, 20, 44.5);
     CrearBuildingColision('Princ', -42.06, 16.00, -16.95, 35, 20, 30.3);
