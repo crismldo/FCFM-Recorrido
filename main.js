@@ -229,11 +229,13 @@ const Salones = Object.freeze({
     Sala_Maestros: 'Sala_Maestros',
     
     
-    
+    //USIT
     USIT_entrada: 'USIT_entrada',
-
-
-    
+    USIT_recepcion: 'USIT_recepcion',
+    USIT_Asistente_subdireccion: 'USIT_Asistente_subdireccion',
+    USIT_Sala_Juntas: 'USIT_Sala_Juntas',
+    USIT_Sala_Usos_Multiples: 'USIT_Sala_Usos_Multiples',
+    USIT_Lab_Base_Datos: 'USIT_Lab_Base_Datos',
     
     
     //PISO 1
@@ -327,6 +329,11 @@ const Salones = Object.freeze({
     Princ_Dep_Ofici_Administra: 'Princ_Dep_Ofici_Administra',
     Princ_Dep_CAADI:            'Princ_Dep_CAADI',
     Princ_Dep_Biblioteca:       'Princ_Dep_Biblioteca',
+    
+
+    Asesorias_Entrada:       'Asesorias_Entrada',
+    
+    Posgrado_Entrada:       'Posgrado_Entrada',
 
 
 
@@ -337,52 +344,58 @@ const Salones = Object.freeze({
 
 const InformacionSalones = {
     [Salones.Sala_Maestros]: { nombre: "Sala de maestros", descripcion: " " },
+
+    //USIT
     [Salones.USIT_entrada]: { nombre: "USIT", descripcion: "Entrada al eficio USIT" },
-    
+    [Salones.USIT_recepcion]: { nombre: "Recepción", descripcion: " " },
+    [Salones.USIT_Asistente_subdireccion]: { nombre: "Asistente de Subdireccion", descripcion: " " },
+    [Salones.USIT_Sala_Juntas]: { nombre: "Sala de Juntas", descripcion: " " },
+    [Salones.USIT_Sala_Usos_Multiples]: { nombre: "Sala de usos Multiples", descripcion: "En esta sala se realizan diferentes eventos" },
+    [Salones.USIT_Lab_Base_Datos]: { nombre: "Laboratorio de Base de Datos", descripcion: " " },
     
     // --- PISO 1 ---
-    [Salones.Princ_Salon_101]: { nombre: "Salón 101", descripcion: "Aula de clases regulares." },
-    [Salones.Princ_Salon_102]: { nombre: "Salón 102", descripcion: "Aula de clases regulares." },
-    [Salones.Princ_Salon_103]: { nombre: "Salón 103", descripcion: "Aula de clases regulares." },
-    [Salones.Princ_Salon_104]: { nombre: "Salón 104", descripcion: "Aula de clases regulares." },
-    [Salones.Princ_Salon_105]: { nombre: "Salón 105", descripcion: "Aula de clases regulares." },
+    [Salones.Princ_Salon_101]: { nombre: "Salón 101", descripcion: " " },
+    [Salones.Princ_Salon_102]: { nombre: "Salón 102", descripcion: " " },
+    [Salones.Princ_Salon_103]: { nombre: "Salón 103", descripcion: " " },
+    [Salones.Princ_Salon_104]: { nombre: "Salón 104", descripcion: " " },
+    [Salones.Princ_Salon_105]: { nombre: "Salón 105", descripcion: " " },
 
-    [Salones.Princ_Salon_201]: { nombre: "Salón 201", descripcion: "Aula de clases." },
-    [Salones.Princ_Salon_202]: { nombre: "Salón 202", descripcion: "Aula de clases." },
-    [Salones.Princ_Salon_203]: { nombre: "Salón 203", descripcion: "Aula de clases." },
-    [Salones.Princ_Salon_204]: { nombre: "Salón 204", descripcion: "Aula de clases." },
+    [Salones.Princ_Salon_201]: { nombre: "Salón 201", descripcion: " " },
+    [Salones.Princ_Salon_202]: { nombre: "Salón 202", descripcion: " " },
+    [Salones.Princ_Salon_203]: { nombre: "Salón 203", descripcion: " " },
+    [Salones.Princ_Salon_204]: { nombre: "Salón 204", descripcion: " " },
 
     [Salones.Princ_Salon_401]: { nombre: "Salón 401", descripcion: "Sala Polivalente." },
-    [Salones.Princ_Salon_402]: { nombre: "Salón 402", descripcion: "Aula de clases." },
-    [Salones.Princ_Salon_403]: { nombre: "Salón 403", descripcion: "Aula de clases." },
-    [Salones.Princ_Salon_404]: { nombre: "Salón 404", descripcion: "Aula de clases." },
-    [Salones.Princ_Salon_405]: { nombre: "Salón 405", descripcion: "Aula de clases." },
+    [Salones.Princ_Salon_402]: { nombre: "Salón 402", descripcion: " " },
+    [Salones.Princ_Salon_403]: { nombre: "Salón 403", descripcion: "Club de programación" },
+    [Salones.Princ_Salon_404]: { nombre: "Salón 404", descripcion: " " },
+    [Salones.Princ_Salon_405]: { nombre: "Salón 405", descripcion: " " },
 
-    [Salones.Princ_Audi_Eladio]: { nombre: "Auditorio Eladio", descripcion: "Auditorio principal para conferencias y eventos." },
-    [Salones.Princ_Dep_Tutorias]: { nombre: "Departamento de Tutorías", descripcion: "Atención y seguimiento académico." },
-    [Salones.Princ_Dep_Tesoreria]: { nombre: "Tesorería", descripcion: "Pagos de colegiaturas y trámites financieros." },
-    [Salones.Princ_Dep_Direccion]: { nombre: "Dirección", descripcion: "Oficina del director(a) de la facultad." },
-    [Salones.Princ_Dep_Servicios_General]: { nombre: "Servicios Generales", descripcion: "Mantenimiento y operaciones del edificio." },
-    [Salones.Princ_Dep_Coordinacion]: { nombre: "Coordinación", descripcion: "Coordinación académica." },
-    [Salones.Princ_Cafeteria]: { nombre: "Cafetería", descripcion: "Área de comida y descanso." },
+    [Salones.Princ_Audi_Eladio]: { nombre: "Auditorio Eladio", descripcion: "Auditorio del primer piso para conferencias y eventos." },
+    [Salones.Princ_Dep_Tutorias]: { nombre: "Departamento de Tutorías", descripcion: " " },
+    [Salones.Princ_Dep_Tesoreria]: { nombre: "Tesorería", descripcion: " "},
+    [Salones.Princ_Dep_Direccion]: { nombre: "Dirección", descripcion: " " },
+    [Salones.Princ_Dep_Servicios_General]: { nombre: "Servicios Generales", descripcion: " " },
+    [Salones.Princ_Dep_Coordinacion]: { nombre: "Coordinación", descripcion: " " },
+    [Salones.Princ_Cafeteria]: { nombre: "Cafetería", descripcion: " " },
 
     // --- PISO 2 ---
-    [Salones.Princ_Salon_106]: { nombre: "Salón 106", descripcion: "Aula de clases regulares." },
-    [Salones.Princ_Salon_107]: { nombre: "Salón 107", descripcion: "Aula de clases regulares." },
-    [Salones.Princ_Salon_108]: { nombre: "Salón 108", descripcion: "Aula de clases regulares." },
-    [Salones.Princ_Salon_109]: { nombre: "Salón 109", descripcion: "Aula de clases regulares." },
-    [Salones.Princ_Salon_110]: { nombre: "Salón 110", descripcion: "Aula de clases regulares." },
+    [Salones.Princ_Salon_106]: { nombre: "Salón 106", descripcion: " " },
+    [Salones.Princ_Salon_107]: { nombre: "Salón 107", descripcion: " " },
+    [Salones.Princ_Salon_108]: { nombre: "Salón 108", descripcion: " " },
+    [Salones.Princ_Salon_109]: { nombre: "Salón 109", descripcion: " " },
+    [Salones.Princ_Salon_110]: { nombre: "Salón 110", descripcion: " " },
 
-    [Salones.Princ_Salon_205]: { nombre: "Salón 205", descripcion: "Aula de clases." },
-    [Salones.Princ_Salon_206]: { nombre: "Salón 206", descripcion: "Aula de clases." },
-    [Salones.Princ_Salon_207]: { nombre: "Salón 207", descripcion: "Aula de clases." },
-    [Salones.Princ_Salon_208]: { nombre: "Salón 208", descripcion: "Aula de clases." },
+    [Salones.Princ_Salon_205]: { nombre: "Salón 205", descripcion: " " },
+    [Salones.Princ_Salon_206]: { nombre: "Salón 206", descripcion: " " },
+    [Salones.Princ_Salon_207]: { nombre: "Salón 207", descripcion: " " },
+    [Salones.Princ_Salon_208]: { nombre: "Salón 208", descripcion: "Laboratorio de Actuaria" },
 
-    [Salones.Princ_Salon_406]: { nombre: "Salón 406", descripcion: "Aula de clases." },
-    [Salones.Princ_Salon_407]: { nombre: "Salón 407", descripcion: "Aula de clases." },
-    [Salones.Princ_Salon_408]: { nombre: "Salón 408", descripcion: "Aula de clases." },
-    [Salones.Princ_Salon_409]: { nombre: "Salón 409", descripcion: "Aula de clases." },
-    [Salones.Princ_Salon_410]: { nombre: "Salón 410", descripcion: "Aula de clases." },
+    [Salones.Princ_Salon_406]: { nombre: "Salón 406", descripcion: "Sala de Inovación y Emprendimiento" },
+    [Salones.Princ_Salon_407]: { nombre: "Salón 407", descripcion: " " },
+    [Salones.Princ_Salon_408]: { nombre: "Salón 408", descripcion: " " },
+    [Salones.Princ_Salon_409]: { nombre: "Salón 409", descripcion: " " },
+    [Salones.Princ_Salon_410]: { nombre: "Salón 410", descripcion: " " },
 
     [Salones.Princ_Audi_Jose]: { nombre: "Auditorio José", descripcion: "Auditorio secundario para presentaciones." },
 
@@ -401,34 +414,37 @@ const InformacionSalones = {
     [Salones.Princ_Dep_Servicio_Social]: { nombre: "Servicio Social", descripcion: "Registro y liberación de horas." },
 
     // --- PISO 3 ---
-    [Salones.Princ_Salon_111]: { nombre: "Salón 111", descripcion: "Aula de clases regulares." },
-    [Salones.Princ_Salon_112]: { nombre: "Salón 112", descripcion: "Aula de clases regulares." },
-    [Salones.Princ_Salon_113]: { nombre: "Salón 113", descripcion: "Aula de clases regulares." },
-    [Salones.Princ_Salon_114]: { nombre: "Salón 114", descripcion: "Aula de clases regulares." },
-    [Salones.Princ_Salon_115]: { nombre: "Salón 115", descripcion: "Aula de clases regulares." },
-    [Salones.Princ_Salon_116]: { nombre: "Salón 116", descripcion: "Aula de clases regulares." },
-    [Salones.Princ_Salon_117]: { nombre: "Salón 117", descripcion: "Aula de clases regulares." },
-    [Salones.Princ_Salon_118]: { nombre: "Salón 118", descripcion: "Aula de clases regulares." },
-    [Salones.Princ_Salon_119]: { nombre: "Salón 119", descripcion: "Aula de clases regulares." },
-    [Salones.Princ_Salon_120]: { nombre: "Salón 120", descripcion: "Aula de clases regulares." },
-    [Salones.Princ_Salon_121]: { nombre: "Salón 121", descripcion: "Aula de clases regulares." },
+    [Salones.Princ_Salon_111]: { nombre: "Salón 111", descripcion: " " },
+    [Salones.Princ_Salon_112]: { nombre: "Salón 112", descripcion: " " },
+    [Salones.Princ_Salon_113]: { nombre: "Salón 113", descripcion: " " },
+    [Salones.Princ_Salon_114]: { nombre: "Salón 114", descripcion: " " },
+    [Salones.Princ_Salon_115]: { nombre: "Salón 115", descripcion: " " },
+    [Salones.Princ_Salon_116]: { nombre: "Salón 116", descripcion: " " },
+    [Salones.Princ_Salon_117]: { nombre: "Salón 117", descripcion: " " },
+    [Salones.Princ_Salon_118]: { nombre: "Salón 118", descripcion: " " },
+    [Salones.Princ_Salon_119]: { nombre: "Salón 119", descripcion: " " },
+    [Salones.Princ_Salon_120]: { nombre: "Salón 120", descripcion: " " },
+    [Salones.Princ_Salon_121]: { nombre: "Salón 121", descripcion: " " },
 
-    [Salones.Princ_Salon_209]: { nombre: "Salón 209", descripcion: "Aula de clases." },
-    [Salones.Princ_Salon_210]: { nombre: "Salón 210", descripcion: "Aula de clases." },
-    [Salones.Princ_Salon_211]: { nombre: "Salón 211", descripcion: "Aula de clases." },
-    [Salones.Princ_Salon_212]: { nombre: "Salón 212", descripcion: "Aula de clases." },
+    [Salones.Princ_Salon_209]: { nombre: "Salón 209", descripcion: "Estudio de Animación" },
+    [Salones.Princ_Salon_210]: { nombre: "Salón 210", descripcion: " " },
+    [Salones.Princ_Salon_211]: { nombre: "Salón 211", descripcion: " " },
+    [Salones.Princ_Salon_212]: { nombre: "Salón 212", descripcion: " " },
 
-    [Salones.Princ_Salon_411]: { nombre: "Salón 411", descripcion: "Aula de clases." },
-    [Salones.Princ_Salon_412]: { nombre: "Salón 412", descripcion: "Aula de clases." },
-    [Salones.Princ_Salon_413]: { nombre: "Salón 413", descripcion: "Aula de clases." },
-    [Salones.Princ_Salon_414]: { nombre: "Salón 414", descripcion: "Aula de clases." },
+    [Salones.Princ_Salon_411]: { nombre: "Salón 411", descripcion: " " },
+    [Salones.Princ_Salon_412]: { nombre: "Salón 412", descripcion: " " },
+    [Salones.Princ_Salon_413]: { nombre: "Salón 413", descripcion: " " },
+    [Salones.Princ_Salon_414]: { nombre: "Salón 414", descripcion: " " },
 
     [Salones.Princ_Dep_Astronomia]: { nombre: "Departamento de Astronomía", descripcion: "Oficinas e investigación astronómica." },
     [Salones.Princ_Dep_Soporte_Tecnico]: { nombre: "Soporte Técnico", descripcion: "Ayuda con redes y equipo de cómputo." },
     [Salones.Princ_Dep_Lab_Computo_Mat]: { nombre: "Lab. Cómputo Matemático", descripcion: "Computadoras con software especializado." },
     [Salones.Princ_Dep_Ofici_Administra]: { nombre: "Oficinas Administrativas", descripcion: "Área administrativa general." },
     [Salones.Princ_Dep_CAADI]: { nombre: "CAADI", descripcion: "Centro de Autoaprendizaje de Idiomas." },
-    [Salones.Princ_Dep_Biblioteca]: { nombre: "Biblioteca", descripcion: "Zona de silencio y estudio." }
+    [Salones.Princ_Dep_Biblioteca]: { nombre: "Biblioteca", descripcion: "Zona de silencio y estudio." },
+    
+    [Salones.Asesorias_Entrada]: { nombre: "Asesorias Entrada", descripcion: " " },
+    [Salones.Posgrado_Entrada]: { nombre: "Posgrado Entrada", descripcion: " " }
 };
 
 
@@ -538,9 +554,10 @@ function DisplaySalonInfo(ID_Salon_Seleccionado) {
     }
 }
 
-function CrearSalonColision(id, centroX, centroY, centroZ) {
+function CrearSalonColision(id, centroX, centroY, centroZ, Salontag) {
 
-    loadGLBModel('modelos/A_test.glb', { x: centroX, y: (centroY - 1.3), z: centroZ, scale: 1 });
+    
+    loadGLBModel('modelos/A_test.glb', { x: centroX, y: (centroY - 1.3), z: centroZ, scale: 1, tag: Salontag });
     const centro = new THREE.Vector3(centroX, centroY, centroZ);
     const tamaño = new THREE.Vector3(2, 2, 2);
     
@@ -991,34 +1008,60 @@ function init() {
 
     //── INFORMACION DE SALONES ─────────────────────────────────────────
 
-    CrearSalonColision(Salones.Sala_Maestros, 34.22, 7.46, 51.84);
-    CrearSalonColision(Salones.USIT_entrada, -24.80, 7.53, 20.87);
+    CrearSalonColision(Salones.Sala_Maestros, 34.51, 7.46, 51.28, 'EST');
+    
+    
+    
 
-    CrearSalonColision(Salones.Princ_Dep_Coordinacion, -8.54, 8.05, -22.25);
-    CrearSalonColision(Salones.Princ_Dep_Servicios_General, -8.77, 8.05, 3.59);
-    CrearSalonColision(Salones.Princ_Cafeteria, -9.14, 8.05, -7.87);
-    CrearSalonColision(Salones.Princ_Dep_Direccion, 14.33, 8.05, 6.22);
-    CrearSalonColision(Salones.Princ_Dep_Tesoreria, 14.50, 8.05, -7.28);
-    CrearSalonColision(Salones.Princ_Audi_Eladio, 17.72, 8.05, -13.97);
-    CrearSalonColision(Salones.Princ_Salon_401, 30.97, 8.05, -18.80);
+
+
+
+
+
+
+
+    CrearSalonColision(Salones.Princ_Dep_Coordinacion, -8.54, 8.05, -22.25, 'FACU');
+    CrearSalonColision(Salones.Princ_Dep_Servicios_General, -8.77, 8.05, 3.59, 'FACU');
+    CrearSalonColision(Salones.Princ_Cafeteria, -9.14, 8.05, -7.87, 'FACU');
+    CrearSalonColision(Salones.Princ_Dep_Direccion, 14.33, 8.05, 6.22, 'FACU');
+    CrearSalonColision(Salones.Princ_Dep_Tesoreria, 14.50, 8.05, -7.28, 'FACU');
+    CrearSalonColision(Salones.Princ_Audi_Eladio, 17.72, 8.05, -13.97, 'FACU');
+    CrearSalonColision(Salones.Princ_Salon_401, 30.97, 8.05, -18.80, 'FACU');
 
     //Piso 2
-    CrearSalonColision(Salones.Princ_Dep_Prefectura, 13.98, 11.77, 9.20);
-    CrearSalonColision(Salones.Princ_Dep_Servicio_Social, 14.06, 11.77, 4.30);
-    CrearSalonColision(Salones.Princ_Dep_Escolar, 14.15, 11.77, -2.25);
-    CrearSalonColision(Salones.Princ_Audi_Jose, 16.89, 11.77, -13.21);
-    //////////CrearSalonColision(Salones.Sala_inovacion_emprendimiento, 30.70, 11.77, -18.77);
-    CrearSalonColision(Salones.Princ_Lab_Optica, 20.37, 11.77, -22.62);
-    CrearSalonColision(Salones.Princ_Lab_Sistemas_Elec, 14.08, 11.77, -22.86);
-    CrearSalonColision(Salones.Princ_Lab_Fisica_III, 7.08, 11.77, -22.90);
-    CrearSalonColision(Salones.Princ_Lab_Circuitos, 0.41, 11.77, -22.86);
-    CrearSalonColision(Salones.Princ_Lab_Fluidos, -6.51, 11.77, -22.94);
-    CrearSalonColision(Salones.Princ_Lab_Mecanica, -13.38, 11.77, -22.85);
-    //////////CrearSalonColision(Salones.Lab_Actuaria, -30.15, 11.77, -11.86);
-    CrearSalonColision(Salones.Princ_Dep_Soci_Alumnos, -9.08, 11.77, -7.10);
-    CrearSalonColision(Salones.Princ_Dep_Copias, -9.12, 11.77, -5.24);
-    CrearSalonColision(Salones.Princ_Dep_RH, -9.16, 11.77, -2.05);
+    CrearSalonColision(Salones.Princ_Dep_Prefectura, 13.98, 11.77, 9.20, 'FACU');
+    CrearSalonColision(Salones.Princ_Dep_Servicio_Social, 14.06, 11.77, 4.30, 'FACU');
+    CrearSalonColision(Salones.Princ_Dep_Escolar, 14.15, 11.77, -2.25, 'FACU');
+    CrearSalonColision(Salones.Princ_Audi_Jose, 16.89, 11.77, -13.21, 'FACU');
+    //////////CrearSalonColision(Salones.Sala_inovacion_emprendimiento, 30.70, 11.77, -18.77, 'FACU');
+    CrearSalonColision(Salones.Princ_Lab_Optica, 20.37, 11.77, -22.62, 'FACU');
+    CrearSalonColision(Salones.Princ_Lab_Sistemas_Elec, 14.08, 11.77, -22.86, 'FACU');
+    CrearSalonColision(Salones.Princ_Lab_Fisica_III, 7.08, 11.77, -22.90, 'FACU');
+    CrearSalonColision(Salones.Princ_Lab_Circuitos, 0.41, 11.77, -22.86, 'FACU');
+    CrearSalonColision(Salones.Princ_Lab_Fluidos, -6.51, 11.77, -22.94, 'FACU');
+    CrearSalonColision(Salones.Princ_Lab_Mecanica, -13.38, 11.77, -22.85, 'FACU');
+    //////////CrearSalonColision(Salones.Lab_Actuaria, -30.15, 11.77, -11.86, 'FACU');
+    CrearSalonColision(Salones.Princ_Dep_Soci_Alumnos, -9.08, 11.77, -7.10, 'FACU');
+    CrearSalonColision(Salones.Princ_Dep_Copias, -9.12, 11.77, -5.24, 'FACU');
+    CrearSalonColision(Salones.Princ_Dep_RH, -9.16, 11.77, -2.05, 'FACU');
+
+    //USIT
+    CrearSalonColision(Salones.USIT_entrada, -24.80, 7.53, 20.87, 'EST');
+    CrearSalonColision(Salones.USIT_recepcion, -33, 7.51, 17.48, 'USIT');
+    CrearSalonColision(Salones.USIT_Asistente_subdireccion, -33, 7.51, 14.84, 'USIT');
+    CrearSalonColision(Salones.USIT_Sala_Juntas, -33.5, 7.51, 13.32, 'USIT');
+    CrearSalonColision(Salones.USIT_Sala_Usos_Multiples, -39.19, 7.51, 21.81, 'USIT');
+    CrearSalonColision(Salones.USIT_Lab_Base_Datos, -43.64, 7.51, 13.58, 'USIT');
     
+    
+    CrearSalonColision(Salones.Asesorias_Entrada, 37.7, 7.17, -76.33, 'ATRAS');
+    CrearSalonColision(Salones.Posgrado_Entrada, 26.54, 7.17, -71.61, 'ATRAS');
+
+    
+
+
+
+
     CrearBuildingColision('Princ', 3.94, 16.00, -10.95, 35, 20, 44.5);
     CrearBuildingColision('Princ', -42.06, 16.00, -16.95, 35, 20, 30.3);
     CrearBuildingColision('Princ', -19.06, 16.00, -26.95, 11.5, 20, 10);
