@@ -38,7 +38,24 @@ const fpsDisplay   = document.getElementById('fps-value');
 let lastTime = performance.now();
 let frames = 0;
 
+
 const ModoDebugActivado = false;
+
+
+// ── LOD VARIABLES ──────────────────────────────────────────────────
+
+let USIT_Lejos = true;
+
+let estadoLOD_USIT_Lejos = null;
+let estadoLOD_Detalles_Lejos = null;
+
+
+
+
+
+
+
+
 
 
 //#endregion 
@@ -707,15 +724,19 @@ function loadEnvironmentAndModel() {
 
                     //===============================USIT===============================
                     loadGLBModel('modelos/USIT-Opt/USIT-Bancas_.glb', { x: 0, y: 10, z: -10, scale: 100, tag: 'USIT' }),
-                    loadGLBModel('modelos/USIT-Opt/USIT-P1_.glb', { x: 0, y: 10, z: -10, scale: 100, tag: 'USIT' }),
-                    loadGLBModel('modelos/USIT-Opt/USIT-P1Lab_.glb', { x: 0, y: 10, z: -10, scale: 100, tag: 'USIT' }),
-                    loadGLBModel('modelos/USIT-Opt/USIT-P2_.glb', { x: 0, y: 10, z: -10, scale: 100, tag: 'USIT' }),
-                    loadGLBModel('modelos/USIT-Opt/USIT-P2Oro_.glb', { x: 0, y: 10, z: -10, scale: 100, tag: 'USIT' }),
-                    loadGLBModel('modelos/USIT-Opt/USIT-P2Podcast_.glb', { x: 0, y: 10, z: -10, scale: 100, tag: 'USIT' }),
-                    loadGLBModel('modelos/USIT-Opt/USIT-P2Soporte_.glb', { x: 0, y: 10, z: -10, scale: 100, tag: 'USIT' }),
-                    loadGLBModel('modelos/USIT-Opt/USIT-PB_.glb', { x: 0, y: 10, z: -10, scale: 100, tag: 'USIT' }),
-                    loadGLBModel('modelos/USIT-Opt/USIT-PBLab_.glb', { x: 0, y: 10, z: -10, scale: 100, tag: 'USIT' }),
-                    loadGLBModel('modelos/USIT-Opt/USIT-PBMulti_.glb', { x: 0, y: 10, z: -10, scale: 100, tag: 'USIT' }),
+
+
+                    loadGLBModel('modelos/USIT-Opt/USIT-P1_.glb', { x: 0, y: 10, z: -10, scale: 100, tag: 'USIT_High' }),
+                    loadGLBModel('modelos/USIT-Opt/USIT-P1Lab_.glb', { x: 0, y: 10, z: -10, scale: 100, tag: 'USIT_Detalles' }),
+                    loadGLBModel('modelos/USIT-Opt/USIT-P2_.glb', { x: 0, y: 10, z: -10, scale: 100, tag: 'USIT_High' }),
+                    loadGLBModel('modelos/USIT-Opt/USIT-P2Oro_.glb', { x: 0, y: 10, z: -10, scale: 100, tag: 'USIT_Detalles' }),
+                    loadGLBModel('modelos/USIT-Opt/USIT-P2Podcast_.glb', { x: 0, y: 10, z: -10, scale: 100, tag: 'USIT_Detalles' }),
+                    loadGLBModel('modelos/USIT-Opt/USIT-P2Soporte_.glb', { x: 0, y: 10, z: -10, scale: 100, tag: 'USIT_Detalles' }),
+                    loadGLBModel('modelos/USIT-Opt/USIT-PB_.glb', { x: 0, y: 10, z: -10, scale: 100, tag: 'USIT_High' }),
+                    loadGLBModel('modelos/USIT-Opt/USIT-PBLab_.glb', { x: 0, y: 10, z: -10, scale: 100, tag: 'USIT_Detalles' }),
+                    loadGLBModel('modelos/USIT-Opt/USIT-PBMulti_.glb', { x: 0, y: 10, z: -10, scale: 100, tag: 'USIT_Detalles' }),
+
+                    loadGLBModel('modelos/USIT-Opt/USIT-Ext-Op.glb', { x: 0, y: 10, z: -10, scale: 100, tag: 'USIT_Low' }),
 
                     
 
@@ -723,10 +744,13 @@ function loadEnvironmentAndModel() {
                     loadGLBModel('modelos/Est-Opt/Est_.glb', { x: 0, y: 10, z: -10, scale: 100, tag: 'EST' }),
                     loadGLBModel('modelos/Est-Opt/Est-Arboles_.glb', { x: 0, y: 10, z: -10, scale: 100, tag: 'EST' }),
             
+                    
                     //===============================FACU===============================
                     loadGLBModel('modelos/FACU/Principal-PB_.glb', { x: 0, y: 10, z: -10, scale: 100, tag: 'FACU' }),
+                    /*
                     loadGLBModel('modelos/FACU/Principal-B_.glb', { x: 0, y: 10, z: -10, scale: 100, tag: 'FACU' }),
                     loadGLBModel('modelos/FACU/Principal-P1_.glb', { x: 0, y: 10, z: -10, scale: 100, tag: 'FACU' }),
+                    loadGLBModel('modelos/FACU/PRINCIPALP2-Op.glb', { x: 0, y: 10, z: -10, scale: 100, tag: 'FACU' }),
 
                     //===============================SALONES ATRAS===============================
                     loadGLBModel('modelos/Salones-Opt/Salones_.glb', { x: 0, y: 10, z: -10, scale: 100, tag: 'ATRAS' }),
@@ -735,8 +759,11 @@ function loadEnvironmentAndModel() {
                     loadGLBModel('modelos/Atras/canchas_.glb', { x: 0, y: 10, z: -10, scale: 100, tag: 'ATRAS' }),
                     loadGLBModel('modelos/Atras/deportivo_.glb', { x: 0, y: 10, z: -10, scale: 100, tag: 'ATRAS' }),
                     loadGLBModel('modelos/Atras/posgrado_.glb', { x: 0, y: 10, z: -10, scale: 100, tag: 'ATRAS' }),
+                    */
                                                                                 
                 ]);
+
+                toggleEdificio('USIT_Low', false);
 
                 isModelLoaded = true;
                 if (statusText) statusText.style.display = 'none';
@@ -893,6 +920,57 @@ function toggleEdificio(tag, activar) {
         collidableObjects = collidableObjects.filter(obj => obj.userData.tag !== tag);
         
         console.log(`[${tag}] Descargado y oculto.`);
+    }
+}
+
+function actualizarLOD_USIT(USIT_Lejos) {
+    // Si la condición no ha cambiado desde el último frame, no hacemos nada
+    if (estadoLOD_USIT_Lejos === USIT_Lejos) return;
+
+    // Actualizamos el estado actual
+    estadoLOD_USIT_Lejos = USIT_Lejos;
+
+    if (USIT_Lejos === true) {
+        // El jugador está CERCA
+        toggleEdificio('USIT_Low', false);  // Descargamos la versión Low-Poly
+        toggleEdificio('USIT_High', true);  // Cargamos los detallados
+        console.log("LOD: Cambiando a USIT High-Poly");
+    } else {
+        
+        // El jugador está LEJOS
+        toggleEdificio('USIT_High', false); // Descargamos los detallados
+        toggleEdificio('USIT_Low', true);   // Cargamos la versión Low-Poly
+        console.log("LOD: Cambiando a USIT Low-Poly");
+    }
+}
+
+function verificarDistanciasLOD() {
+    const playerPos = controls.getObject().position;
+    const centroUSIT = new THREE.Vector3(30.06, 16.00, 17.55);
+    const distancia = playerPos.distanceTo(centroUSIT);
+    
+    // 1. Lógica del Edificio (Swap a los 150 metros)
+    const USIT_Lejos = distancia > 50; 
+    actualizarLOD_USIT(USIT_Lejos);
+
+    // 2. Lógica de Detalles (Desaparecen por completo a los 50 metros)
+    const detalles_Lejos = distancia > 10;
+    actualizarCulling_DetallesUSIT(detalles_Lejos);
+}
+
+function actualizarCulling_DetallesUSIT(detallesLejos) {
+    if (estadoLOD_Detalles_Lejos === detallesLejos) return; // Si no hay cambio, no hacer nada
+    
+    estadoLOD_Detalles_Lejos = detallesLejos;
+
+    if (detallesLejos === true) {
+        // Jugador está lejos: ocultar detalles
+        toggleEdificio('USIT_Detalles', false);
+        console.log("Culling: Detalles del USIT ocultos");
+    } else {
+        // Jugador está cerca: mostrar detalles
+        toggleEdificio('USIT_Detalles', true);
+        console.log("Culling: Detalles del USIT visibles");
     }
 }
 
@@ -1119,6 +1197,7 @@ function animate() {
             _accumulator -= FIXED_STEP;
         }
         verificarColisionEdificios();
+        verificarDistanciasLOD();
         const p = controls.getObject().position;
         const cx = p.x.toFixed(2), cy = p.y.toFixed(2), cz = p.z.toFixed(2);
         if (cx !== _lastCoordX || cy !== _lastCoordY || cz !== _lastCoordZ) {
