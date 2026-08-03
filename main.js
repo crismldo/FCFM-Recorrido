@@ -44,10 +44,15 @@ const ModoDebugActivado = false;
 
 // ── LOD VARIABLES ──────────────────────────────────────────────────
 
+
 let USIT_Lejos = true;
 
 let estadoLOD_USIT_Lejos = null;
 let estadoLOD_Detalles_Lejos = null;
+
+// NUEVAS VARIABLES PARA FACU
+let estadoLOD_FACU_Lejos = null;
+let estadoLOD_FACU_Detalles_Lejos = null;
 
 
 
@@ -748,13 +753,13 @@ function loadEnvironmentAndModel() {
                     //===============================FACU===============================
                     
                     //Version HIGH POLY
-                    //loadGLBModel('modelos/FACU/FACU-EOP.glb', { x: 0, y: 10, z: -10, scale: 100, tag: 'FACU' }),
-                    //loadGLBModel('modelos/FACU/FACU-P1OP.glb', { x: 0, y: 10, z: -10, scale: 100, tag: 'FACU' }),
-                    //loadGLBModel('modelos/FACU/FACU-P2OP.glb', { x: 0, y: 10, z: -10, scale: 100, tag: 'FACU' }),
-                    //loadGLBModel('modelos/FACU/FACU-PBOP.glb', { x: 0, y: 10, z: -10, scale: 100, tag: 'FACU' }),
+                    loadGLBModel('modelos/FACU/FACU-EOP.glb', { x: 0, y: 10, z: -10, scale: 100, tag: 'FACU_High' }),
+                    loadGLBModel('modelos/FACU/FACU-P1OP.glb', { x: 0, y: 10, z: -10, scale: 100, tag: 'FACU_High' }),
+                    loadGLBModel('modelos/FACU/FACU-P2OP.glb', { x: 0, y: 10, z: -10, scale: 100, tag: 'FACU_High' }),
+                    loadGLBModel('modelos/FACU/FACU-PBOP.glb', { x: 0, y: 10, z: -10, scale: 100, tag: 'FACU_High' }),
 
                     //Version LOW POLY
-                    loadGLBModel('modelos/FACU/FACU-EXTOP.glb', { x: 0, y: 10, z: -10, scale: 100, tag: 'FACU' }),
+                    loadGLBModel('modelos/FACU/FACU-EXTOP.glb', { x: 0, y: 10, z: -10, scale: 100, tag: 'FACU_Low' }),
                     
                     
                     
@@ -777,6 +782,7 @@ function loadEnvironmentAndModel() {
                 ]);
 
                 toggleEdificio('USIT_Low', false);
+                toggleEdificio('FACU_Low', false);
 
                 isModelLoaded = true;
                 if (statusText) statusText.style.display = 'none';
@@ -957,18 +963,43 @@ function actualizarLOD_USIT(USIT_Lejos) {
     }
 }
 
+function actualizarLOD_FACU(FACU_Lejos) {
+    if (estadoLOD_FACU_Lejos === FACU_Lejos) return;
+    
+    estadoLOD_FACU_Lejos = FACU_Lejos;
+
+    if (FACU_Lejos === true) {
+        toggleEdificio('FACU_High', false);
+        toggleEdificio('FACU_Low', true);
+        console.log("LOD: Cambiando a FACU Low-Poly");
+    } else {
+        toggleEdificio('FACU_Low', false);
+        toggleEdificio('FACU_High', true);
+        console.log("LOD: Cambiando a FACU High-Poly");
+    }
+}
+
 function verificarDistanciasLOD() {
     const playerPos = controls.getObject().position;
-    const centroUSIT = new THREE.Vector3(30.06, 16.00, 17.55);
-    const distancia = playerPos.distanceTo(centroUSIT);
     
-    // 1. Lógica del Edificio (Swap a los 150 metros)
-    const USIT_Lejos = distancia > 50; 
+    // --- LÓGICA USIT ---
+    const centroUSIT = new THREE.Vector3(30.06, 16.00, 17.55);
+    const distanciaUSIT = playerPos.distanceTo(centroUSIT);
+    
+    const USIT_Lejos = distanciaUSIT > 50; 
     actualizarLOD_USIT(USIT_Lejos);
 
-    // 2. Lógica de Detalles (Desaparecen por completo a los 50 metros)
-    const detalles_Lejos = distancia > 10;
-    actualizarCulling_DetallesUSIT(detalles_Lejos);
+    const detallesUSIT_Lejos = distanciaUSIT > 10;
+    actualizarCulling_DetallesUSIT(detallesUSIT_Lejos);
+
+    // --- LÓGICA FACU ---
+    // Ajusta estas coordenadas al centro físico real de tu edificio FACU
+    const centroFACU = new THREE.Vector3(3, 6.0, -10); 
+    const distanciaFACU = playerPos.distanceTo(centroFACU);
+
+    // Ajusta la distancia (ej. 80 metros) en la que quieres que cambie
+    const FACU_Lejos = distanciaFACU > 30; 
+    actualizarLOD_FACU(FACU_Lejos);
 }
 
 function actualizarCulling_DetallesUSIT(detallesLejos) {
