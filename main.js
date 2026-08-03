@@ -746,7 +746,20 @@ function loadEnvironmentAndModel() {
             
                     
                     //===============================FACU===============================
-                    loadGLBModel('modelos/FACU/Principal-PB_.glb', { x: 0, y: 10, z: -10, scale: 100, tag: 'FACU' }),
+                    
+                    //Version HIGH POLY
+                    //loadGLBModel('modelos/FACU/FACU-EOP.glb', { x: 0, y: 10, z: -10, scale: 100, tag: 'FACU' }),
+                    //loadGLBModel('modelos/FACU/FACU-P1OP.glb', { x: 0, y: 10, z: -10, scale: 100, tag: 'FACU' }),
+                    //loadGLBModel('modelos/FACU/FACU-P2OP.glb', { x: 0, y: 10, z: -10, scale: 100, tag: 'FACU' }),
+                    //loadGLBModel('modelos/FACU/FACU-PBOP.glb', { x: 0, y: 10, z: -10, scale: 100, tag: 'FACU' }),
+
+                    //Version LOW POLY
+                    loadGLBModel('modelos/FACU/FACU-EXTOP.glb', { x: 0, y: 10, z: -10, scale: 100, tag: 'FACU' }),
+                    
+                    
+                    
+                    
+                    //loadGLBModel('modelos/FACU/Principal-PB_.glb', { x: 0, y: 10, z: -10, scale: 100, tag: 'FACU' }),
                     /*
                     loadGLBModel('modelos/FACU/Principal-B_.glb', { x: 0, y: 10, z: -10, scale: 100, tag: 'FACU' }),
                     loadGLBModel('modelos/FACU/Principal-P1_.glb', { x: 0, y: 10, z: -10, scale: 100, tag: 'FACU' }),
