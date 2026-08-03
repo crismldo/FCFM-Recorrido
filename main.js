@@ -43,16 +43,14 @@ const ModoDebugActivado = false;
 
 
 // ── LOD VARIABLES ──────────────────────────────────────────────────
-
-
 let USIT_Lejos = true;
-
 let estadoLOD_USIT_Lejos = null;
 let estadoLOD_Detalles_Lejos = null;
+let estado_USIT_Permitido = null; // NUEVO: Rastrea el Chunk Loader
 
-// NUEVAS VARIABLES PARA FACU
 let estadoLOD_FACU_Lejos = null;
 let estadoLOD_FACU_Detalles_Lejos = null;
+let estado_FACU_Permitido = null; // NUEVO: Rastrea el Chunk Loader
 
 
 
@@ -909,7 +907,7 @@ function toggleEdificio(tag, activar) {
     const modelos = edificiosCargados[tag];
     
     if (!modelos) {
-        console.warn(`No se encontraron modelos con el tag: ${tag}`);
+        //console.warn(`No se encontraron modelos con el tag: ${tag}`);
         return;
     }
 
@@ -942,81 +940,92 @@ function toggleEdificio(tag, activar) {
     }
 }
 
-function actualizarLOD_USIT(USIT_Lejos) {
-    // Si la condición no ha cambiado desde el último frame, no hacemos nada
-    if (estadoLOD_USIT_Lejos === USIT_Lejos) return;
+function actualizarLOD_USIT(USIT_Lejos, permitido) {
+    // Si no hubo NINGÚN cambio (ni de distancia ni de sector), no hacer nada
+    if (estadoLOD_USIT_Lejos === USIT_Lejos && estado_USIT_Permitido === permitido) return;
 
-    // Actualizamos el estado actual
     estadoLOD_USIT_Lejos = USIT_Lejos;
+    estado_USIT_Permitido = permitido;
 
+    // Regla 1: Si el Chunk Manager dice que el USIT no debe verse, apagamos TODO
+    if (!permitido) {
+        toggleEdificio('USIT_High', false);
+        toggleEdificio('USIT_Low', false);
+        return; // Salimos de la función temprano
+    }
+
+    // Regla 2: Si SÍ está permitido, la distancia decide qué versión mostrar
     if (USIT_Lejos === true) {
-        // El jugador está CERCA
-        toggleEdificio('USIT_Low', false);  // Descargamos la versión Low-Poly
-        toggleEdificio('USIT_High', true);  // Cargamos los detallados
-        console.log("LOD: Cambiando a USIT High-Poly");
+        toggleEdificio('USIT_High', false);
+        toggleEdificio('USIT_Low', true);
     } else {
-        
-        // El jugador está LEJOS
-        toggleEdificio('USIT_High', false); // Descargamos los detallados
-        toggleEdificio('USIT_Low', true);   // Cargamos la versión Low-Poly
-        console.log("LOD: Cambiando a USIT Low-Poly");
+        toggleEdificio('USIT_Low', false);
+        toggleEdificio('USIT_High', true);
     }
 }
 
-function actualizarLOD_FACU(FACU_Lejos) {
-    if (estadoLOD_FACU_Lejos === FACU_Lejos) return;
+function actualizarCulling_DetallesUSIT(detallesLejos, permitido) {
+    if (estadoLOD_Detalles_Lejos === detallesLejos && estado_USIT_Permitido === permitido) return;
     
+    estadoLOD_Detalles_Lejos = detallesLejos;
+    // Usamos el mismo estado permitido del USIT
+    
+    if (!permitido) {
+        toggleEdificio('USIT_Detalles', false);
+        return;
+    }
+
+    if (detallesLejos === true) {
+        toggleEdificio('USIT_Detalles', false);
+    } else {
+        toggleEdificio('USIT_Detalles', true);
+    }
+}
+
+function actualizarLOD_FACU(FACU_Lejos, permitido) {
+    if (estadoLOD_FACU_Lejos === FACU_Lejos && estado_FACU_Permitido === permitido) return;
+
     estadoLOD_FACU_Lejos = FACU_Lejos;
+    estado_FACU_Permitido = permitido;
+
+    if (!permitido) {
+        toggleEdificio('FACU_High', false);
+        toggleEdificio('FACU_Low', false);
+        return;
+    }
 
     if (FACU_Lejos === true) {
         toggleEdificio('FACU_High', false);
         toggleEdificio('FACU_Low', true);
-        console.log("LOD: Cambiando a FACU Low-Poly");
     } else {
         toggleEdificio('FACU_Low', false);
         toggleEdificio('FACU_High', true);
-        console.log("LOD: Cambiando a FACU High-Poly");
     }
 }
 
 function verificarDistanciasLOD() {
     const playerPos = controls.getObject().position;
     
+    // Obtenemos qué edificios permite el Chunk Manager en el sector actual
+    const tagsPermitidos = ReglasVisibilidad[sectorActivoActual] || ReglasVisibilidad['Exterior'];
+
     // --- LÓGICA USIT ---
     const centroUSIT = new THREE.Vector3(30.06, 16.00, 17.55);
     const distanciaUSIT = playerPos.distanceTo(centroUSIT);
+    const permitidoUSIT = tagsPermitidos.includes('USIT'); // ¿El chunk nos deja verlo?
     
-    const USIT_Lejos = distanciaUSIT > 50; 
-    actualizarLOD_USIT(USIT_Lejos);
-
-    const detallesUSIT_Lejos = distanciaUSIT > 10;
-    actualizarCulling_DetallesUSIT(detallesUSIT_Lejos);
+    actualizarLOD_USIT(distanciaUSIT > 50, permitidoUSIT);
+    actualizarCulling_DetallesUSIT(distanciaUSIT > 10, permitidoUSIT);
 
     // --- LÓGICA FACU ---
-    // Ajusta estas coordenadas al centro físico real de tu edificio FACU
     const centroFACU = new THREE.Vector3(3, 6.0, -10); 
     const distanciaFACU = playerPos.distanceTo(centroFACU);
+    const permitidoFACU = tagsPermitidos.includes('FACU'); // ¿El chunk nos deja verlo?
 
-    // Ajusta la distancia (ej. 80 metros) en la que quieres que cambie
-    const FACU_Lejos = distanciaFACU > 30; 
-    actualizarLOD_FACU(FACU_Lejos);
+    actualizarLOD_FACU(distanciaFACU > 30, permitidoFACU);
 }
 
-function actualizarCulling_DetallesUSIT(detallesLejos) {
-    if (estadoLOD_Detalles_Lejos === detallesLejos) return; // Si no hay cambio, no hacer nada
-    
-    estadoLOD_Detalles_Lejos = detallesLejos;
 
-    if (detallesLejos === true) {
-        // Jugador está lejos: ocultar detalles
-        toggleEdificio('USIT_Detalles', false);
-        console.log("Culling: Detalles del USIT ocultos");
-    } else {
-        // Jugador está cerca: mostrar detalles
-        toggleEdificio('USIT_Detalles', true);
-        console.log("Culling: Detalles del USIT visibles");
-    }
-}
 
 //#endregion 
 
