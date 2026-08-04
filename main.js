@@ -1024,7 +1024,12 @@ function verificarDistanciasLOD() {
     const distanciaFACU = playerPos.distanceTo(centroFACU);
     const permitidoFACU = tagsPermitidos.includes('FACU'); // ¿El chunk nos deja verlo?
 
-    actualizarLOD_FACU(distanciaFACU > 40, permitidoFACU);
+    // MODIFICACIÓN: Si el jugador está dentro de las cajas de colisión de la facultad ('Princ'), 
+    // forzamos a que el sistema asuma que estamos "cerca" (FACU_Lejos = false).
+    // Si está afuera, usamos la lógica normal de distancia.
+    const FACU_Lejos = (sectorActivoActual === 'Princ') ? false : (distanciaFACU > 40);
+
+    actualizarLOD_FACU(FACU_Lejos, permitidoFACU);
 }
 
 
