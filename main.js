@@ -344,6 +344,7 @@ const Salones = Object.freeze({
     Princ_Salon_414: 'Princ_Salon_414',
 
     Princ_Dep_Astronomia:       'Princ_Dep_Astronomia',
+    Princ_Dep_Animacion:       'Princ_Dep_Animacion',
     Princ_Dep_Soporte_Tecnico:  'Princ_Dep_Soporte_Tecnico',
     Princ_Dep_Lab_Computo_Mat:  'Princ_Dep_Lab_Computo_Mat',
     Princ_Dep_Ofici_Administra: 'Princ_Dep_Ofici_Administra',
@@ -457,6 +458,7 @@ const InformacionSalones = {
     [Salones.Princ_Salon_414]: { nombre: "Salón 414", descripcion: " " },
 
     [Salones.Princ_Dep_Astronomia]: { nombre: "Departamento de Astronomía", descripcion: "Oficinas e investigación astronómica." },
+    [Salones.Princ_Dep_Animacion]: { nombre: "Departamento de Animación", descripcion: "Sala comn equipo para animar." },
     [Salones.Princ_Dep_Soporte_Tecnico]: { nombre: "Soporte Técnico", descripcion: "Ayuda con redes y equipo de cómputo." },
     [Salones.Princ_Dep_Lab_Computo_Mat]: { nombre: "Lab. Cómputo Matemático", descripcion: "Computadoras con software especializado." },
     [Salones.Princ_Dep_Ofici_Administra]: { nombre: "Oficinas Administrativas", descripcion: "Área administrativa general." },
@@ -763,11 +765,11 @@ function loadEnvironmentAndModel() {
                     
                     
                     //loadGLBModel('modelos/FACU/Principal-PB_.glb', { x: 0, y: 10, z: -10, scale: 100, tag: 'FACU' }),
-                    /*
-                    loadGLBModel('modelos/FACU/Principal-B_.glb', { x: 0, y: 10, z: -10, scale: 100, tag: 'FACU' }),
-                    loadGLBModel('modelos/FACU/Principal-P1_.glb', { x: 0, y: 10, z: -10, scale: 100, tag: 'FACU' }),
-                    loadGLBModel('modelos/FACU/PRINCIPALP2-Op.glb', { x: 0, y: 10, z: -10, scale: 100, tag: 'FACU' }),
-
+                    
+                    //loadGLBModel('modelos/FACU/Principal-B_.glb', { x: 0, y: 10, z: -10, scale: 100, tag: 'FACU' }),
+                    //loadGLBModel('modelos/FACU/Principal-P1_.glb', { x: 0, y: 10, z: -10, scale: 100, tag: 'FACU' }),
+                    //loadGLBModel('modelos/FACU/PRINCIPALP2-Op.glb', { x: 0, y: 10, z: -10, scale: 100, tag: 'FACU' }),
+                    
                     //===============================SALONES ATRAS===============================
                     loadGLBModel('modelos/Salones-Opt/Salones_.glb', { x: 0, y: 10, z: -10, scale: 100, tag: 'ATRAS' }),
                     loadGLBModel('modelos/Salones-Opt/Salones-Plant_.glb', { x: 0, y: 10, z: -10, scale: 100, tag: 'ATRAS' }),                
@@ -775,7 +777,7 @@ function loadEnvironmentAndModel() {
                     loadGLBModel('modelos/Atras/canchas_.glb', { x: 0, y: 10, z: -10, scale: 100, tag: 'ATRAS' }),
                     loadGLBModel('modelos/Atras/deportivo_.glb', { x: 0, y: 10, z: -10, scale: 100, tag: 'ATRAS' }),
                     loadGLBModel('modelos/Atras/posgrado_.glb', { x: 0, y: 10, z: -10, scale: 100, tag: 'ATRAS' }),
-                    */
+                    
                                                                                 
                 ]);
 
@@ -907,7 +909,7 @@ function toggleEdificio(tag, activar) {
     const modelos = edificiosCargados[tag];
     
     if (!modelos) {
-        //console.warn(`No se encontraron modelos con el tag: ${tag}`);
+        console.warn(`No se encontraron modelos con el tag: ${tag}`);
         return;
     }
 
@@ -1010,19 +1012,19 @@ function verificarDistanciasLOD() {
     const tagsPermitidos = ReglasVisibilidad[sectorActivoActual] || ReglasVisibilidad['Exterior'];
 
     // --- LÓGICA USIT ---
-    const centroUSIT = new THREE.Vector3(30.06, 16.00, 17.55);
+    const centroUSIT = new THREE.Vector3(-30.06, 16.00, 17.55);
     const distanciaUSIT = playerPos.distanceTo(centroUSIT);
     const permitidoUSIT = tagsPermitidos.includes('USIT'); // ¿El chunk nos deja verlo?
     
-    actualizarLOD_USIT(distanciaUSIT > 50, permitidoUSIT);
+    actualizarLOD_USIT(distanciaUSIT > 20, permitidoUSIT);
     actualizarCulling_DetallesUSIT(distanciaUSIT > 10, permitidoUSIT);
 
     // --- LÓGICA FACU ---
-    const centroFACU = new THREE.Vector3(3, 6.0, -10); 
+    const centroFACU = new THREE.Vector3(3, 6.0, 0); 
     const distanciaFACU = playerPos.distanceTo(centroFACU);
     const permitidoFACU = tagsPermitidos.includes('FACU'); // ¿El chunk nos deja verlo?
 
-    actualizarLOD_FACU(distanciaFACU > 30, permitidoFACU);
+    actualizarLOD_FACU(distanciaFACU > 40, permitidoFACU);
 }
 
 
@@ -1175,6 +1177,20 @@ function init() {
     CrearSalonColision(Salones.Princ_Dep_Soci_Alumnos, -9.08, 11.77, -7.10, 'FACU');
     CrearSalonColision(Salones.Princ_Dep_Copias, -9.12, 11.77, -5.24, 'FACU');
     CrearSalonColision(Salones.Princ_Dep_RH, -9.16, 11.77, -2.05, 'FACU');
+
+    //Piso 3
+    CrearSalonColision(Salones.Princ_Dep_Biblioteca, 12.7, 15.16, 11.94, 'FACU');
+    CrearSalonColision(Salones.Princ_Dep_CAADI, 13.42, 15.16, 5, 'FACU');
+    CrearSalonColision(Salones.Princ_Dep_Ofici_Administra, 17.26, 15.16, -22.28, 'FACU');
+    CrearSalonColision(Salones.Princ_Dep_Lab_Computo_Mat, 15.02, 15.16, -22.28, 'FACU');
+    CrearSalonColision(Salones.Princ_Dep_Soporte_Tecnico, -8.94, 15.16, -22.28, 'FACU');
+    CrearSalonColision(Salones.Princ_Dep_Astronomia, -18.81, 15.16, -22.28, 'FACU');
+    CrearSalonColision(Salones.Princ_Dep_Animacion, -57.33, 15.16, -22.28, 'FACU');
+
+
+
+
+
 
     //USIT
     CrearSalonColision(Salones.USIT_entrada, -24.80, 7.53, 20.87, 'EST');
