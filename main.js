@@ -242,7 +242,7 @@ const direction = new THREE.Vector3();
 // ── INFORMACION SALONES ────────────────────────────────────────────────────
 const infoPanel = document.getElementById('info-panel');
 const Salon_Nombre = document.getElementById('Salon_Nombre');
-const Salon_Descripcion = document.getElementById('Salon_Descripcion');
+//const Salon_Descripcion = document.getElementById('Salon_Descripcion');
 let Salon_ID = 0;
 
 
@@ -571,12 +571,13 @@ function DisplaySalonInfo(ID_Salon_Seleccionado) {
     
     const info = InformacionSalones[ID_Salon_Seleccionado];
     
+    
     if (info) {
         Salon_Nombre.textContent = info.nombre;
-        Salon_Descripcion.textContent = info.descripcion;
+        //Salon_Descripcion.textContent = info.descripcion;
     } else {
         Salon_Nombre.textContent = "Área Desconocida";
-        Salon_Descripcion.textContent = "No hay información disponible para este lugar.";
+        //Salon_Descripcion.textContent = "No hay información disponible para este lugar.";
     }
 }
 
