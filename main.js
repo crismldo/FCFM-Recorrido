@@ -13,6 +13,10 @@ import { OutputPass }          from 'three/addons/postprocessing/OutputPass.js';
 import { MeshBVH, acceleratedRaycast } from 'three-mesh-bvh';
 import  Stats                  from 'three/addons/libs/stats.module.js';
 
+import { FilmPass } from 'three/examples/jsm/postprocessing/FilmPass.js';
+import { ShaderPass } from 'three/examples/jsm/postprocessing/ShaderPass.js';
+import { VignetteShader } from 'three/examples/jsm/shaders/VignetteShader.js';
+
 //#endregion 
 
 
@@ -1074,9 +1078,26 @@ function init() {
     renderer.outputColorSpace  = THREE.SRGBColorSpace;
 
     // ── POST-PROCESADO ────────────────────────────────────────
+    // Initialize the EffectComposer
     composer = new EffectComposer(renderer);
-    composer.addPass(new RenderPass(scene, camera));
-    composer.addPass(new OutputPass());
+
+    // Add the base RenderPass (this renders your actual scene and camera)
+    const renderPass = new RenderPass(scene, camera);
+    composer.addPass(renderPass);
+
+    // --- ADD FILM GRAIN PASS ---
+    // Parameters: noiseIntensity, scanlinesIntensity, scanlinesCount, grayscale
+    // Tip: Keep scanlinesIntensity very low (0.05) or 0 to avoid it looking like an old TV
+    const filmPass = new FilmPass(0.35, 0.05, 648, false);
+    composer.addPass(filmPass);
+
+    // --- ADD VIGNETTE PASS ---
+    const vignettePass = new ShaderPass(VignetteShader);
+    // Controls how far the dark edges reach into the center (lower = reaches further in)
+    vignettePass.uniforms['offset'].value = 0.8;
+    // Controls the absolute darkness of the corners (higher = darker)
+    vignettePass.uniforms['darkness'].value = 1.5;
+    composer.addPass(vignettePass);
 
     // ── CONTROLES ─────────────────────────────────────────────
     controls = new PointerLockControls(camera, renderer.domElement);
