@@ -1016,17 +1016,19 @@ function verificarDistanciasLOD() {
     const distanciaUSIT = playerPos.distanceTo(centroUSIT);
     const permitidoUSIT = tagsPermitidos.includes('USIT'); // ¿El chunk nos deja verlo?
     
-    actualizarLOD_USIT(distanciaUSIT > 20, permitidoUSIT);
-    actualizarCulling_DetallesUSIT(distanciaUSIT > 10, permitidoUSIT);
+    // MODIFICACIÓN USIT: Si estamos en las cajas de 'usitbuild', forzamos a que esté "cerca"
+    const USIT_Lejos = (sectorActivoActual === 'usitbuild') ? false : (distanciaUSIT > 20);
+    const USIT_Detalles_Lejos = (sectorActivoActual === 'usitbuild') ? false : (distanciaUSIT > 10);
+
+    actualizarLOD_USIT(USIT_Lejos, permitidoUSIT);
+    actualizarCulling_DetallesUSIT(USIT_Detalles_Lejos, permitidoUSIT);
 
     // --- LÓGICA FACU ---
     const centroFACU = new THREE.Vector3(3, 6.0, 0); 
     const distanciaFACU = playerPos.distanceTo(centroFACU);
     const permitidoFACU = tagsPermitidos.includes('FACU'); // ¿El chunk nos deja verlo?
 
-    // MODIFICACIÓN: Si el jugador está dentro de las cajas de colisión de la facultad ('Princ'), 
-    // forzamos a que el sistema asuma que estamos "cerca" (FACU_Lejos = false).
-    // Si está afuera, usamos la lógica normal de distancia.
+    // MODIFICACIÓN FACU: Si estamos en las cajas de 'Princ', forzamos a que esté "cerca"
     const FACU_Lejos = (sectorActivoActual === 'Princ') ? false : (distanciaFACU > 40);
 
     actualizarLOD_FACU(FACU_Lejos, permitidoFACU);
@@ -1190,7 +1192,7 @@ function init() {
     CrearSalonColision(Salones.Princ_Dep_Lab_Computo_Mat, 15.02, 15.16, -22.28, 'FACU');
     CrearSalonColision(Salones.Princ_Dep_Soporte_Tecnico, -8.94, 15.16, -22.28, 'FACU');
     CrearSalonColision(Salones.Princ_Dep_Astronomia, -18.81, 15.16, -22.28, 'FACU');
-    CrearSalonColision(Salones.Princ_Dep_Animacion, -57.33, 15.16, -22.28, 'FACU');
+    CrearSalonColision(Salones.Princ_Dep_Animacion, -57.33, 15.16, -12.28, 'FACU');
 
 
 
