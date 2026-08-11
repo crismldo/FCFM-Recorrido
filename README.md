@@ -19,6 +19,8 @@
 
 ##### Esto permitirá que el codigo pueda encontrar los modelos que requiere para funcionar sin peligro de sobrecargar el peso del proyecto en Github
 
+#### ⚠️Advertencia⚠️: Por motivos de Estética y de esconder algunas imperfecciones, a la visión del jugador se le añadieron algunos efectos de Post Procesado. Más adeltante en este documento se detallará cuales son y como desactivarlos en caso de ser necesario.
+
 
 --------
 
@@ -464,5 +466,57 @@ function SpawnDebugBox(w, h, d) {
 
 > Una vez hecho esto, se puede empezar a usar la `DebugBox` antes definida para encontrar otro `Edificio`. O en caso de que ya no se requiera su uso, `ModoDebugActivado` puede volver ser puesto en `False`.
  
+--------
+
+## Efectos de Post Procesado
+
+##### Algunos efectos se pueden añadir a la vision del jugador para dar una impresión mas profesional del proyecto que está probando, sin embargo, se entiende que aveces estos efectos pueden tambien verse poco profesionales, por lo que detallaremos como podemos desactivarlos en caso de que sea decidido que hacen mas mál que bien.
 
 
+
+> La seccion pertinente al Post procesado se encuentra en la función `Init()` dentro del apartado `// ── POST-PROCESADO`
+
+> Esta es la versión `minima` del efecto de post procesado, es lo que tenemos que conservar aunque no vayamos a agregar otros efectos ya es necesario.
+⚠️Quitar esta parte del codigo creará un error⚠️
+
+```
+// ── POST-PROCESADO ────────────────────────────────────────
+    // Inicializar el Compositor de Efectos
+    composer = new EffectComposer(renderer);
+    const renderPass = new RenderPass(scene, camera);
+    composer.addPass(renderPass);
+```
+#### Ruido / Estática en pantalla
+> Esto es el codigo que maneja el dibujado de Ruido en pantalla, lo cual puede ayudar a esconder errores en los materiales o para hacer menos notorio cuando una Textura tiene que ser reducida y por lo miosmo bajó su calidad.
+
+```
+// --- RUIDO ---
+    
+// FilmPass: noiseIntensity, scanlinesIntensity, scanlinesCount, grayscale
+
+// Se recomienda mantener scanlinesIntensity en 0.05 o 0
+const filmPass = new FilmPass(0.3, 0.05, 648, false);
+composer.addPass(filmPass);
+```
+
+> `filmPass` es lo que define al efecto, mientras que `.addPass()` solo es para añadirlo al elemento `composer`, en caso de que quieras desactivar este efecto, puedes comentar la linea que llama a esta función.
+
+> `noiseIntensity` especifica que tan intenso quieres el ruido, si el valor se hacerca mucho a 1, será muy notorio, por lo que un nivel más bajo es recomendado.
+
+#### Viñeta
+> Esto añade un efecto negro en los bordes de la imagen que van a mas ligeros y transparentes hacia el centro de la imagen, ocultando levemente algunos objetos mas lejanos de la vista del jugador, lo que ayuda a esconder algunos efectos de Desdibujar elementos que no necesitan ser dibujador en este momento.
+
+```
+// --- VIÑETA ---
+const vignettePass = new ShaderPass(VignetteShader);
+
+// Que tan lejos las esquinas negras se hacercan al Centro (Entre mas pequeño, mas se acerca)
+vignettePass.uniforms['offset'].value = 0.8;
+//Que tanta obscuridad absoluta hay en las esquinas (Entre mas grande, más negro)
+vignettePass.uniforms['darkness'].value = 1.5;
+composer.addPass(vignettePass);
+```
+
+> `offset` define que tan pequeño es el "circulo" que no tiene oscuridad en la pantalla, entre mas pequeño y cerca de 0.0, menos se notará la viñeta, y entre más grande sea el valor más se notará la viñeta y el "circulo" será más pequeño.
+
+> `darkness` define que tan intenso quieres el negro de los bordes, un valor mas bajo que 1 le da más transparencia y un valor más alto lo hace mucho mas intenso y dramatico.

@@ -50,11 +50,11 @@ const ModoDebugActivado = false;
 let USIT_Lejos = true;
 let estadoLOD_USIT_Lejos = null;
 let estadoLOD_Detalles_Lejos = null;
-let estado_USIT_Permitido = null; // NUEVO: Rastrea el Chunk Loader
+let estado_USIT_Permitido = null; 
 
 let estadoLOD_FACU_Lejos = null;
 let estadoLOD_FACU_Detalles_Lejos = null;
-let estado_FACU_Permitido = null; // NUEVO: Rastrea el Chunk Loader
+let estado_FACU_Permitido = null;
 
 
 
@@ -103,7 +103,7 @@ document.addEventListener('keydown', e => {
         if (k === 'u') vectorMovimiento.y -= debugPaso; // Mover abajo
         if (k === 'o') vectorMovimiento.y += debugPaso; // Mover arriba
 
-        // Aplicar el movimiento a la caja
+        // Mover la Caja
         //debugBox.translate(vectorMovimiento);
 
         // IMPRIMIR COORDENADAS CON 'M'
@@ -147,14 +147,10 @@ const teleportList = [
 function teletransportarA(nuevaPosicion) {
     const camObj = controls.getObject();
 
-    // 1. Copiamos la nueva posición al objeto de la cámara (el avatar del jugador)
     camObj.position.copy(nuevaPosicion);
 
-    // 2. Reseteamos la velocidad vertical para evitar que herede gravedad acumulada
     velocityY = 0;
 
-    // 3. Activamos el cooldown global de teletransporte que ya tienes en tu física
-    // Esto evita conflictos con los desencadenadores de los TPs automáticos del mapa
     teleportCooldown = 1.5;
 
     console.log(`Teletransportado con éxito a: X: ${nuevaPosicion.x} | Y: ${nuevaPosicion.y} | Z: ${nuevaPosicion.z}`);
@@ -214,6 +210,7 @@ const MAX_SUBSTEPS       = 2;
 let   _accumulator       = 0;
 const moveSpeed          = 8.0;
 const gravity            = 50.0;
+//const gravity            = 0.0;
 const jumpForce          = 10.0;
 const cameraHeight       = 1.3;
 const collisionThreshold = 0.5;
@@ -374,11 +371,11 @@ const InformacionSalones = {
     [Salones.Sala_Maestros]: { nombre: "Sala de maestros", descripcion: " " },
 
     //USIT
-    [Salones.USIT_entrada]: { nombre: "USIT", descripcion: "Entrada al eficio USIT" },
+    [Salones.USIT_entrada]: { nombre: "USIT", descripcion: " " },
     [Salones.USIT_recepcion]: { nombre: "Recepción", descripcion: " " },
     [Salones.USIT_Asistente_subdireccion]: { nombre: "Asistente de Subdireccion", descripcion: " " },
     [Salones.USIT_Sala_Juntas]: { nombre: "Sala de Juntas", descripcion: " " },
-    [Salones.USIT_Sala_Usos_Multiples]: { nombre: "Sala de usos Multiples", descripcion: "En esta sala se realizan diferentes eventos" },
+    [Salones.USIT_Sala_Usos_Multiples]: { nombre: "Sala de usos Multiples", descripcion: " " },
     [Salones.USIT_Lab_Base_Datos]: { nombre: "Laboratorio de Base de Datos", descripcion: " " },
     [Salones.USIT_Lab_Computo]: { nombre: "Laboratorio de Computo", descripcion: " " },
     [Salones.USIT_Investig_Telecom]: { nombre: "Investigación y Telecomunicaciones", descripcion: " " },
@@ -396,13 +393,13 @@ const InformacionSalones = {
     [Salones.Princ_Salon_203]: { nombre: "Salón 203", descripcion: " " },
     [Salones.Princ_Salon_204]: { nombre: "Salón 204", descripcion: " " },
 
-    [Salones.Princ_Salon_401]: { nombre: "Salón 401", descripcion: "Sala Polivalente." },
+    [Salones.Princ_Salon_401]: { nombre: "Salón 401", descripcion: " " },
     [Salones.Princ_Salon_402]: { nombre: "Salón 402", descripcion: " " },
-    [Salones.Princ_Salon_403]: { nombre: "Salón 403", descripcion: "Club de programación" },
+    [Salones.Princ_Salon_403]: { nombre: "Salón 403", descripcion: " " },
     [Salones.Princ_Salon_404]: { nombre: "Salón 404", descripcion: " " },
     [Salones.Princ_Salon_405]: { nombre: "Salón 405", descripcion: " " },
 
-    [Salones.Princ_Audi_Eladio]: { nombre: "Auditorio Eladio", descripcion: "Auditorio del primer piso para conferencias y eventos." },
+    [Salones.Princ_Audi_Eladio]: { nombre: "Auditorio Eladio", descripcion: " " },
     [Salones.Princ_Dep_Tutorias]: { nombre: "Departamento de Tutorías", descripcion: " " },
     [Salones.Princ_Dep_Tesoreria]: { nombre: "Tesorería", descripcion: " "},
     [Salones.Princ_Dep_Direccion]: { nombre: "Dirección", descripcion: " " },
@@ -420,29 +417,29 @@ const InformacionSalones = {
     [Salones.Princ_Salon_205]: { nombre: "Salón 205", descripcion: " " },
     [Salones.Princ_Salon_206]: { nombre: "Salón 206", descripcion: " " },
     [Salones.Princ_Salon_207]: { nombre: "Salón 207", descripcion: " " },
-    [Salones.Princ_Salon_208]: { nombre: "Salón 208", descripcion: "Laboratorio de Actuaria" },
+    [Salones.Princ_Salon_208]: { nombre: "Salón 208", descripcion: " " },
 
-    [Salones.Princ_Salon_406]: { nombre: "Salón 406", descripcion: "Sala de Inovación y Emprendimiento" },
+    [Salones.Princ_Salon_406]: { nombre: "Salón 406", descripcion: " " },
     [Salones.Princ_Salon_407]: { nombre: "Salón 407", descripcion: " " },
     [Salones.Princ_Salon_408]: { nombre: "Salón 408", descripcion: " " },
     [Salones.Princ_Salon_409]: { nombre: "Salón 409", descripcion: " " },
     [Salones.Princ_Salon_410]: { nombre: "Salón 410", descripcion: " " },
 
-    [Salones.Princ_Audi_Jose]: { nombre: "Auditorio José", descripcion: "Auditorio secundario para presentaciones." },
+    [Salones.Princ_Audi_Jose]: { nombre: "Auditorio José", descripcion: " " },
 
-    [Salones.Princ_Lab_Mecanica]: { nombre: "Laboratorio de Mecánica", descripcion: "Uso obligatorio de bata y lentes de seguridad." },
-    [Salones.Princ_Lab_Fluidos]: { nombre: "Laboratorio de Fluidos", descripcion: "Prácticas de hidrostática e hidrodinámica." },
-    [Salones.Princ_Lab_Circuitos]: { nombre: "Laboratorio de Circuitos", descripcion: "Mesas de trabajo con osciloscopios y fuentes." },
-    [Salones.Princ_Lab_Fisica_III]: { nombre: "Laboratorio de Física III", descripcion: "Prácticas de electromagnetismo." },
-    [Salones.Princ_Lab_Sistemas_Elec]: { nombre: "Lab. Sistemas Eléctricos", descripcion: "Prácticas de potencia y control." },
-    [Salones.Princ_Lab_Optica]: { nombre: "Laboratorio de Óptica", descripcion: "Experimentos con luz y lentes. Mantener puerta cerrada." },
+    [Salones.Princ_Lab_Mecanica]: { nombre: "Laboratorio de Mecánica", descripcion: " " },
+    [Salones.Princ_Lab_Fluidos]: { nombre: "Laboratorio de Fluidos", descripcion: " " },
+    [Salones.Princ_Lab_Circuitos]: { nombre: "Laboratorio de Circuitos", descripcion: " " },
+    [Salones.Princ_Lab_Fisica_III]: { nombre: "Laboratorio de Física III", descripcion: " " },
+    [Salones.Princ_Lab_Sistemas_Elec]: { nombre: "Lab. Sistemas Eléctricos", descripcion: " " },
+    [Salones.Princ_Lab_Optica]: { nombre: "Laboratorio de Óptica", descripcion: " " },
 
-    [Salones.Princ_Dep_Soci_Alumnos]: { nombre: "Sociedad de Alumnos", descripcion: "Oficina de representación estudiantil." },
-    [Salones.Princ_Dep_Copias]: { nombre: "Centro de Copiado", descripcion: "Impresiones, copias y papelería básica." },
-    [Salones.Princ_Dep_RH]: { nombre: "Recursos Humanos", descripcion: "Atención al personal docente y administrativo." },
-    [Salones.Princ_Dep_Escolar]: { nombre: "Control Escolar", descripcion: "Kardex, constancias y trámites de titulación." },
-    [Salones.Princ_Dep_Prefectura]: { nombre: "Prefectura", descripcion: "Control de asistencias y reportes." },
-    [Salones.Princ_Dep_Servicio_Social]: { nombre: "Servicio Social", descripcion: "Registro y liberación de horas." },
+    [Salones.Princ_Dep_Soci_Alumnos]: { nombre: "Sociedad de Alumnos", descripcion: " " },
+    [Salones.Princ_Dep_Copias]: { nombre: "Centro de Copiado", descripcion: " " },
+    [Salones.Princ_Dep_RH]: { nombre: "Recursos Humanos", descripcion: " " },
+    [Salones.Princ_Dep_Escolar]: { nombre: "Control Escolar", descripcion: " " },
+    [Salones.Princ_Dep_Prefectura]: { nombre: "Prefectura", descripcion: " " },
+    [Salones.Princ_Dep_Servicio_Social]: { nombre: "Servicio Social", descripcion: " " },
 
     // --- PISO 3 ---
     [Salones.Princ_Salon_111]: { nombre: "Salón 111", descripcion: " " },
@@ -457,7 +454,7 @@ const InformacionSalones = {
     [Salones.Princ_Salon_120]: { nombre: "Salón 120", descripcion: " " },
     [Salones.Princ_Salon_121]: { nombre: "Salón 121", descripcion: " " },
 
-    [Salones.Princ_Salon_209]: { nombre: "Salón 209", descripcion: "Estudio de Animación" },
+    [Salones.Princ_Salon_209]: { nombre: "Salón 209 Estudio de Animación", descripcion: " " },
     [Salones.Princ_Salon_210]: { nombre: "Salón 210", descripcion: " " },
     [Salones.Princ_Salon_211]: { nombre: "Salón 211", descripcion: " " },
     [Salones.Princ_Salon_212]: { nombre: "Salón 212", descripcion: " " },
@@ -467,23 +464,22 @@ const InformacionSalones = {
     [Salones.Princ_Salon_413]: { nombre: "Salón 413", descripcion: " " },
     [Salones.Princ_Salon_414]: { nombre: "Salón 414", descripcion: " " },
 
-    [Salones.Princ_Dep_Astronomia]: { nombre: "Departamento de Astronomía", descripcion: "Oficinas e investigación astronómica." },
-    [Salones.Princ_Dep_Animacion]: { nombre: "Departamento de Animación", descripcion: "Sala comn equipo para animar." },
-    [Salones.Princ_Dep_Soporte_Tecnico]: { nombre: "Soporte Técnico", descripcion: "Ayuda con redes y equipo de cómputo." },
-    [Salones.Princ_Dep_Lab_Computo_Mat]: { nombre: "Lab. Cómputo Matemático", descripcion: "Computadoras con software especializado." },
-    [Salones.Princ_Dep_Ofici_Administra]: { nombre: "Oficinas Administrativas", descripcion: "Área administrativa general." },
-    [Salones.Princ_Dep_CAADI]: { nombre: "CAADI", descripcion: "Centro de Autoaprendizaje de Idiomas." },
-    [Salones.Princ_Dep_Biblioteca]: { nombre: "Biblioteca", descripcion: "Zona de silencio y estudio." },
+    [Salones.Princ_Dep_Astronomia]: { nombre: "Departamento de Astronomía", descripcion: " " },
+    [Salones.Princ_Dep_Animacion]: { nombre: "Departamento de Animación", descripcion: " " },
+    [Salones.Princ_Dep_Soporte_Tecnico]: { nombre: "Soporte Técnico", descripcion: " " },
+    [Salones.Princ_Dep_Lab_Computo_Mat]: { nombre: "Lab. Cómputo Matemático", descripcion: " " },
+    [Salones.Princ_Dep_Ofici_Administra]: { nombre: "Oficinas Administrativas", descripcion: " " },
+    [Salones.Princ_Dep_CAADI]: { nombre: "CAADI", descripcion: " " },
+    [Salones.Princ_Dep_Biblioteca]: { nombre: "Biblioteca", descripcion: " " },
     
     [Salones.Asesorias_Entrada]: { nombre: "Asesorias Entrada", descripcion: " " },
     [Salones.Posgrado_Entrada]: { nombre: "Posgrado Entrada", descripcion: " " }
 };
 
 
-// Arreglo para guardar todas las zonas de colisión de los salones
+// zonas de colisión de los salones
 const zonasSalones = [];
 
-// Variable de estado para evitar laguear el DOM actualizando el texto en cada frame
 let salonActualID = null;
 let isPlayerInside101 = false;
 
@@ -594,16 +590,15 @@ function CrearSalonColision(id, centroX, centroY, centroZ, Salontag) {
     const centro = new THREE.Vector3(centroX, centroY, centroZ);
     const tamaño = new THREE.Vector3(2, 2, 2);
     
-    // Crear una caja matemática pura (sin mesh, rendimiento óptimo)
+
     const cajaMatematica = new THREE.Box3().setFromCenterAndSize(centro, tamaño);
     
-    // Empujamos el objeto con su ID al arreglo global
     zonasSalones.push({
         id: id,
         box: cajaMatematica
     });
 
-    // OPCIONAL: Si quieres ver las cajas para debugear dónde están paradas:
+    // OPCIONAL: Si quieres ver dónde están paradas las Cajas:
     
     //const helper = new THREE.Box3Helper(cajaMatematica, 0x00ff00);
     //scene.add(helper);
@@ -638,7 +633,7 @@ function verificarColisionSalones() {
 
 // ── FUNCIONES DEBUG ──────────────────────────────────────────────────
 
-// Arreglo para guardar las grandes zonas de carga (Trigger Volumes)
+// zonas de carga (Trigger Volumes)
 const zonasEdificios = [];
 
 
@@ -651,13 +646,14 @@ let debugBoxHelper = null;
 let debugPaso = 0.5; // Cuántos metros se mueve con cada tecla
 
 function SpawnDebugBox(w, h, d) {
+    
     // Si ya existe una caja de debug, la borramos primero
     if (debugBoxHelper) {
         scene.remove(debugBoxHelper);
     }
 
     //const centroInicial = new THREE.Vector3(0, 10, 0); // Empieza en el centro del mundo
-    const centroInicial = new THREE.Vector3(-47.23, 16.00, 48.89); // Empieza en el centro del mundo
+    const centroInicial = new THREE.Vector3(-47.23, 16.00, 48.89);
     const tamaño = new THREE.Vector3(w, h, d);
     
     // Creamos la caja matemática
@@ -735,7 +731,6 @@ function loadEnvironmentAndModel() {
             if (statusText) statusText.innerText = 'CARGANDO CAMPUS...';
 
             try {
-                // Configuración modular de tus pedazos de mapa
                 await Promise.all([                                        
 
                     //===============================USIT===============================
@@ -782,7 +777,7 @@ function loadEnvironmentAndModel() {
                     //loadGLBModel('modelos/FACU/PRINCIPALP2-Op.glb', { x: 0, y: 10, z: -10, scale: 100, tag: 'FACU' }),
                     
                     //===============================SALONES ATRAS===============================
-                    loadGLBModel('modelos/Salones-Opt/Salones_.glb', { x: 0, y: 10, z: -10, scale: 100, tag: 'ATRAS' }),
+                    loadGLBModel('modelos/Salones-Opt/Salones_.glb', { x: 0, y: 10, z: -10, scale: 100, tag: 'FACU' }),
                     loadGLBModel('modelos/Salones-Opt/Salones-Plant_.glb', { x: 0, y: 10, z: -10, scale: 100, tag: 'ATRAS' }),                
                     loadGLBModel('modelos/Atras/300s_.glb', { x: 0, y: 10, z: -10, scale: 100, tag: 'ATRAS' }),
                     loadGLBModel('modelos/Atras/canchas_.glb', { x: 0, y: 10, z: -10, scale: 100, tag: 'ATRAS' }),
@@ -826,7 +821,7 @@ function loadGLBModel(path, options = {}) {
                 model.scale.set(scale, scale, scale);
                 model.position.set(posX, posY, posZ);
 
-                // Guardamos el modelo en nuestro diccionario global
+                
                 if (!edificiosCargados[tag]) edificiosCargados[tag] = [];
                 edificiosCargados[tag].push(model);
 
@@ -902,7 +897,7 @@ let sectorActivoActual = 'Exterior';
 // ── FUNCIONES ──────────────────────────────────────────────────
 
 function actualizarSectores(nuevoSector) {
-    if (sectorActivoActual === nuevoSector) return; // Evita cálculos innecesarios
+    if (sectorActivoActual === nuevoSector) return;
 
     sectorActivoActual = nuevoSector;
     const tagsPermitidos = ReglasVisibilidad[nuevoSector] || ReglasVisibilidad['Exterior'];
@@ -910,7 +905,7 @@ function actualizarSectores(nuevoSector) {
     TODOS_LOS_TAGS.forEach(tag => {
         const debeEstarActivo = tagsPermitidos.includes(tag);
 
-        // Asumiendo que tu función toggleEdificio maneja si ya está activo/inactivo
+        
         toggleEdificio(tag, debeEstarActivo);
     });
 }
@@ -1040,7 +1035,8 @@ function verificarDistanciasLOD() {
     const permitidoFACU = tagsPermitidos.includes('FACU'); // ¿El chunk nos deja verlo?
 
     // MODIFICACIÓN FACU: Si estamos en las cajas de 'Princ', forzamos a que esté "cerca"
-    const FACU_Lejos = (sectorActivoActual === 'Princ') ? false : (distanciaFACU > 40);
+    //const FACU_Lejos = (sectorActivoActual === 'Princ') ? false : (distanciaFACU > 40);
+    const FACU_Lejos = (sectorActivoActual === 'Princ') ? false : (distanciaFACU > 50);
 
     actualizarLOD_FACU(FACU_Lejos, permitidoFACU);
 }
@@ -1054,7 +1050,7 @@ function verificarDistanciasLOD() {
 //#region INIT
 // ============================================================
 function init() {
-    // Definimos el color base para el horizonte y la niebla
+    // Color de la Niebla
     const FOG_COLOR = 0xffe6d1;
 
     // ── ESCENA ────────────────────────────────────────────────
@@ -1066,8 +1062,9 @@ function init() {
     // ── CÁMARA ────────────────────────────────────────────────
     
     camera = new THREE.PerspectiveCamera(70, innerWidth / innerHeight, 0.1, 50);
+    //camera.position.set(24, 11.63, -35.83);
     camera.position.set(7, 8.41, 37);
-    //camera.position.set(6.31, 20, 52.96);
+    //camera.position.set(6.31, 30, 52.96);
 
     // ── RENDERER ──────────────────────────────────────────────
     renderer = new THREE.WebGLRenderer({ canvas, antialias: false, powerPreference: 'high-performance' });
@@ -1084,27 +1081,39 @@ function init() {
     renderer.toneMappingExposure = 1.1;
     renderer.outputColorSpace  = THREE.SRGBColorSpace;
 
-    // ── POST-PROCESADO ────────────────────────────────────────
-    // Initialize the EffectComposer
-    composer = new EffectComposer(renderer);
 
-    // Add the base RenderPass (this renders your actual scene and camera)
+
+    
+
+    // ── POST-PROCESADO ────────────────────────────────────────
+    // Inicializar el Compositor de Efectos
+    composer = new EffectComposer(renderer);
     const renderPass = new RenderPass(scene, camera);
     composer.addPass(renderPass);
 
-    // --- ADD FILM GRAIN PASS ---
-    // Parameters: noiseIntensity, scanlinesIntensity, scanlinesCount, grayscale
-    // Tip: Keep scanlinesIntensity very low (0.05) or 0 to avoid it looking like an old TV
-    const filmPass = new FilmPass(0.35, 0.05, 648, false);
+    // --- RUIDO ---
+    
+    // FilmPass: noiseIntensity, scanlinesIntensity, scanlinesCount, grayscale
+    
+    // Se recomienda mantener scanlinesIntensity en 0.05 o 0
+    const filmPass = new FilmPass(0.1, 0.05, 648, false);
     composer.addPass(filmPass);
 
-    // --- ADD VIGNETTE PASS ---
+    // --- VIÑETA ---
     const vignettePass = new ShaderPass(VignetteShader);
-    // Controls how far the dark edges reach into the center (lower = reaches further in)
+
+    // Que tan lejos las esquinas negras se hacercan al Centro (Entre mas pequeño, mas se acerca)
     vignettePass.uniforms['offset'].value = 0.8;
-    // Controls the absolute darkness of the corners (higher = darker)
-    vignettePass.uniforms['darkness'].value = 1.5;
+    //Que tanta obscuridad absoluta hay en las esquinas (Entre mas grande, más negro)
+    vignettePass.uniforms['darkness'].value = 0.9;
     composer.addPass(vignettePass);
+
+    
+
+
+
+
+
 
     // ── CONTROLES ─────────────────────────────────────────────
     controls = new PointerLockControls(camera, renderer.domElement);
@@ -1236,8 +1245,7 @@ function init() {
     
     
     
-    CrearSalonColision(Salones.USIT_Lab_Computo
-, -48.86, 7.51, 14.30, 'USIT');
+    CrearSalonColision(Salones.USIT_Lab_Computo, -48.86, 7.51, 14.30, 'USIT');
     CrearSalonColision(Salones.USIT_Investig_Telecom, -43.74, 7.51, 14.30, 'USIT');
     CrearSalonColision(Salones.USIT_Lab_Telecomun, -40.80, 7.51, 14.30, 'USIT');
     
@@ -1253,7 +1261,7 @@ function init() {
     CrearBuildingColision('Princ', 3.94, 16.00, -10.95, 35, 20, 44.5);
     CrearBuildingColision('Princ', -42.06, 16.00, -16.95, 35, 20, 30.3);
     CrearBuildingColision('Princ', -19.06, 16.00, -26.95, 11.5, 20, 10);
-    CrearBuildingColision('Princ', 30.94, 16.00, -23.95, 11.5, 20, 32);
+    CrearBuildingColision('Princ', 20.94, 16.00, -23.95, 20.5, 20, 32);
     CrearBuildingColision('Princ', 19.94, 16.00, 5.05, 10, 20, 18);
 
     CrearBuildingColision('usitbuild', -46.06, 16.00, 18.05, 30, 20, 30);
