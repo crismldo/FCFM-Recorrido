@@ -260,6 +260,9 @@ const Salones = Object.freeze({
     USIT_Sala_Juntas: 'USIT_Sala_Juntas',
     USIT_Sala_Usos_Multiples: 'USIT_Sala_Usos_Multiples',
     USIT_Lab_Base_Datos: 'USIT_Lab_Base_Datos',
+    USIT_Lab_Computo: 'USIT_Lab_Computo',
+    USIT_Investig_Telecom: 'USIT_Investig_Telecom',
+    USIT_Lab_Telecomun: 'USIT_Lab_Telecomun',
     
     
     //PISO 1
@@ -377,6 +380,9 @@ const InformacionSalones = {
     [Salones.USIT_Sala_Juntas]: { nombre: "Sala de Juntas", descripcion: " " },
     [Salones.USIT_Sala_Usos_Multiples]: { nombre: "Sala de usos Multiples", descripcion: "En esta sala se realizan diferentes eventos" },
     [Salones.USIT_Lab_Base_Datos]: { nombre: "Laboratorio de Base de Datos", descripcion: " " },
+    [Salones.USIT_Lab_Computo]: { nombre: "Laboratorio de Computo", descripcion: " " },
+    [Salones.USIT_Investig_Telecom]: { nombre: "Investigación y Telecomunicaciones", descripcion: " " },
+    [Salones.USIT_Lab_Telecomun]: { nombre: "Laboratorio de Telecomunicaciones", descripcion: " " },
     
     // --- PISO 1 ---
     [Salones.Princ_Salon_101]: { nombre: "Salón 101", descripcion: " " },
@@ -1226,8 +1232,14 @@ function init() {
     CrearSalonColision(Salones.USIT_recepcion, -33, 7.51, 17.48, 'USIT');
     CrearSalonColision(Salones.USIT_Asistente_subdireccion, -33, 7.51, 14.84, 'USIT');
     CrearSalonColision(Salones.USIT_Sala_Juntas, -33.5, 7.51, 13.32, 'USIT');
-    CrearSalonColision(Salones.USIT_Sala_Usos_Multiples, -39.19, 7.51, 21.81, 'USIT');
-    CrearSalonColision(Salones.USIT_Lab_Base_Datos, -43.64, 7.51, 13.58, 'USIT');
+    CrearSalonColision(Salones.USIT_Sala_Usos_Multiples, -38.75, 7.51, 21.81, 'USIT');
+    
+    
+    
+    CrearSalonColision(Salones.USIT_Lab_Computo
+, -48.86, 7.51, 14.30, 'USIT');
+    CrearSalonColision(Salones.USIT_Investig_Telecom, -43.74, 7.51, 14.30, 'USIT');
+    CrearSalonColision(Salones.USIT_Lab_Telecomun, -40.80, 7.51, 14.30, 'USIT');
     
     
     CrearSalonColision(Salones.Asesorias_Entrada, 37.7, 7.17, -76.33, 'ATRAS');
