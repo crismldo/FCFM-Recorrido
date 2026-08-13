@@ -252,7 +252,7 @@ const Salones = Object.freeze({
     
     //USIT
     USIT_entrada: 'USIT_entrada',
-    USIT_recepcion: 'USIT_recepcion',
+    USIT_Tienda_Bisonte: 'USIT_Tienda_Bisonte',
     USIT_Asistente_subdireccion: 'USIT_Asistente_subdireccion',
     USIT_Sala_Juntas: 'USIT_Sala_Juntas',
     USIT_Sala_Usos_Multiples: 'USIT_Sala_Usos_Multiples',
@@ -372,7 +372,7 @@ const InformacionSalones = {
 
     //USIT
     [Salones.USIT_entrada]: { nombre: "USIT", descripcion: " " },
-    [Salones.USIT_recepcion]: { nombre: "Recepción", descripcion: " " },
+    [Salones.USIT_Tienda_Bisonte]: { nombre: "Tienda Bisonte", descripcion: " " },
     [Salones.USIT_Asistente_subdireccion]: { nombre: "Asistente de Subdireccion", descripcion: " " },
     [Salones.USIT_Sala_Juntas]: { nombre: "Sala de Juntas", descripcion: " " },
     [Salones.USIT_Sala_Usos_Multiples]: { nombre: "Sala de usos Multiples", descripcion: " " },
@@ -743,8 +743,15 @@ function loadEnvironmentAndModel() {
                     loadGLBModel('modelos/USIT-Opt/USIT-P2Oro_.glb', { x: 0, y: 10, z: -10, scale: 100, tag: 'USIT_Detalles' }),
                     loadGLBModel('modelos/USIT-Opt/USIT-P2Podcast_.glb', { x: 0, y: 10, z: -10, scale: 100, tag: 'USIT_Detalles' }),
                     loadGLBModel('modelos/USIT-Opt/USIT-P2Soporte_.glb', { x: 0, y: 10, z: -10, scale: 100, tag: 'USIT_Detalles' }),
-                    loadGLBModel('modelos/USIT-Opt/USIT-PB_.glb', { x: 0, y: 10, z: -10, scale: 100, tag: 'USIT_High' }),
-                    loadGLBModel('modelos/USIT-Opt/USIT-PBLab_.glb', { x: 0, y: 10, z: -10, scale: 100, tag: 'USIT_Detalles' }),
+                    
+                    loadGLBModel('modelos/USIT-Opt/USIT-PBLABOP.glb', { x: 0, y: 10, z: -10, scale: 100, tag: 'USIT_High' }),
+                    loadGLBModel('modelos/USIT-Opt/USIT-PBOP.glb', { x: 0, y: 10, z: -10, scale: 100, tag: 'USIT_High' }),
+                    
+                    
+                    //loadGLBModel('modelos/USIT-Opt/USIT-PB_.glb', { x: 0, y: 10, z: -10, scale: 100, tag: 'USIT_High' }),
+                    //loadGLBModel('modelos/USIT-Opt/USIT-PBLab_.glb', { x: 0, y: 10, z: -10, scale: 100, tag: 'USIT_Detalles' }),
+                    
+                    
                     loadGLBModel('modelos/USIT-Opt/USIT-PBMulti_.glb', { x: 0, y: 10, z: -10, scale: 100, tag: 'USIT_Detalles' }),
 
                     loadGLBModel('modelos/USIT-Opt/USIT-Ext-Op.glb', { x: 0, y: 10, z: -10, scale: 100, tag: 'USIT_Low' }),
@@ -1238,7 +1245,7 @@ function init() {
 
     //USIT
     CrearSalonColision(Salones.USIT_entrada, -24.80, 7.53, 20.87, 'EST');
-    CrearSalonColision(Salones.USIT_recepcion, -33, 7.51, 17.48, 'USIT');
+    CrearSalonColision(Salones.USIT_Tienda_Bisonte, -33, 7.51, 17.48, 'USIT');
     CrearSalonColision(Salones.USIT_Asistente_subdireccion, -33, 7.51, 14.84, 'USIT');
     CrearSalonColision(Salones.USIT_Sala_Juntas, -33.5, 7.51, 13.32, 'USIT');
     CrearSalonColision(Salones.USIT_Sala_Usos_Multiples, -38.75, 7.51, 21.81, 'USIT');
