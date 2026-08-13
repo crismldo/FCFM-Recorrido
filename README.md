@@ -80,13 +80,15 @@ const Salones = Object.freeze({
 ```
 const InformacionSalones = {
     // --- PISO 1 ---
-    [Salones.Princ_Salon_101]: { nombre: "Salón 101", descripcion: "Aula de clases regulares." },
-    [Salones.Princ_Salon_102]: { nombre: "Salón 102", descripcion: "Aula de clases regulares." },
-    [Salones.Princ_Salon_103]: { nombre: "Salón 103", descripcion: "Aula de clases regulares." },
-    [Salones.Princ_Salon_104]: { nombre: "Salón 104", descripcion: "Aula de clases regulares." },
-    [Salones.Princ_Salon_105]: { nombre: "Salón 105", descripcion: "Aula de clases regulares." }
+    [Salones.Princ_Salon_101]: { nombre: "Salón 101", descripcion: " " },
+    [Salones.Princ_Salon_102]: { nombre: "Salón 102", descripcion: " " },
+    [Salones.Princ_Salon_103]: { nombre: "Salón 103", descripcion: " " },
+    [Salones.Princ_Salon_104]: { nombre: "Salón 104", descripcion: " " },
+    [Salones.Princ_Salon_105]: { nombre: "Salón 105", descripcion: " " }
 };
 ```
+
+#### ⚠️Advertencia⚠️: La sección de "Descripción" a sido desactivada del codigo HTML debido a que seria muy tardado hacer descripciones de cada salón, especialmente considerando que muchos se describen solos. Dejaremos las Descripciones en Blanco, si quieres darte el trabajo de crear descripciones, favor de preguntar a tu Docente encargado sobre qué Salones vale la pena crear descripciones.
 
 > Para crear "Salones" que no esten ya definidos, se deben añadir en estas dos secciones
 
@@ -520,3 +522,15 @@ composer.addPass(vignettePass);
 > `offset` define que tan pequeño es el "circulo" que no tiene oscuridad en la pantalla, entre mas pequeño y cerca de 0.0, menos se notará la viñeta, y entre más grande sea el valor más se notará la viñeta y el "circulo" será más pequeño.
 
 > `darkness` define que tan intenso quieres el negro de los bordes, un valor mas bajo que 1 le da más transparencia y un valor más alto lo hace mucho mas intenso y dramatico.
+
+--------
+
+## COMENTARIOS
+
+
+> `13/08/2026` Ojalá esta documentación le sea útil a la siguiente persona que le toque trabajar con este proyecto. En caso de que algun aspecto sea confuso, sientanse libres de actualizar este documento para crear mejor legibilidad o para explicar más detalladamente el funcionamiento de este codigo.
+
+> Gracias por leer.
+
+
+- Documentación hecha por Dariel Pérez Chávez.

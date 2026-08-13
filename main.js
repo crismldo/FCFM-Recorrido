@@ -1,4 +1,16 @@
 // ============================================================
+// EL SIGUIENTE CODIGO A SIDO DOCUMENTADO EN EL README.md DE ESTE REPOSITORIO.
+// EN CASO DE QUE ESTE CODIGO SE VAYA A PASAR A OTRO MEDIO, FAVOR DE INCLUIR EL ARCHIVO
+// ANTES MENCIONADO PARA ASEGURARSE DE TENER LAS INSTRUCCIONES Y RECOMENDACIONES DE COMO
+// UTILIZAR EL CODIGO, ASÍ COMO PARA TENER GUIA DE COMO MODIFICARLO EN CASO
+// DE QUE ALGUN ASPECTO TENGA QUE SER ACTUALIZADO A FUTURO.
+// ============================================================
+
+
+
+
+
+// ============================================================
 //#region  IMPORTS
 // ============================================================
 import * as THREE from 'three';
@@ -393,7 +405,7 @@ const InformacionSalones = {
     [Salones.Princ_Salon_203]: { nombre: "Salón 203", descripcion: " " },
     [Salones.Princ_Salon_204]: { nombre: "Salón 204", descripcion: " " },
 
-    [Salones.Princ_Salon_401]: { nombre: "Salón 401", descripcion: " " },
+    [Salones.Princ_Salon_401]: { nombre: "Salón 401 Sala Polivalente", descripcion: " " },
     [Salones.Princ_Salon_402]: { nombre: "Salón 402", descripcion: " " },
     [Salones.Princ_Salon_403]: { nombre: "Salón 403", descripcion: " " },
     [Salones.Princ_Salon_404]: { nombre: "Salón 404", descripcion: " " },
@@ -734,7 +746,8 @@ function loadEnvironmentAndModel() {
                 await Promise.all([                                        
 
                     //===============================USIT===============================
-                    loadGLBModel('modelos/USIT-Opt/USIT-Bancas_.glb', { x: 0, y: 10, z: -10, scale: 100, tag: 'USIT' }),
+                    //loadGLBModel('modelos/USIT-Opt/USIT-Bancas_.glb', { x: 0, y: 10, z: -10, scale: 100, tag: 'USIT' }),
+                    loadGLBModel('modelos/USIT-Opt/USIT-BANCASOP.glb', { x: 0, y: 10, z: -10, scale: 100, tag: 'USIT' }),
 
 
                     loadGLBModel('modelos/USIT-Opt/USIT-P1_.glb', { x: 0, y: 10, z: -10, scale: 100, tag: 'USIT_High' }),
@@ -784,12 +797,15 @@ function loadEnvironmentAndModel() {
                     //loadGLBModel('modelos/FACU/PRINCIPALP2-Op.glb', { x: 0, y: 10, z: -10, scale: 100, tag: 'FACU' }),
                     
                     //===============================SALONES ATRAS===============================
-                    loadGLBModel('modelos/Salones-Opt/Salones_.glb', { x: 0, y: 10, z: -10, scale: 100, tag: 'FACU' }),
-                    loadGLBModel('modelos/Salones-Opt/Salones-Plant_.glb', { x: 0, y: 10, z: -10, scale: 100, tag: 'ATRAS' }),                
-                    loadGLBModel('modelos/Atras/300s_.glb', { x: 0, y: 10, z: -10, scale: 100, tag: 'ATRAS' }),
-                    loadGLBModel('modelos/Atras/canchas_.glb', { x: 0, y: 10, z: -10, scale: 100, tag: 'ATRAS' }),
-                    loadGLBModel('modelos/Atras/deportivo_.glb', { x: 0, y: 10, z: -10, scale: 100, tag: 'ATRAS' }),
-                    loadGLBModel('modelos/Atras/posgrado_.glb', { x: 0, y: 10, z: -10, scale: 100, tag: 'ATRAS' }),
+                    loadGLBModel('modelos/Salones-Opt/Salones_.glb', { x: 0, y: 10.31, z: -10, scale: 100, tag: 'FACU' }),
+                    loadGLBModel('modelos/Salones-Opt/Salones-Plant_.glb', { x: 0, y: 10, z: -10, scale: 100, tag: 'FACU' }), 
+                    
+                    
+                    loadGLBModel('modelos/Atras/300s_.glb', { x: 0, y: 9.57, z: -12.36, scale: 100, tag: 'ATRAS' }),
+                    loadGLBModel('modelos/Atras/canchas_.glb', { x: 0, y: 9.35, z: -12.36, scale: 100, tag: 'ATRAS' }),
+                    loadGLBModel('modelos/Atras/deportivo_.glb', { x: 0, y: 9.35, z: -12.36, scale: 100, tag: 'ATRAS' }),
+                    //loadGLBModel('modelos/Atras/posgrado_.glb', { x: 0, y: 9.35, z: -12.36, scale: 100, tag: 'ATRAS' }),
+                    loadGLBModel('modelos/Atras/posgrado_.glb', { x: 0, y: 9.35, z: -12.36, scale: 100, tag: 'ATRAS' }),
                     
                                                                                 
                 ]);
@@ -1042,8 +1058,8 @@ function verificarDistanciasLOD() {
     const permitidoFACU = tagsPermitidos.includes('FACU'); // ¿El chunk nos deja verlo?
 
     // MODIFICACIÓN FACU: Si estamos en las cajas de 'Princ', forzamos a que esté "cerca"
-    //const FACU_Lejos = (sectorActivoActual === 'Princ') ? false : (distanciaFACU > 40);
-    const FACU_Lejos = (sectorActivoActual === 'Princ') ? false : (distanciaFACU > 50);
+    //const FACU_Lejos = (sectorActivoActual === 'Princ') ? false : (distanciaFACU > 50);
+    const FACU_Lejos = (sectorActivoActual === 'Princ') ? false : (distanciaFACU > 70);
 
     actualizarLOD_FACU(FACU_Lejos, permitidoFACU);
 }
@@ -1069,8 +1085,11 @@ function init() {
     // ── CÁMARA ────────────────────────────────────────────────
     
     camera = new THREE.PerspectiveCamera(70, innerWidth / innerHeight, 0.1, 50);
-    //camera.position.set(24, 11.63, -35.83);
+    
+    /*ESTA ES LA POSICION DEFAULT, AL PRESIONAR P PUEDES VOLVER A ESTA POSICION*/
     camera.position.set(7, 8.41, 37);
+
+    //camera.position.set(22.35, 6.75, -60.17);
     //camera.position.set(6.31, 30, 52.96);
 
     // ── RENDERER ──────────────────────────────────────────────
@@ -1213,21 +1232,21 @@ function init() {
     CrearSalonColision(Salones.Princ_Salon_401, 30.97, 8.05, -18.80, 'FACU');
 
     //Piso 2
-    CrearSalonColision(Salones.Princ_Dep_Prefectura, 13.98, 11.77, 9.20, 'FACU');
-    CrearSalonColision(Salones.Princ_Dep_Servicio_Social, 14.06, 11.77, 4.30, 'FACU');
-    CrearSalonColision(Salones.Princ_Dep_Escolar, 14.15, 11.77, -2.25, 'FACU');
-    CrearSalonColision(Salones.Princ_Audi_Jose, 16.89, 11.77, -13.21, 'FACU');
-    //////////CrearSalonColision(Salones.Sala_inovacion_emprendimiento, 30.70, 11.77, -18.77, 'FACU');
-    CrearSalonColision(Salones.Princ_Lab_Optica, 20.37, 11.77, -22.62, 'FACU');
-    CrearSalonColision(Salones.Princ_Lab_Sistemas_Elec, 14.08, 11.77, -22.86, 'FACU');
-    CrearSalonColision(Salones.Princ_Lab_Fisica_III, 7.08, 11.77, -22.90, 'FACU');
-    CrearSalonColision(Salones.Princ_Lab_Circuitos, 0.41, 11.77, -22.86, 'FACU');
-    CrearSalonColision(Salones.Princ_Lab_Fluidos, -6.51, 11.77, -22.94, 'FACU');
-    CrearSalonColision(Salones.Princ_Lab_Mecanica, -13.38, 11.77, -22.85, 'FACU');
-    //////////CrearSalonColision(Salones.Lab_Actuaria, -30.15, 11.77, -11.86, 'FACU');
-    CrearSalonColision(Salones.Princ_Dep_Soci_Alumnos, -9.08, 11.77, -7.10, 'FACU');
-    CrearSalonColision(Salones.Princ_Dep_Copias, -9.12, 11.77, -5.24, 'FACU');
-    CrearSalonColision(Salones.Princ_Dep_RH, -9.16, 11.77, -2.05, 'FACU');
+    CrearSalonColision(Salones.Princ_Dep_Prefectura, 13.98, 11.66, 9.20, 'FACU');
+    CrearSalonColision(Salones.Princ_Dep_Servicio_Social, 14.06, 11.66, 4.30, 'FACU');
+    CrearSalonColision(Salones.Princ_Dep_Escolar, 14.15, 11.66, -2.25, 'FACU');
+    CrearSalonColision(Salones.Princ_Audi_Jose, 16.89, 11.66, -13.21, 'FACU');
+    //////////CrearSalonColision(Salones.Sala_inovacion_emprendimiento, 30.70, 11.66, -18.77, 'FACU');
+    CrearSalonColision(Salones.Princ_Lab_Optica, 20.37, 11.66, -22.62, 'FACU');
+    CrearSalonColision(Salones.Princ_Lab_Sistemas_Elec, 14.08, 11.66, -22.86, 'FACU');
+    CrearSalonColision(Salones.Princ_Lab_Fisica_III, 7.08, 11.66, -22.90, 'FACU');
+    CrearSalonColision(Salones.Princ_Lab_Circuitos, 0.41, 11.66, -22.86, 'FACU');
+    CrearSalonColision(Salones.Princ_Lab_Fluidos, -6.51, 11.66, -22.94, 'FACU');
+    CrearSalonColision(Salones.Princ_Lab_Mecanica, -13.38, 11.66, -22.85, 'FACU');
+    //////////CrearSalonColision(Salones.Lab_Actuaria, -30.15, 11.66, -11.86, 'FACU');
+    CrearSalonColision(Salones.Princ_Dep_Soci_Alumnos, -9.08, 11.66, -7.10, 'FACU');
+    CrearSalonColision(Salones.Princ_Dep_Copias, -9.12, 11.66, -5.24, 'FACU');
+    CrearSalonColision(Salones.Princ_Dep_RH, -9.16, 11.66, -2.05, 'FACU');
 
     //Piso 3
     CrearSalonColision(Salones.Princ_Dep_Biblioteca, 12.7, 15.16, 11.94, 'FACU');
@@ -1257,8 +1276,8 @@ function init() {
     CrearSalonColision(Salones.USIT_Lab_Telecomun, -40.80, 7.51, 14.30, 'USIT');
     
     
-    CrearSalonColision(Salones.Asesorias_Entrada, 37.7, 7.17, -76.33, 'ATRAS');
-    CrearSalonColision(Salones.Posgrado_Entrada, 26.54, 7.17, -71.61, 'ATRAS');
+    CrearSalonColision(Salones.Asesorias_Entrada, 38.7, 6.52, -78.69, 'ATRAS');
+    CrearSalonColision(Salones.Posgrado_Entrada, 26.54, 6.52, -74.05, 'ATRAS');
 
     
 
