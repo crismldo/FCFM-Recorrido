@@ -43,6 +43,9 @@ const edificiosCargados = {};
 let isUsitVisible = true;
 let isModelLoaded = false;
 
+let MakeVideoWarm = true; 
+let tintPass;
+
 // ── DOM ───────────────────────────────────────────────────────
 const canvas       = document.getElementById('webgl');
 const blocker      = document.getElementById('blocker');
@@ -116,7 +119,7 @@ document.addEventListener('keydown', e => {
         if (k === 'o') vectorMovimiento.y += debugPaso; // Mover arriba
 
         // Mover la Caja
-        //debugBox.translate(vectorMovimiento);
+        debugBox.translate(vectorMovimiento);
 
         // IMPRIMIR COORDENADAS CON 'M'
         if (k === 'm') {
@@ -132,7 +135,7 @@ document.addEventListener('keydown', e => {
 
             console.log("=====================================");
             console.log("Copia y pega esta línea en tu código:");
-            console.log(`CrearBuildingColision('TAG_AQUI', ${cX}, ${cY}, ${cZ}, ${size.x}, ${size.y}, ${size.z});`);
+            console.log(`CrearCajaDeColision(${cX}, ${cY}, ${cZ}, ${size.x}, ${size.y}, ${size.z});`);
             console.log("=====================================");
         }
     }
@@ -655,7 +658,7 @@ const zonasEdificios = [];
 // ==========================================
 let debugBox = null;
 let debugBoxHelper = null;
-let debugPaso = 0.5; // Cuántos metros se mueve con cada tecla
+let debugPaso = 0.1; // Cuántos metros se mueve con cada tecla
 
 function SpawnDebugBox(w, h, d) {
     
@@ -665,18 +668,18 @@ function SpawnDebugBox(w, h, d) {
     }
 
     //const centroInicial = new THREE.Vector3(0, 10, 0); // Empieza en el centro del mundo
-    const centroInicial = new THREE.Vector3(-47.23, 16.00, 48.89);
+    const centroInicial = new THREE.Vector3(-12.67, 14.16, -18.80);
     const tamaño = new THREE.Vector3(w, h, d);
     
     // Creamos la caja matemática
     debugBox = new THREE.Box3().setFromCenterAndSize(centroInicial, tamaño);
     
     // Le ponemos un color llamativo (Cyan) para diferenciarla de las rojas/verdes
-    //debugBoxHelper = new THREE.Box3Helper(debugBox, 0x00ffff); 
-    //scene.add(debugBoxHelper);
+    debugBoxHelper = new THREE.Box3Helper(debugBox, 0x00ffff); 
+    scene.add(debugBoxHelper);
 
-    //console.log(`Caja Debug Creada: ${w}x${h}x${d}`);
-    //console.log("Controles: I/K (Adelante/Atrás), J/L (Izquierda/Derecha), U/O (Abajo/Arriba). Presiona 'P' para imprimir.");
+    console.log(`Caja Debug Creada: ${w}x${h}x${d}`);
+    console.log("Controles: I/K (Adelante/Atrás), J/L (Izquierda/Derecha), U/O (Abajo/Arriba). Presiona 'P' para imprimir.");
 }
 
 function CrearBuildingColision(prefijo, centroX, centroY, centroZ, w, h, d) {
@@ -712,6 +715,39 @@ function verificarColisionEdificios() {
     actualizarSectores(sectorActual);
 }
 
+
+function CrearCajaDeColision(x, y, z, scaleX, scaleY, scaleZ) {
+    // 1. Create a base 1x1x1 geometry. The scale parameters will resize it.
+    const geometry = new THREE.BoxGeometry(1, 1, 1);
+    
+    // 2. Create a material. It remains invisible during normal gameplay, 
+    // but shows up as a wireframe if ModoDebugActivado is true.
+    const material = new THREE.MeshBasicMaterial({ 
+        color: 0xff0000,
+        wireframe: true,
+        transparent: !ModoDebugActivado,
+        opacity: ModoDebugActivado ? 1 : 0 
+    });
+    
+    // 3. Assemble the mesh and set transforms
+    const collisionBox = new THREE.Mesh(geometry, material);
+    collisionBox.position.set(x, y, z);
+    collisionBox.scale.set(scaleX, scaleY, scaleZ);
+    
+    // Update the matrix so the physics engine knows its exact place in the world
+    collisionBox.updateMatrixWorld(true);
+    
+    // 4. Integrate with your existing collision logic
+    collisionBox.geometry.boundsTree = new MeshBVH(collisionBox.geometry);
+    collisionBox.layers.enable(LAYER_COLLIDABLE);
+    
+    // 5. Add it to the physical world and the visual scene
+    collidableObjects.push(collisionBox);
+    scene.add(collisionBox);
+}
+
+
+
 //#endregion 
 
 
@@ -723,11 +759,17 @@ function verificarColisionEdificios() {
 // ── FUNCIONES ──────────────────────────────────────────────────
 function loadEnvironmentAndModel() {
     new RGBELoader().load(
-        'https://dl.polyhaven.org/file/ph-assets/HDRIs/hdr/1k/kloofendal_48d_partly_cloudy_puresky_1k.hdr',
+        //'https://dl.polyhaven.org/file/ph-assets/HDRIs/hdr/1k/kloofendal_48d_partly_cloudy_puresky_1k.hdr',
+        'https://dl.polyhaven.org/file/ph-assets/HDRIs/hdr/1k/driving_school_1k.hdr',
         async (hdr) => {
             hdr.mapping = THREE.EquirectangularReflectionMapping;
+            
+            scene.background = hdr; 
+            //scene.environment = hdr;
+            
+            
             scene.backgroundIntensity  = 0.8;
-            scene.environmentIntensity = 1.2;
+            scene.environmentIntensity = 0.5;
 
             const pmrem    = new THREE.PMREMGenerator(renderer);
             const envRT    = pmrem.fromEquirectangular(hdr);
@@ -866,14 +908,14 @@ function loadGLBModel(path, options = {}) {
                     child.receiveShadow = false;
                     child.frustumCulled = true;
 
-                    if (child.material) {
-                        const name = (child.material.name || '') + ' ' + (child.name || '');
-                        if (isGlass(name)) {
-                            child.material = createGlassMaterial(child.material);
-                        } else if (isMetal(name) || isOriginallyMetal(child.material)) {
-                            enhanceMetalMaterial(child.material);
-                        }
-                    }
+                    // if (child.material) {
+                    //     const name = (child.material.name || '') + ' ' + (child.name || '');
+                    //     if (isGlass(name)) {
+                    //         child.material = createGlassMaterial(child.material);
+                    //     } else if (isMetal(name) || isOriginallyMetal(child.material)) {
+                    //         enhanceMetalMaterial(child.material);
+                    //     }
+                    // }
                 });
 
                 resolve(model);
@@ -1074,7 +1116,9 @@ function verificarDistanciasLOD() {
 // ============================================================
 function init() {
     // Color de la Niebla
-    const FOG_COLOR = 0xffe6d1;
+    //NIEBLA CALIDA
+    //const FOG_COLOR = 0xffe6d1;
+    const FOG_COLOR = 0xdae6f7;
 
     // ── ESCENA ────────────────────────────────────────────────
     scene = new THREE.Scene();
@@ -1087,10 +1131,10 @@ function init() {
     camera = new THREE.PerspectiveCamera(70, innerWidth / innerHeight, 0.1, 50);
     
     /*ESTA ES LA POSICION DEFAULT, AL PRESIONAR P PUEDES VOLVER A ESTA POSICION*/
-    camera.position.set(7, 8.41, 37);
+    //camera.position.set(7, 8.41, 37);
 
-    //camera.position.set(22.35, 6.75, -60.17);
-    //camera.position.set(6.31, 30, 52.96);
+    camera.position.set(-6.33, 15.14, -19.77);
+    //camera.position.set(1.75, 15, 0.25);
 
     // ── RENDERER ──────────────────────────────────────────────
     renderer = new THREE.WebGLRenderer({ canvas, antialias: false, powerPreference: 'high-performance' });
@@ -1104,7 +1148,7 @@ function init() {
     //renderer.shadowMap.type    = THREE.VSMShadowMap;
     renderer.shadowMap.type    = THREE.PCFSoftShadowMap;
     renderer.toneMapping       = THREE.ACESFilmicToneMapping;
-    renderer.toneMappingExposure = 1.1;
+    renderer.toneMappingExposure = 1.0;
     renderer.outputColorSpace  = THREE.SRGBColorSpace;
 
 
@@ -1168,11 +1212,17 @@ function init() {
     raycaster.firstHitOnly = true;
 
     // ── ILUMINACIÓN ───────────────────────────────────────────
-    const hemi = new THREE.HemisphereLight(0xffeeb1, 0x3a5f8a, 1.5);
+    const hemi = new THREE.HemisphereLight(0xffeeb1, 0x3a5f8a, 1.0);
     hemi.position.set(0, 50, 0);
     scene.add(hemi);
 
-    const sun = new THREE.DirectionalLight(0xffaa33, 2.5);
+    //Luz calida
+    //const sun = new THREE.DirectionalLight(0xffaa33, 2.5);
+    const sun = new THREE.DirectionalLight(0xb3ebfc, 1.0);
+    //const sun = new THREE.DirectionalLight(0xFFFFFF, 1.0);
+
+
+
     sun.position.set(50, 80, 50);
     sun.castShadow = false;
     sun.shadow.mapSize.set(1024, 1024);
@@ -1183,7 +1233,7 @@ function init() {
     const d = 60;
     sun.shadow.camera.left = -d; sun.shadow.camera.right = d;
     sun.shadow.camera.top  =  d; sun.shadow.camera.bottom = -d;
-    scene.add(sun);
+    //scene.add(sun);
 
     const fill = new THREE.DirectionalLight(0x8ab4d4, 0.4);
     fill.position.set(-40, 20, -30);
@@ -1299,8 +1349,38 @@ function init() {
     CrearBuildingColision('front', 12.27, 16.00, 44.89, 60, 20, 40);
     CrearBuildingColision('front', -40.23, 16.00, 49.89, 45, 20, 30);
 
+
+
+    CrearCajaDeColision(2.60, 13.70, -5.00, 18.5, 8, 29);
+    CrearCajaDeColision(29.80, 15, -44.30, 15, 15, 0.5);
+    CrearCajaDeColision(21.90, 9.36, -43.50, 0.8, 15, 3.5);
+    CrearCajaDeColision(36.90, 9.36, -42.80, 0.5, 15, 3.5);
+    CrearCajaDeColision(21.70, 15.66, -34.70, 0.5, 10, 10);
+
+    CrearCajaDeColision(12.76, 8.30, 1.32, 0.5, 1.5, 12);
+    CrearCajaDeColision(-7.24, 8.30, 1.52, 0.5, 1.5, 12);
+    CrearCajaDeColision(-7.24, 8.30, -12.98, 0.5, 1.5, 12);
+    CrearCajaDeColision(12.66, 8.30, -12.98, 0.5, 1.5, 12);
+
+    CrearCajaDeColision(2.71, 8.30, -20.66, 17, 1.5, 0.5);
+    CrearCajaDeColision(-43.92, 13.43, -22.56, 30, 12, 0.5);
+    CrearCajaDeColision(-43.92, 17.2, -13.86, 30, 12, 0.5);
+    CrearCajaDeColision(-50.82, 8.80, -13.86, 10, 2, 0.5);
+    CrearCajaDeColision(-28.72, 14.90, -18.26, 0.5, 7, 9);
+    CrearCajaDeColision(-23.32, 14.90, -18.26, 3.5, 7, 9);
+
+    CrearCajaDeColision(-17.42, 14.90, -20.56, 3.5, 7, 0.5);
+    CrearCajaDeColision(18.53, 14.16, 12.00, 5.5, 15, 0.3);
+
+    CrearCajaDeColision(15.63, 15.26, 11.10, 0.3, 2.8, 1.8);
+    CrearCajaDeColision(-12.67, 14.16, -18.80, 6.7, 8, 0.3);
+    CrearCajaDeColision(-9.47, 16.16, -18.00, 0.3, 5, 2);
+
+
+
+
     if (ModoDebugActivado == true){
-        SpawnDebugBox(45, 20, 30)
+        SpawnDebugBox(0.3, 3, 2)
     }
     
     
