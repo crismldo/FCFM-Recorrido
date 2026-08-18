@@ -254,7 +254,7 @@ const direction = new THREE.Vector3();
 // ── INFORMACION SALONES ────────────────────────────────────────────────────
 const infoPanel = document.getElementById('info-panel');
 const Salon_Nombre = document.getElementById('Salon_Nombre');
-//const Salon_Descripcion = document.getElementById('Salon_Descripcion');
+const Salon_Descripcion = document.getElementById('Salon_Descripcion');
 let Salon_ID = 0;
 
 
@@ -383,7 +383,7 @@ const Salones = Object.freeze({
 
 
 const InformacionSalones = {
-    [Salones.Sala_Maestros]: { nombre: "Sala de maestros", descripcion: " " },
+    [Salones.Sala_Maestros]: { nombre: "Sala de maestros", descripcion: "  DESCRIPCION TEST " },
 
     //USIT
     [Salones.USIT_entrada]: { nombre: "USIT", descripcion: " " },
@@ -414,7 +414,7 @@ const InformacionSalones = {
     [Salones.Princ_Salon_404]: { nombre: "Salón 404", descripcion: " " },
     [Salones.Princ_Salon_405]: { nombre: "Salón 405", descripcion: " " },
 
-    [Salones.Princ_Audi_Eladio]: { nombre: "Auditorio Eladio", descripcion: " " },
+    [Salones.Princ_Audi_Eladio]: { nombre: "Auditorio Dr. Eladio Saenz Quiroga ", descripcion: " " },
     [Salones.Princ_Dep_Tutorias]: { nombre: "Departamento de Tutorías", descripcion: " " },
     [Salones.Princ_Dep_Tesoreria]: { nombre: "Tesorería", descripcion: " "},
     [Salones.Princ_Dep_Direccion]: { nombre: "Dirección", descripcion: " " },
@@ -440,7 +440,7 @@ const InformacionSalones = {
     [Salones.Princ_Salon_409]: { nombre: "Salón 409", descripcion: " " },
     [Salones.Princ_Salon_410]: { nombre: "Salón 410", descripcion: " " },
 
-    [Salones.Princ_Audi_Jose]: { nombre: "Auditorio José", descripcion: " " },
+    [Salones.Princ_Audi_Jose]: { nombre: "Auditorio Dr. José Luis Comparan Elizondo", descripcion: " " },
 
     [Salones.Princ_Lab_Mecanica]: { nombre: "Laboratorio de Mecánica", descripcion: " " },
     [Salones.Princ_Lab_Fluidos]: { nombre: "Laboratorio de Fluidos", descripcion: " " },
@@ -591,10 +591,10 @@ function DisplaySalonInfo(ID_Salon_Seleccionado) {
     
     if (info) {
         Salon_Nombre.textContent = info.nombre;
-        //Salon_Descripcion.textContent = info.descripcion;
+        Salon_Descripcion.textContent = info.descripcion;
     } else {
         Salon_Nombre.textContent = "Área Desconocida";
-        //Salon_Descripcion.textContent = "No hay información disponible para este lugar.";
+        Salon_Descripcion.textContent = "No hay información disponible para este lugar.";
     }
 }
 
@@ -821,10 +821,13 @@ function loadEnvironmentAndModel() {
                     //===============================FACU===============================
                     
                     //Version HIGH POLY
-                    loadGLBModel('modelos/FACU/FACU-EOP.glb', { x: 0, y: 10, z: -10, scale: 100, tag: 'FACU_High' }),
+                    loadGLBModel('modelos/FACU/FACU-EOP.glb', { x: 0, y: 10.1, z: -10, scale: 100, tag: 'FACU_High' }),
                     loadGLBModel('modelos/FACU/FACU-P1OP.glb', { x: 0, y: 10, z: -10, scale: 100, tag: 'FACU_High' }),
                     loadGLBModel('modelos/FACU/FACU-P2OP.glb', { x: 0, y: 10, z: -10, scale: 100, tag: 'FACU_High' }),
+
+                    
                     loadGLBModel('modelos/FACU/FACU-PBOP.glb', { x: 0, y: 10, z: -10, scale: 100, tag: 'FACU_High' }),
+                    //loadGLBModel('modelos/FACU/tempPisoOP.glb', { x: 0, y: 10, z: -10, scale: 100, tag: 'FACU_High' }),
 
                     //Version LOW POLY
                     loadGLBModel('modelos/FACU/FACU-EXTOP.glb', { x: 0, y: 10, z: -10, scale: 100, tag: 'FACU_Low' }),
@@ -1131,9 +1134,9 @@ function init() {
     camera = new THREE.PerspectiveCamera(70, innerWidth / innerHeight, 0.1, 50);
     
     /*ESTA ES LA POSICION DEFAULT, AL PRESIONAR P PUEDES VOLVER A ESTA POSICION*/
-    //camera.position.set(7, 8.41, 37);
+    camera.position.set(7, 8.41, 37);
 
-    camera.position.set(-6.33, 15.14, -19.77);
+    //camera.position.set(-6.33, 15.14, -19.77);
     //camera.position.set(1.75, 15, 0.25);
 
     // ── RENDERER ──────────────────────────────────────────────
@@ -1212,13 +1215,13 @@ function init() {
     raycaster.firstHitOnly = true;
 
     // ── ILUMINACIÓN ───────────────────────────────────────────
-    const hemi = new THREE.HemisphereLight(0xffeeb1, 0x3a5f8a, 1.0);
+    const hemi = new THREE.HemisphereLight(0xd9d9d9, 0x3a5f8a, 1.0);
     hemi.position.set(0, 50, 0);
     scene.add(hemi);
 
     //Luz calida
     //const sun = new THREE.DirectionalLight(0xffaa33, 2.5);
-    const sun = new THREE.DirectionalLight(0xb3ebfc, 1.0);
+    const sun = new THREE.DirectionalLight(0xd9d9d9, 3.0);
     //const sun = new THREE.DirectionalLight(0xFFFFFF, 1.0);
 
 
@@ -1235,11 +1238,11 @@ function init() {
     sun.shadow.camera.top  =  d; sun.shadow.camera.bottom = -d;
     //scene.add(sun);
 
-    const fill = new THREE.DirectionalLight(0x8ab4d4, 0.4);
+    const fill = new THREE.DirectionalLight(0xd9d9d9, 0.1);
     fill.position.set(-40, 20, -30);
     scene.add(fill);
 
-    scene.add(new THREE.AmbientLight(0xffffff, 0.15));
+    scene.add(new THREE.AmbientLight(0xd9d9d9, 0.45));
 
     // ── PISO BASE ─────────────────────────────────────────────
     const ground = new THREE.Mesh(
