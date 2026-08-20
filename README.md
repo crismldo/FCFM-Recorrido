@@ -6,6 +6,8 @@
 
 > Previsualizador [Markdownlivepreview](https://markdownlivepreview.com/).
 
+> Alguna extensión para ver documentos estilo Markdown en Visual Studio Code como `"Markdown Preview Enhanced"`
+
 --------
 #### ⚠️Advertencia⚠️: Para un Rendimiento optimo mientras se navega en este proyecto, favor de tener encendido `Acceleración de Hardware` en la configuración de su navegador. De lo contrario el proyecto tendrá mucho lag y no sera jugable o testeable apropiadamente.
 
@@ -24,6 +26,166 @@
 
 --------
 
+## Modo Desarrollador / Debug
+
+##### Mucho del codigo de este proyecto radica en el uso de Colisiones para determinar acciones que el programa debe realizar, como saber qué edificios dejar de dibujar o para saber en donde estan los limites de cada "Zona"
+
+> Al inicio del codigo de `main.js` se encuentra este bloque de texto. Para Habilitar las funciones del Modo Desarrollador hay que cambiar esta variable a `TRUE`.
+
+
+
+```
+// ============================================================
+// PARA PODER VER LAS COLISIONES Y BOUNDING BOXES, PONER ESTA VARIABLE EN TRUE
+// DE LO CONTRARIO ESTAN PERMANECERAN INVISIBLES
+// ============================================================
+const ModoDebugActivado = false;
+```
+
+> Tambien se recomienda tener la Consola del navegador (Accesible mediante las `herramientas para desarrollador`) abierta para poder leer los avisos que se crean segun se modifiquen aspectos del proyecto.
+
+
+
+### SpawnDebugBox()
+
+#### Esta funcion se usa para dibujar una Caja que el cliente puede mover usando teclas que solo se pueden usar cuando el `Modo Desarrollador` está activado
+
+```
+function SpawnDebugBox(x, y, z, scaleX, scaleY, scaleZ) {
+    
+    // Si ya existe una caja de debug, la borramos primero
+    if (debugBoxHelper) {
+        scene.remove(debugBoxHelper);
+    }
+
+    const centroInicial = new THREE.Vector3(x, y, z);
+    const tamaño = new THREE.Vector3(scaleX, scaleY, scaleZ);
+
+    debugBox = new THREE.Box3().setFromCenterAndSize(centroInicial, tamaño);
+    
+    
+    debugBoxHelper = new THREE.Box3Helper(debugBox, 0x00ffff); 
+    scene.add(debugBoxHelper);
+
+    console.log(`Caja Debug Creada`);
+    console.log(`Posicion: ${x},${y},${z}`);
+    console.log(`Dimensiones: ${scaleX}x${scaleY}x${scaleZ}`);
+    console.log("Controles: I/K (Adelante/Atrás), J/L (Izquierda/Derecha), U/O (Abajo/Arriba). Presiona 'M' para imprimir.");
+}
+```
+> Esta funcion es muy útil para hacer una preview de que `tamaño` y en que `posición` quieres poner una colisión y comprobar si realmente cubre el espacio que deseas.
+
+> Para Dibujarla en Escena `Init()` tiene que incluir este segmento de codigo
+
+```
+if (ModoDebugActivado == true){
+    SpawnDebugBox(10, 10, 10, 0.3, 3, 2)
+}
+```
+
+> Los primeros 3 valores corresponden a la `posición` en `X, Y y Z`. Los segundos 3 valores son la `escala` que se le aplicará al tamaño del objeto.
+
+> ⚠️Advertencia⚠️: Amenos que el `Modo Desarrollador` esté activado, este objeto nunca se dibujará en camara, así que de preferencia no se elimine esta parte del codigo.
+
+
+> Para mover la caja se utilizan los siguientes controles 
+```
+if (ModoDebugActivado == true) {
+    const vectorMovimiento = new THREE.Vector3(0, 0, 0);
+    // Mapeo de teclas Debug
+    if (k === 'i') vectorMovimiento.z -= debugPaso; // Mover adelante
+    if (k === 'k') vectorMovimiento.z += debugPaso; // Mover atrás
+    if (k === 'j') vectorMovimiento.x -= debugPaso; // Mover izquierda
+    if (k === 'l') vectorMovimiento.x += debugPaso; // Mover derecha
+    if (k === 'u') vectorMovimiento.y -= debugPaso; // Mover abajo
+    if (k === 'o') vectorMovimiento.y += debugPaso; // Mover arriba
+    // Mover la Caja
+    debugBox.translate(vectorMovimiento);
+
+    // IMPRIMIR COORDENADAS CON 'M'
+    if (k === 'm') {
+        const centroActual = new THREE.Vector3();
+        debugBox.getCenter(centroActual); // Extraemos el centro exacto
+        const size = new THREE.Vector3();
+        debugBox.getSize(size); // Extraemos el tamaño por si lo olvidaste
+        const cX = centroActual.x.toFixed(2);
+        const cY = centroActual.y.toFixed(2);
+        const cZ = centroActual.z.toFixed(2);
+
+        console.log("=====================================");
+        console.log(`POSICION:--------(${cX}, ${cY}, ${cZ})`);
+        console.log(`PROPORCIONES:----(${size.x}, ${size.y}, ${size.z})`);
+        console.log(`Combinado:-------(${cX}, ${cY}, ${cZ}, ${size.x}, ${size.y}, ${size.z})`);
+        //console.log(`CrearCajaDeColision(${cX}, ${cY}, ${cZ}, ${size.x}, ${size.y}, ${size.z});`);
+        console.log("=====================================");
+    }
+}
+```
+
+> `U` y `O` Mueven Abajo y Arriba
+> `I` y `K` Mueven Adelante y Atrás
+> `J` y `L` Mueven Izquierda y Derecha
+
+> `M` Permite imprimir un Mensaje en la consola con la información actual de la caja para que sea facil copiar y pegas estos datos en tus funciones que lo pidan
+
+
+```
+=====================================
+POSICION:--------(10.00, 10.00, 10.00)
+PROPORCIONES:----(0.3, 3, 2)
+Combinado:-------(10.00, 10.00, 10.00, 0.3, 3, 2)
+=====================================
+```
+
+
+### CrearCajaDeColision()
+#### Para determinar Areas donde los usuarios no puedan pasar, hay que crear Cajas que funcionan como Colisiones para prevenir el paso del usuario.
+
+```
+function CrearCajaDeColision(x, y, z, scaleX, scaleY, scaleZ) {
+    
+    const geometry = new THREE.BoxGeometry(1, 1, 1);
+    const material = new THREE.MeshBasicMaterial({ 
+        color: 0xff0000,
+        wireframe: true,
+        transparent: !ModoDebugActivado,
+        opacity: ModoDebugActivado ? 1 : 0 
+    });
+    const collisionBox = new THREE.Mesh(geometry, material);
+    collisionBox.position.set(x, y, z);
+    collisionBox.scale.set(scaleX, scaleY, scaleZ);
+    collisionBox.updateMatrixWorld(true);
+
+    collisionBox.geometry.boundsTree = new MeshBVH(collisionBox.geometry);
+    collisionBox.layers.enable(LAYER_COLLIDABLE);
+    
+    collidableObjects.push(collisionBox);
+    scene.add(collisionBox);
+}
+```
+
+> Al igual que otras Cajas o Bounding Boxes, cada `Caja de Colision` se declaran dentro del `Init()`
+
+```
+CrearCajaDeColision(2.60, 13.70, -5.00, 18.5, 8, 29);
+```
+
+--------
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 ### Controles y añadir nuevas Teclas
 
 > El movimiento Basico del jugador es `WASD` y Salto con el `Espacio`.
@@ -35,19 +197,14 @@
 document.addEventListener('keydown', e => {
     const k = e.key === ' ' ? ' ' : e.key.toLowerCase();
     if (k in keys) keys[k] = true;
-    
 
     if (isModelLoaded && controls.isLocked) {
         if (k === 'p') {
-            teletransportarA(new THREE.Vector3(7.0, 8.41, 37.0)); // Coordenadas de ejemplo 1
-            //teletransportarA(new THREE.Vector3(48.38, 8.41, -51.56)); // Coordenadas de ejemplo 1
-        }
-        //if (k === 'o') {
-        //    Aqui insertamos nueva funcionalidad
-        //}   
+            teletransportarA(new THREE.Vector3(7.0, 8.41, 37.0)); // VOLVER A LA ENTRADA 
+        }        
     }
-});
 ```
+
 > `o` es la tecla a la que le asignameros una nueva funcion en este caso.
 
 
@@ -79,16 +236,15 @@ const Salones = Object.freeze({
 
 ```
 const InformacionSalones = {
-    // --- PISO 1 ---
-    [Salones.Princ_Salon_101]: { nombre: "Salón 101", descripcion: " " },
-    [Salones.Princ_Salon_102]: { nombre: "Salón 102", descripcion: " " },
-    [Salones.Princ_Salon_103]: { nombre: "Salón 103", descripcion: " " },
-    [Salones.Princ_Salon_104]: { nombre: "Salón 104", descripcion: " " },
-    [Salones.Princ_Salon_105]: { nombre: "Salón 105", descripcion: " " }
-};
+    [Salones.Sala_Maestros]: { nombre: "Sala de maestros", descripcion: "  DESCRIPCION TEST " },
+
+    //USIT
+    [Salones.USIT_entrada]: { nombre: "USIT", descripcion: " " },
+    [Salones.USIT_Tienda_Bisonte]: { nombre: "Tienda Bisonte", descripcion: " " },
+...
+);
 ```
 
-#### ⚠️Advertencia⚠️: La sección de "Descripción" a sido desactivada del codigo HTML debido a que seria muy tardado hacer descripciones de cada salón, especialmente considerando que muchos se describen solos. Dejaremos las Descripciones en Blanco, si quieres darte el trabajo de crear descripciones, favor de preguntar a tu Docente encargado sobre qué Salones vale la pena crear descripciones.
 
 > Para crear "Salones" que no esten ya definidos, se deben añadir en estas dos secciones
 
@@ -99,26 +255,22 @@ const InformacionSalones = {
 > Para usarla solo se tiene que pedir un objeto **InformacionSalones,** y coordenadas **X, Y, Z**
 
 ```
-function CrearSalonColision(id, centroX, centroY, centroZ) {
-
-    loadGLBModel('modelos/A_test.glb', { x: centroX, y: (centroY - 1.7), z: centroZ, scale: 1 });
+function CrearSalonColision(id, centroX, centroY, centroZ, Salontag) {
+    
+    loadGLBModel('modelos/A_test.glb', { x: centroX, y: (centroY - 1.3), z: centroZ, scale: 1, tag: Salontag });
     const centro = new THREE.Vector3(centroX, centroY, centroZ);
     const tamaño = new THREE.Vector3(2, 2, 2);
     
-    // Crear una caja matemática pura (sin mesh, rendimiento óptimo)
     const cajaMatematica = new THREE.Box3().setFromCenterAndSize(centro, tamaño);
-    
-    // Empujamos el objeto con su ID al arreglo global
     zonasSalones.push({
         id: id,
         box: cajaMatematica
     });
 
-    // OPCIONAL: Si quieres ver las cajas para debugear dónde están paradas:
-    
-    //const helper = new THREE.Box3Helper(cajaMatematica, 0x00ff00);
-    //scene.add(helper);
-    
+    if (ModoDebugActivado == true) {
+        const helper = new THREE.Box3Helper(cajaMatematica, 0x00ff00);
+        scene.add(helper);
+    }
 }
 ```
 
@@ -183,13 +335,17 @@ const ReglasVisibilidad = {
 function CrearBuildingColision(prefijo, centroX, centroY, centroZ, w, h, d) {
     const centro = new THREE.Vector3(centroX, centroY, centroZ);
     const tamaño = new THREE.Vector3(w, h, d);
-    
     const cajaMatematica = new THREE.Box3().setFromCenterAndSize(centro, tamaño);
-    
     zonasEdificios.push({
         prefijo: prefijo, // ej: 'Princ' o 'USIT'
         box: cajaMatematica
     });
+
+    if (ModoDebugActivado == true) {
+        const helper = new THREE.Box3Helper(cajaMatematica, 0xffff00);
+        scene.add(helper);
+    }
+    
 }
 ```
 > Y su declaración es la siguiente.
@@ -358,117 +514,7 @@ gltf-transform optimize modelos/facu2.glb modelos/facu3_opt.glb --compress draco
 > Por ultimo, reemplazar el modelo original por el modelo optimizado en el codigo. Asi como eliminar el modelo original de la carpeta `modelos/` en caso de ser necesario.
 --------
 
-## Opciones de Depuración / Debuggeo
 
-##### A la hora de Añadir o editar la funcionalidad de este proyecto, algunos aspectos pueden ser engorrosos de testear si se requiere entrar y salir de la pagina una y otra vez para verificar cambios al codigo. Así que aquí se registraran las Herramientas que estén disponibles para probar el funcionamiento de este proyecto de manera mas cómoda.
-
-### Ubicar de `Edificios` en el mapa
-
-##### Debido a que los `Edificios` son Cajas de colision de tamaño variable que definen zonas de carga, puede ser muy engorroso intentar ubicar el centro para cada caja. Para esto tenemos la funcion `SpawnDebugBox`
-
-> En `Init()` casi al final de su codigo tenemos una declaración de esta función que se habilitará cuando cambies `ModoDebugActivado` de `False` a `True` dentro del Bloque de codigo de `Variables Globales`
-
-```
-const ModoDebugActivado = false;
-```
-
-```
-function init() {
-    .....
-
-    if (ModoDebugActivado == true){
-        SpawnDebugBox(45, 20, 30)
-    }
-    
-    .....
-}
-```
-
-> Al marcar `ModoDebugActivado` como `true` tambien se habilitan más `controles`
-
-```
-document.addEventListener('keydown', e => {
-    .......
-    // ── HERRAMIENTAS DEBUG ───────────────────────────────────────────────
-
-    if (ModoDebugActivado == true) {
-        const vectorMovimiento = new THREE.Vector3(0, 0, 0);
-
-        // Mapeo de teclas Debug
-        if (k === 'i') vectorMovimiento.z -= debugPaso; // Mover adelante
-        if (k === 'k') vectorMovimiento.z += debugPaso; // Mover atrás
-        if (k === 'j') vectorMovimiento.x -= debugPaso; // Mover izquierda
-        if (k === 'l') vectorMovimiento.x += debugPaso; // Mover derecha
-        if (k === 'u') vectorMovimiento.y -= debugPaso; // Mover abajo
-        if (k === 'o') vectorMovimiento.y += debugPaso; // Mover arriba
-
-        // Aplicar el movimiento a la caja
-        //debugBox.translate(vectorMovimiento);
-
-        // IMPRIMIR COORDENADAS CON 'M'
-        if (k === 'm') {
-            const centroActual = new THREE.Vector3();
-            debugBox.getCenter(centroActual); // Extraemos el centro exacto
-
-            const size = new THREE.Vector3();
-            debugBox.getSize(size); // Extraemos el tamaño por si lo olvidaste
-
-            const cX = centroActual.x.toFixed(2);
-            const cY = centroActual.y.toFixed(2);
-            const cZ = centroActual.z.toFixed(2);
-
-            console.log("=====================================");
-            console.log("Copia y pega esta línea en tu código:");
-            console.log(`CrearBuildingColision('TAG_AQUI', ${cX}, ${cY}, ${cZ}, ${size.x}, ${size.y}, ${size.z});`);
-            console.log("=====================================");
-        }
-    }
-});
-```
-
-> Esta funcion provoca el dibujado de un `Bounding Box` en el mapa, con su `Escala` en sus 3 ejes siendo especificada en su Declaración
-```
-function init() {
-    .....
-    if (ModoDebugActivado == true){
-        SpawnDebugBox(45, 20, 30)
-    } 
-    .....
-}
-```
-
-> Y su posicion Inicial se especifica en su Definición
-
-```
-function SpawnDebugBox(w, h, d) {
-    // Si ya existe una caja de debug, la borramos primero
-    if (debugBoxHelper) {
-        scene.remove(debugBoxHelper);
-    }
-
-    
-    const centroInicial = new THREE.Vector3(-47.23, 16.00, 48.89); // 
-    
-    
-    const tamaño = new THREE.Vector3(w, h, d);
-    // Creamos la caja matemática
-    debugBox = new THREE.Box3().setFromCenterAndSize(centroInicial, tamaño);
-    
-    // Le ponemos un color llamativo (Cyan) para diferenciarla de las rojas/verdes
-    debugBoxHelper = new THREE.Box3Helper(debugBox, 0x00ffff); 
-    scene.add(debugBoxHelper);
-
-    
-}
-```
-
-> La Habilitación de los `Controles` y el dibujado de la `DebugBox` permite que el Usuario pueda mover esta caja usando las teclas ya vistas.
-
-> Una vez se encuentre una posición favorable para la `DebugBox` (en donde quedaria bien un `Edificio`), al presionar la tecla `M` del teclado, lo cual hará que en la consola se imprima la declaración de `CrearBuildingColision` con las coordenadas y la escala requerida para recrear el tamaño y la posición de la `DebugBox` pero para un `Edificio`, solo faltando que se defina qué `Tag` tiene que seguir.
-
-> Una vez hecho esto, se puede empezar a usar la `DebugBox` antes definida para encontrar otro `Edificio`. O en caso de que ya no se requiera su uso, `ModoDebugActivado` puede volver ser puesto en `False`.
- 
---------
 
 ## Efectos de Post Procesado
 

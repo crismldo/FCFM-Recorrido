@@ -7,8 +7,11 @@
 // ============================================================
 
 
-
-
+// ============================================================
+// PARA PODER VER LAS COLISIONES Y BOUNDING BOXES, PONER ESTA VARIABLE EN TRUE
+// DE LO CONTRARIO ESTAN PERMANECERAN INVISIBLES
+// ============================================================
+const ModoDebugActivado = true;
 
 // ============================================================
 //#region  IMPORTS
@@ -58,7 +61,7 @@ let lastTime = performance.now();
 let frames = 0;
 
 
-const ModoDebugActivado = false;
+
 
 
 // ── LOD VARIABLES ──────────────────────────────────────────────────
@@ -94,14 +97,9 @@ document.addEventListener('keydown', e => {
 
     if (isModelLoaded && controls.isLocked) {
         if (k === 'p') {
-            teletransportarA(new THREE.Vector3(7.0, 8.41, 37.0)); // Coordenadas de ejemplo 1
-            //teletransportarA(new THREE.Vector3(48.38, 8.41, -51.56)); // Coordenadas de ejemplo 1
+            teletransportarA(new THREE.Vector3(7.0, 8.41, 37.0)); // VOLVER A LA ENTRADA 
         }
         
-        //if (k === 'o') {
-        //    isUsitVisible = !isUsitVisible; // Invertimos el estado
-        //    toggleEdificio('USIT', isUsitVisible);
-        //}
         
     }
 
@@ -115,6 +113,7 @@ document.addEventListener('keydown', e => {
         if (k === 'k') vectorMovimiento.z += debugPaso; // Mover atrás
         if (k === 'j') vectorMovimiento.x -= debugPaso; // Mover izquierda
         if (k === 'l') vectorMovimiento.x += debugPaso; // Mover derecha
+
         if (k === 'u') vectorMovimiento.y -= debugPaso; // Mover abajo
         if (k === 'o') vectorMovimiento.y += debugPaso; // Mover arriba
 
@@ -134,8 +133,10 @@ document.addEventListener('keydown', e => {
             const cZ = centroActual.z.toFixed(2);
 
             console.log("=====================================");
-            console.log("Copia y pega esta línea en tu código:");
-            console.log(`CrearCajaDeColision(${cX}, ${cY}, ${cZ}, ${size.x}, ${size.y}, ${size.z});`);
+            console.log(`POSICION:--------(${cX}, ${cY}, ${cZ})`);
+            console.log(`PROPORCIONES:----(${size.x}, ${size.y}, ${size.z})`);
+            console.log(`Combinado:-------(${cX}, ${cY}, ${cZ}, ${size.x}, ${size.y}, ${size.z})`);
+            //console.log(`CrearCajaDeColision(${cX}, ${cY}, ${cZ}, ${size.x}, ${size.y}, ${size.z});`);
             console.log("=====================================");
         }
     }
@@ -613,10 +614,10 @@ function CrearSalonColision(id, centroX, centroY, centroZ, Salontag) {
         box: cajaMatematica
     });
 
-    // OPCIONAL: Si quieres ver dónde están paradas las Cajas:
-    
-    //const helper = new THREE.Box3Helper(cajaMatematica, 0x00ff00);
-    //scene.add(helper);
+    if (ModoDebugActivado == true) {
+        const helper = new THREE.Box3Helper(cajaMatematica, 0x00ff00);
+        scene.add(helper);
+    }
     
 }
 
@@ -654,32 +655,32 @@ const zonasEdificios = [];
 
 
 // ==========================================
-// HERRAMIENTA DE DEBUG
+// HERRAMIENTA DE DESARROLLADOR
 // ==========================================
 let debugBox = null;
 let debugBoxHelper = null;
 let debugPaso = 0.1; // Cuántos metros se mueve con cada tecla
 
-function SpawnDebugBox(w, h, d) {
+function SpawnDebugBox(x, y, z, scaleX, scaleY, scaleZ) {
     
     // Si ya existe una caja de debug, la borramos primero
     if (debugBoxHelper) {
         scene.remove(debugBoxHelper);
     }
 
-    //const centroInicial = new THREE.Vector3(0, 10, 0); // Empieza en el centro del mundo
-    const centroInicial = new THREE.Vector3(-12.67, 14.16, -18.80);
-    const tamaño = new THREE.Vector3(w, h, d);
-    
-    // Creamos la caja matemática
+    const centroInicial = new THREE.Vector3(x, y, z);
+    const tamaño = new THREE.Vector3(scaleX, scaleY, scaleZ);
+
     debugBox = new THREE.Box3().setFromCenterAndSize(centroInicial, tamaño);
     
-    // Le ponemos un color llamativo (Cyan) para diferenciarla de las rojas/verdes
+    
     debugBoxHelper = new THREE.Box3Helper(debugBox, 0x00ffff); 
     scene.add(debugBoxHelper);
 
-    console.log(`Caja Debug Creada: ${w}x${h}x${d}`);
-    console.log("Controles: I/K (Adelante/Atrás), J/L (Izquierda/Derecha), U/O (Abajo/Arriba). Presiona 'P' para imprimir.");
+    console.log(`Caja Debug Creada`);
+    console.log(`Posicion: ${x},${y},${z}`);
+    console.log(`Dimensiones:: ${scaleX}x${scaleY}x${scaleZ}`);
+    console.log("Controles: I/K (Adelante/Atrás), J/L (Izquierda/Derecha), U/O (Abajo/Arriba). Presiona 'M' para imprimir.");
 }
 
 function CrearBuildingColision(prefijo, centroX, centroY, centroZ, w, h, d) {
@@ -693,9 +694,11 @@ function CrearBuildingColision(prefijo, centroX, centroY, centroZ, w, h, d) {
         box: cajaMatematica
     });
 
-    // Descomenta esto para ver las cajas amarillas gigantes y ajustarlas visualmente
-    //const helper = new THREE.Box3Helper(cajaMatematica, 0xffff00);
-    //scene.add(helper);
+    if (ModoDebugActivado == true) {
+        const helper = new THREE.Box3Helper(cajaMatematica, 0xffff00);
+        scene.add(helper);
+    }
+    
 }
 
 function verificarColisionEdificios() {
@@ -717,11 +720,9 @@ function verificarColisionEdificios() {
 
 
 function CrearCajaDeColision(x, y, z, scaleX, scaleY, scaleZ) {
-    // 1. Create a base 1x1x1 geometry. The scale parameters will resize it.
+    
     const geometry = new THREE.BoxGeometry(1, 1, 1);
     
-    // 2. Create a material. It remains invisible during normal gameplay, 
-    // but shows up as a wireframe if ModoDebugActivado is true.
     const material = new THREE.MeshBasicMaterial({ 
         color: 0xff0000,
         wireframe: true,
@@ -729,19 +730,19 @@ function CrearCajaDeColision(x, y, z, scaleX, scaleY, scaleZ) {
         opacity: ModoDebugActivado ? 1 : 0 
     });
     
-    // 3. Assemble the mesh and set transforms
+    
     const collisionBox = new THREE.Mesh(geometry, material);
     collisionBox.position.set(x, y, z);
     collisionBox.scale.set(scaleX, scaleY, scaleZ);
     
-    // Update the matrix so the physics engine knows its exact place in the world
+    
     collisionBox.updateMatrixWorld(true);
     
-    // 4. Integrate with your existing collision logic
+    
     collisionBox.geometry.boundsTree = new MeshBVH(collisionBox.geometry);
     collisionBox.layers.enable(LAYER_COLLIDABLE);
     
-    // 5. Add it to the physical world and the visual scene
+    
     collidableObjects.push(collisionBox);
     scene.add(collisionBox);
 }
@@ -1383,7 +1384,7 @@ function init() {
 
 
     if (ModoDebugActivado == true){
-        SpawnDebugBox(0.3, 3, 2)
+        SpawnDebugBox(10, 10, 10, 0.3, 3, 2)
     }
     
     
