@@ -11,7 +11,7 @@
 // PARA PODER VER LAS COLISIONES Y BOUNDING BOXES, PONER ESTA VARIABLE EN TRUE
 // DE LO CONTRARIO ESTAN PERMANECERAN INVISIBLES
 // ============================================================
-const ModoDebugActivado = true;
+const ModoDebugActivado = false;
 
 // ============================================================
 //#region  IMPORTS
@@ -828,6 +828,20 @@ function loadEnvironmentAndModel() {
 
                     
                     loadGLBModel('modelos/FACU/FACU-PBOP.glb', { x: 0, y: 10, z: -10, scale: 100, tag: 'FACU_High' }),
+
+                    loadGLBModel('modelos/FACU/FACU-PB_Placas.glb', { x: 0, y: 10, z: -10, scale: 100, tag: 'FACU_High' }),
+
+
+                    //loadGLBModel('modelos/FACU/FACU-PB_Titulos.glb', { x: 0, y: 10, z: -10, scale: 100, tag: 'FACU_High' }),
+
+                    loadGLBModel('modelos/FACU/FACU-PB_Titulos.glb', { x: 0, y: 10, z: -10, scale: 100, tag: 'FACU_High' }).then(model => {
+                        model.traverse(child => {
+                            if (child.isMesh) {
+                                child.renderOrder = 1;
+                            }
+                        });
+                    }),
+
                     //loadGLBModel('modelos/FACU/tempPisoOP.glb', { x: 0, y: 10, z: -10, scale: 100, tag: 'FACU_High' }),
 
                     //Version LOW POLY
@@ -911,6 +925,8 @@ function loadGLBModel(path, options = {}) {
                     child.castShadow    = false;
                     child.receiveShadow = false;
                     child.frustumCulled = true;
+
+                    
 
                     // if (child.material) {
                     //     const name = (child.material.name || '') + ' ' + (child.name || '');
