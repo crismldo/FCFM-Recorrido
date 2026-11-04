@@ -28,9 +28,9 @@ import { OutputPass }          from 'three/addons/postprocessing/OutputPass.js';
 import { MeshBVH, acceleratedRaycast } from 'three-mesh-bvh';
 import  Stats                  from 'three/addons/libs/stats.module.js';
 
-import { FilmPass } from 'three/examples/jsm/postprocessing/FilmPass.js';
-import { ShaderPass } from 'three/examples/jsm/postprocessing/ShaderPass.js';
-import { VignetteShader } from 'three/examples/jsm/shaders/VignetteShader.js';
+import { FilmPass } from 'three/addons/postprocessing/FilmPass.js';
+import { ShaderPass } from 'three/addons/postprocessing/ShaderPass.js';
+import { VignetteShader } from 'three/addons/shaders/VignetteShader.js';
 
 //#endregion 
 
@@ -503,6 +503,7 @@ let isPlayerInside101 = false;
 
 function physicsStep() {
     const dt     = FIXED_STEP;
+    //const camObj = controls.getObject();
     const camObj = controls.getObject();
 
     _rayOrigin.copy(camObj.position);
@@ -602,7 +603,7 @@ function DisplaySalonInfo(ID_Salon_Seleccionado) {
 function CrearSalonColision(id, centroX, centroY, centroZ, Salontag) {
 
     
-    loadGLBModel('modelos/A_test.glb', { x: centroX, y: (centroY - 1.3), z: centroZ, scale: 1, tag: Salontag });
+    loadGLBModel('/public/modelos/A_test.glb', { x: centroX, y: (centroY - 1.3), z: centroZ, scale: 1, tag: Salontag });
     const centro = new THREE.Vector3(centroX, centroY, centroZ);
     const tamaño = new THREE.Vector3(2, 2, 2);
     
@@ -769,8 +770,8 @@ function loadEnvironmentAndModel() {
             //scene.environment = hdr;
             
             
-            scene.backgroundIntensity  = 0.8;
-            scene.environmentIntensity = 0.5;
+            scene.backgroundIntensity  = 1.0;
+            scene.environmentIntensity = 1.5;
 
             const pmrem    = new THREE.PMREMGenerator(renderer);
             const envRT    = pmrem.fromEquirectangular(hdr);
@@ -789,52 +790,56 @@ function loadEnvironmentAndModel() {
                 await Promise.all([                                        
 
                     //===============================USIT===============================
-                    //loadGLBModel('modelos/USIT-Opt/USIT-Bancas_.glb', { x: 0, y: 10, z: -10, scale: 100, tag: 'USIT' }),
-                    loadGLBModel('modelos/USIT-Opt/USIT-BANCASOP.glb', { x: 0, y: 10, z: -10, scale: 100, tag: 'USIT' }),
+                    loadGLBModel('/public/modelos/USIT-Opt/USIT-BANCASOP.glb', { x: 0, y: 10, z: -10, scale: 100, tag: 'USIT' }),
+                    //loadGLBModel('/public/modelos/USIT-Opt/USIT-Ext-Op.glb', { x: 0, y: 10, z: -10, scale: 100, tag: 'USIT' }),
 
+                    loadGLBModel('/public/modelos/USIT-Opt/USIT-Ext-Op.glb', { x: 0, y: 10, z: -10, scale: 100, tag: 'USIT_Low' }),
 
-                    loadGLBModel('modelos/USIT-Opt/USIT-P1_.glb', { x: 0, y: 10, z: -10, scale: 100, tag: 'USIT_High' }),
-                    loadGLBModel('modelos/USIT-Opt/USIT-P1Lab_.glb', { x: 0, y: 10, z: -10, scale: 100, tag: 'USIT_Detalles' }),
-                    loadGLBModel('modelos/USIT-Opt/USIT-P2_.glb', { x: 0, y: 10, z: -10, scale: 100, tag: 'USIT_High' }),
-                    loadGLBModel('modelos/USIT-Opt/USIT-P2Oro_.glb', { x: 0, y: 10, z: -10, scale: 100, tag: 'USIT_Detalles' }),
-                    loadGLBModel('modelos/USIT-Opt/USIT-P2Podcast_.glb', { x: 0, y: 10, z: -10, scale: 100, tag: 'USIT_Detalles' }),
-                    loadGLBModel('modelos/USIT-Opt/USIT-P2Soporte_.glb', { x: 0, y: 10, z: -10, scale: 100, tag: 'USIT_Detalles' }),
+                    loadGLBModel('/public/modelos/USIT-Opt/USIT-P1_.glb', { x: 0, y: 10, z: -10, scale: 100, tag: 'USIT_High' }),
+                    loadGLBModel('/public/modelos/USIT-Opt/USIT-P1Lab_.glb', { x: 0, y: 10, z: -10, scale: 100, tag: 'USIT_Detalles' }),
+                    loadGLBModel('/public/modelos/USIT-Opt/USIT-P2_.glb', { x: 0, y: 10, z: -10, scale: 100, tag: 'USIT_High' }),
+                    loadGLBModel('/public/modelos/USIT-Opt/USIT-P2Oro_.glb', { x: 0, y: 10, z: -10, scale: 100, tag: 'USIT_Detalles' }),
+                    loadGLBModel('/public/modelos/USIT-Opt/USIT-P2Podcast_.glb', { x: 0, y: 10, z: -10, scale: 100, tag: 'USIT_Detalles' }),
+                    loadGLBModel('/public/modelos/USIT-Opt/USIT-P2SOPORTE_.glb', { x: 0, y: 10, z: -10, scale: 100, tag: 'USIT_Detalles' }),
                     
-                    loadGLBModel('modelos/USIT-Opt/USIT-PBLABOP.glb', { x: 0, y: 10, z: -10, scale: 100, tag: 'USIT_High' }),
-                    loadGLBModel('modelos/USIT-Opt/USIT-PBOP.glb', { x: 0, y: 10, z: -10, scale: 100, tag: 'USIT_High' }),
-                    
-                    
-                    //loadGLBModel('modelos/USIT-Opt/USIT-PB_.glb', { x: 0, y: 10, z: -10, scale: 100, tag: 'USIT_High' }),
-                    //loadGLBModel('modelos/USIT-Opt/USIT-PBLab_.glb', { x: 0, y: 10, z: -10, scale: 100, tag: 'USIT_Detalles' }),
+                    loadGLBModel('/public/modelos/USIT-Opt/USIT-PBLABOP.glb', { x: 0, y: 10, z: -10, scale: 100, tag: 'USIT_High' }),
+                    loadGLBModel('/public/modelos/USIT-Opt/USIT-PBMULTI_.glb', { x: 0, y: 10, z: -10, scale: 100, tag: 'USIT_Detalles' }),
+                    loadGLBModel('/public/modelos/USIT-Opt/USIT-PBOP.glb', { x: 0, y: 10, z: -10, scale: 100, tag: 'USIT_High' }),
                     
                     
-                    loadGLBModel('modelos/USIT-Opt/USIT-PBMulti_.glb', { x: 0, y: 10, z: -10, scale: 100, tag: 'USIT_Detalles' }),
+                    //loadGLBModel('/public/modelos/USIT-Opt/USIT-PB_.glb', { x: 0, y: 10, z: -10, scale: 100, tag: 'USIT_High' }),
+                    //loadGLBModel('/public/modelos/USIT-Opt/USIT-PBLab_.glb', { x: 0, y: 10, z: -10, scale: 100, tag: 'USIT_Detalles' }),
+                    
+                    
+                    
 
-                    loadGLBModel('modelos/USIT-Opt/USIT-Ext-Op.glb', { x: 0, y: 10, z: -10, scale: 100, tag: 'USIT_Low' }),
+                    
 
                     
 
                     //===============================ESTACIONAMIENTO===============================
-                    loadGLBModel('modelos/Est-Opt/Est_.glb', { x: 0, y: 10, z: -10, scale: 100, tag: 'EST' }),
-                    loadGLBModel('modelos/Est-Opt/Est-Arboles_.glb', { x: 0, y: 10, z: -10, scale: 100, tag: 'EST' }),
+                    loadGLBModel('/public/modelos/Est-Opt/Est_.glb', { x: 0, y: 10, z: -10, scale: 100, tag: 'EST' }),
+                    loadGLBModel('/public/modelos/Est-Opt/Est-Arboles_.glb', { x: 0, y: 10, z: -10, scale: 100, tag: 'EST' }),
             
                     
                     //===============================FACU===============================
                     
                     //Version HIGH POLY
-                    loadGLBModel('modelos/FACU/FACU-EOP.glb', { x: 0, y: 10.1, z: -10, scale: 100, tag: 'FACU_High' }),
-                    loadGLBModel('modelos/FACU/FACU-P1OP.glb', { x: 0, y: 10, z: -10, scale: 100, tag: 'FACU_High' }),
-                    loadGLBModel('modelos/FACU/FACU-P2OP.glb', { x: 0, y: 10, z: -10, scale: 100, tag: 'FACU_High' }),
+                    //loadGLBModel('/public/modelos/FACU/FACU-EOP.glb', { x: 0, y: 10.1, z: -10, scale: 100, tag: 'FACU_High' }),
+                    
+                    loadGLBModel('/public/modelos/FACU/FACU-PBOP.glb', { x: 0, y: 10, z: -10, scale: 100, tag: 'FACU_High' }),
+                    loadGLBModel('/public/modelos/FACU/FACU-P1OP.glb', { x: 0, y: 10, z: -10, scale: 100, tag: 'FACU_High' }),
+                    loadGLBModel('/public/modelos/FACU/FACU-P2OP.glb', { x: 0, y: 10, z: -10, scale: 100, tag: 'FACU_High' }),
 
                     
-                    loadGLBModel('modelos/FACU/FACU-PBOP.glb', { x: 0, y: 10, z: -10, scale: 100, tag: 'FACU_High' }),
+                    
 
-                    loadGLBModel('modelos/FACU/FACU-PB_Placas.glb', { x: 0, y: 10, z: -10, scale: 100, tag: 'FACU_High' }),
+                    loadGLBModel('/public/modelos/FACU/FACU-PB_Placas.glb', { x: 0, y: 10, z: -10, scale: 100, tag: 'FACU_High' }),
 
 
-                    //loadGLBModel('modelos/FACU/FACU-PB_Titulos.glb', { x: 0, y: 10, z: -10, scale: 100, tag: 'FACU_High' }),
+                    //loadGLBModel('/public/modelos/FACU/FACU-PB_Titulos.glb', { x: 0, y: 10, z: -10, scale: 100, tag: 'FACU_High' }),
 
-                    loadGLBModel('modelos/FACU/FACU-PB_Titulos.glb', { x: 0, y: 10, z: -10, scale: 100, tag: 'FACU_High' }).then(model => {
+                    loadGLBModel('/public/modelos/FACU/FACU-PB_Titulos.glb', { x: 0, y: 10, z: -10, scale: 100, tag: 'FACU_High' }).then(model => {
                         model.traverse(child => {
                             if (child.isMesh) {
                                 child.renderOrder = 1;
@@ -842,30 +847,50 @@ function loadEnvironmentAndModel() {
                         });
                     }),
 
-                    //loadGLBModel('modelos/FACU/tempPisoOP.glb', { x: 0, y: 10, z: -10, scale: 100, tag: 'FACU_High' }),
+                    //loadGLBModel('/public/modelos/FACU/tempPisoOP.glb', { x: 0, y: 10, z: -10, scale: 100, tag: 'FACU_High' }),
 
                     //Version LOW POLY
-                    loadGLBModel('modelos/FACU/FACU-EXTOP.glb', { x: 0, y: 10, z: -10, scale: 100, tag: 'FACU_Low' }),
+                    loadGLBModel('/public/modelos/FACU/FACU-EXTOP.glb', { x: 0, y: 10, z: -10, scale: 100, tag: 'FACU_Low' }),
                     
                     
                     
                     
-                    //loadGLBModel('modelos/FACU/Principal-PB_.glb', { x: 0, y: 10, z: -10, scale: 100, tag: 'FACU' }),
+                    //loadGLBModel('/public/modelos/FACU/Principal-PB_.glb', { x: 0, y: 10, z: -10, scale: 100, tag: 'FACU' }),
                     
-                    //loadGLBModel('modelos/FACU/Principal-B_.glb', { x: 0, y: 10, z: -10, scale: 100, tag: 'FACU' }),
-                    //loadGLBModel('modelos/FACU/Principal-P1_.glb', { x: 0, y: 10, z: -10, scale: 100, tag: 'FACU' }),
-                    //loadGLBModel('modelos/FACU/PRINCIPALP2-Op.glb', { x: 0, y: 10, z: -10, scale: 100, tag: 'FACU' }),
+                    //loadGLBModel('/public/modelos/FACU/Principal-B_.glb', { x: 0, y: 10, z: -10, scale: 100, tag: 'FACU' }),
+                    //loadGLBModel('/public/modelos/FACU/Principal-P1_.glb', { x: 0, y: 10, z: -10, scale: 100, tag: 'FACU' }),
+                    //loadGLBModel('/public/modelos/FACU/PRINCIPALP2-Op.glb', { x: 0, y: 10, z: -10, scale: 100, tag: 'FACU' }),
                     
                     //===============================SALONES ATRAS===============================
-                    loadGLBModel('modelos/Salones-Opt/Salones_.glb', { x: 0, y: 10.31, z: -10, scale: 100, tag: 'FACU' }),
-                    loadGLBModel('modelos/Salones-Opt/Salones-Plant_.glb', { x: 0, y: 10, z: -10, scale: 100, tag: 'FACU' }), 
+                     loadGLBModel('/public/modelos/Salones-Opt/Salones-OPT.glb', { x: 0, y: 10, z: -10, scale: 100, tag: 'FACU' }),
+                     loadGLBModel('/public/modelos/Salones-Opt/Salones-Plant_.glb', { x: 0, y: 10, z: -10, scale: 100, tag: 'FACU' }), 
                     
                     
-                    loadGLBModel('modelos/Atras/300s_.glb', { x: 0, y: 9.57, z: -12.36, scale: 100, tag: 'ATRAS' }),
-                    loadGLBModel('modelos/Atras/canchas_.glb', { x: 0, y: 9.35, z: -12.36, scale: 100, tag: 'ATRAS' }),
-                    loadGLBModel('modelos/Atras/deportivo_.glb', { x: 0, y: 9.35, z: -12.36, scale: 100, tag: 'ATRAS' }),
-                    //loadGLBModel('modelos/Atras/posgrado_.glb', { x: 0, y: 9.35, z: -12.36, scale: 100, tag: 'ATRAS' }),
-                    loadGLBModel('modelos/Atras/posgrado_.glb', { x: 0, y: 9.35, z: -12.36, scale: 100, tag: 'ATRAS' }),
+                    // loadGLBModel('/public/modelos/Atras/300-P1OPT.glb', { x: 0, y: 10, z: -10, scale: 100, tag: 'ATRAS' }),
+                    // loadGLBModel('/public/modelos/Atras/300-PBOPT.glb', { x: 0, y: 10, z: -10, scale: 100, tag: 'ATRAS' }),
+                    // loadGLBModel('/public/modelos/Atras/300-EOPT.glb', { x: 0, y: 10, z: -10, scale: 100, tag: 'ATRAS' }),
+                    
+                    
+                    // loadGLBModel('/public/modelos/Atras/canchas_.glb', { x: 0, y: 9.35, z: -12.36, scale: 100, tag: 'ATRAS' }),
+                    // loadGLBModel('/public/modelos/Atras/deportivo_.glb', { x: 0, y: 9.35, z: -12.36, scale: 100, tag: 'ATRAS' }),
+
+                    //=============================== ATRAS NUEVO ===============================
+                    loadGLBModel('/public/modelos/Atras/300-EOPT.glb', { x: 0, y: 10, z: -10, scale: 100, tag: 'ATRAS' }),
+                    loadGLBModel('/public/modelos/Atras/300-PBOPT.glb', { x: 0, y: 10, z: -10, scale: 100, tag: 'ATRAS' }),
+                    loadGLBModel('/public/modelos/Atras/300-P1OPT.glb', { x: 0, y: 10, z: -10, scale: 100, tag: 'ATRAS' }),
+
+                    loadGLBModel('/public/modelos/Atras/cancha-futOP.glb', { x: 0, y: 10, z: -10, scale: 100, tag: 'ATRAS' }),
+                    loadGLBModel('/public/modelos/Atras/cancha-baskOP.glb', { x: 0, y: 10, z: -10, scale: 100, tag: 'ATRAS' }),
+
+                    loadGLBModel('/public/modelos/Atras/Deportivo-PBOP.glb', { x: 0, y: 10, z: -10, scale: 100, tag: 'ATRAS' }),
+                    loadGLBModel('/public/modelos/Atras/Deportivo-P1OP.glb', { x: 0, y: 10, z: -10, scale: 100, tag: 'ATRAS' }),
+
+                    //loadGLBModel('/public/modelos/Atras/posgrado_.glb', { x: 0, y: 9.35, z: -12.36, scale: 100, tag: 'ATRAS' }),
+
+                    //loadGLBModel('/public/modelos/Atras/posgrado_.glb', { x: 0, y: 10, z: -10, scale: 100, tag: 'ATRAS' }),
+                    loadGLBModel('/public/modelos/Atras/POSGRADO-P1OP.glb', { x: 0, y: 10, z: -10, scale: 100, tag: 'ATRAS' }),
+                    loadGLBModel('/public/modelos/Atras/POSGRADO-P2OP.glb', { x: 0, y: 10, z: -10, scale: 100, tag: 'ATRAS' }),
+                    loadGLBModel('/public/modelos/Atras/POSGRADO-TEMPOP.glb', { x: 0, y: 10, z: -10, scale: 100, tag: 'ATRAS' }),
                     
                                                                                 
                 ]);
@@ -1198,6 +1223,9 @@ function init() {
     vignettePass.uniforms['darkness'].value = 0.9;
     composer.addPass(vignettePass);
 
+    const outputPass = new OutputPass();
+    composer.addPass(outputPass);
+
     
 
 
@@ -1232,7 +1260,7 @@ function init() {
     raycaster.firstHitOnly = true;
 
     // ── ILUMINACIÓN ───────────────────────────────────────────
-    const hemi = new THREE.HemisphereLight(0xd9d9d9, 0x3a5f8a, 1.0);
+    const hemi = new THREE.HemisphereLight(0xd9d9d9, 0x3a5f8a, 1.5);
     hemi.position.set(0, 50, 0);
     scene.add(hemi);
 
@@ -1259,7 +1287,7 @@ function init() {
     fill.position.set(-40, 20, -30);
     scene.add(fill);
 
-    scene.add(new THREE.AmbientLight(0xd9d9d9, 0.45));
+    scene.add(new THREE.AmbientLight(0xd9d9d9, 1.00));
 
     // ── PISO BASE ─────────────────────────────────────────────
     const ground = new THREE.Mesh(

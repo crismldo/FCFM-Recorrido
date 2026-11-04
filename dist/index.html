@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>FCFM - Recorrido Virtual</title>
+    
+    
+
+    
+  <script type="module" crossorigin src="/assets/index-XyTVlNqM.js"></script>
+  <link rel="stylesheet" crossorigin href="/assets/index-FWWmNdFp.css">
+</head>
+<body>
+    <canvas id="webgl"></canvas>
+
+    <!-- <div class="glass-panel">
+        <strong>Salon 403</strong>
+        <p>Salon de clase</p>
+
+    </div> -->
+
+    <div id="three-container">
+    </div>
+    <div id="info-panel" style="display: none; position: absolute; top: 10%; left: 50%; transform: translate(-50%, -50%); color: white; padding: 20px;"
+        class="glass-panel">
+        <div id="Salon_Nombre">Salon 405</div>
+        <div id="Salon_Descripcion"> Salon de clases regular</div>
+    </div>
+
+
+    <div id="ui-container">
+        <div id="coords" class="glass-panel">
+            <span class="label">UBICACIÓN</span>
+            <div id="pos-values">X: 0 | Y: 0 | Z: 0</div>
+            <div id="temptest">FPS: <span id="fps-value">0</span></div>
+        </div>
+
+        <div class="controls-hint glass-panel">
+            <p><strong>WASD</strong> Caminar</p>
+            <p><strong>ESPACIO</strong> Saltar</p>
+            <p><strong>P</strong> Entrada</p>
+        </div>
+    </div>
+
+    <div id="blocker">
+        <div id="instructions" class="glass-panel main-menu">
+            <h1>RECORRIDO VIRTUAL FCFM</h1>
+            <h4>Recuerde activar "Aceleración de hardware" en su Navegador para una mejor experiencia</h4>
+            <div class="loader-container">
+                <div id="loading-bar"></div>
+            </div>
+            <p id="status-text">Cargando activos...</p>
+            <button id="start-btn" style="display: none;">EXPLORAR</button>
+        </div>
+    </div>
+
+    
+
+</body>
+</html>
