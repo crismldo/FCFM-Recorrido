@@ -372,9 +372,13 @@ const Salones = Object.freeze({
     Princ_Dep_Biblioteca:       'Princ_Dep_Biblioteca',
     
 
-    Asesorias_Entrada:       'Asesorias_Entrada',
+    Asesorias_Entrada:         'Asesorias_Entrada',
+    Dep_Psicopedagogia:        'Dep_Psicopedagogia',
+    Enfermeria:                'Enfermeria',
     
     Posgrado_Entrada:       'Posgrado_Entrada',
+
+    Deportivo_Entrada:       'Deportivo_Entrada',
 
 
 
@@ -388,7 +392,7 @@ const InformacionSalones = {
 
     //USIT
     [Salones.USIT_entrada]: { nombre: "USIT", descripcion: " " },
-    [Salones.USIT_Tienda_Bisonte]: { nombre: "Tienda Bisonte", descripcion: " " },
+    [Salones.USIT_Tienda_Bisonte]: { nombre: "Bisonte Store", descripcion: "Abierto de lunes a viernes de 8:30 a 15:30 horas" },
     [Salones.USIT_Asistente_subdireccion]: { nombre: "Asistente de Subdireccion", descripcion: " " },
     [Salones.USIT_Sala_Juntas]: { nombre: "Sala de Juntas", descripcion: " " },
     [Salones.USIT_Sala_Usos_Multiples]: { nombre: "Sala de usos Multiples", descripcion: " " },
@@ -417,7 +421,7 @@ const InformacionSalones = {
 
     [Salones.Princ_Audi_Eladio]: { nombre: "Auditorio Dr. Eladio Saenz Quiroga ", descripcion: " " },
     [Salones.Princ_Dep_Tutorias]: { nombre: "Departamento de Tutorías", descripcion: " " },
-    [Salones.Princ_Dep_Tesoreria]: { nombre: "Tesorería", descripcion: " "},
+    [Salones.Princ_Dep_Tesoreria]: { nombre: "Tesorería", descripcion: "Abierto lunes a viernes de 8:00 a 17:00 horas"},
     [Salones.Princ_Dep_Direccion]: { nombre: "Dirección", descripcion: " " },
     [Salones.Princ_Dep_Servicios_General]: { nombre: "Servicios Generales", descripcion: " " },
     [Salones.Princ_Dep_Coordinacion]: { nombre: "Coordinación", descripcion: " " },
@@ -453,9 +457,9 @@ const InformacionSalones = {
     [Salones.Princ_Dep_Soci_Alumnos]: { nombre: "Sociedad de Alumnos", descripcion: " " },
     [Salones.Princ_Dep_Copias]: { nombre: "Centro de Copiado", descripcion: " " },
     [Salones.Princ_Dep_RH]: { nombre: "Recursos Humanos", descripcion: " " },
-    [Salones.Princ_Dep_Escolar]: { nombre: "Control Escolar", descripcion: " " },
-    [Salones.Princ_Dep_Prefectura]: { nombre: "Prefectura", descripcion: " " },
-    [Salones.Princ_Dep_Servicio_Social]: { nombre: "Servicio Social", descripcion: " " },
+    [Salones.Princ_Dep_Escolar]: { nombre: "Control Escolar", descripcion: "Abierto de lunes a viernes de 8:00 a 18:00 horas" },
+    [Salones.Princ_Dep_Prefectura]: { nombre: "Prefectura", descripcion: "Abierto de lunes a viernes de 7:00 a 22:00 horas y Sábados de 7:00 a 14:00 horas" },
+    [Salones.Princ_Dep_Servicio_Social]: { nombre: "Servicio Social", descripcion: "Abierto de lunes a viernes de 9:00 a 18:00 horas" },
 
     // --- PISO 3 ---
     [Salones.Princ_Salon_111]: { nombre: "Salón 111", descripcion: " " },
@@ -482,14 +486,20 @@ const InformacionSalones = {
 
     [Salones.Princ_Dep_Astronomia]: { nombre: "Departamento de Astronomía", descripcion: " " },
     [Salones.Princ_Dep_Animacion]: { nombre: "Departamento de Animación", descripcion: " " },
-    [Salones.Princ_Dep_Soporte_Tecnico]: { nombre: "Soporte Técnico", descripcion: " " },
+    [Salones.Princ_Dep_Soporte_Tecnico]: { nombre: "Soporte Técnico", descripcion: "Abierto de luneas a viernes de 6:30 a 18:00 horas" },
     [Salones.Princ_Dep_Lab_Computo_Mat]: { nombre: "Lab. Cómputo Matemático", descripcion: " " },
     [Salones.Princ_Dep_Ofici_Administra]: { nombre: "Oficinas Administrativas", descripcion: " " },
-    [Salones.Princ_Dep_CAADI]: { nombre: "CAADI", descripcion: " " },
-    [Salones.Princ_Dep_Biblioteca]: { nombre: "Biblioteca", descripcion: " " },
+    [Salones.Princ_Dep_CAADI]: { nombre: "CAADI", descripcion: "Abierto de lunes a viernes de 10:00 a 18:00 horas" },
+    [Salones.Princ_Dep_Biblioteca]: { nombre: "Biblioteca", descripcion: "Abierto de lunes a viernes de 8:00 a 19:00 horas" },
     
-    [Salones.Asesorias_Entrada]: { nombre: "Asesorias Entrada", descripcion: " " },
-    [Salones.Posgrado_Entrada]: { nombre: "Posgrado Entrada", descripcion: " " }
+    //300s
+    [Salones.Asesorias_Entrada]: { nombre: "Asesorias Entrada", descripcion: "Abierto de lunes a viernes de 8:00 a 20:00 horas" },
+    [Salones.Dep_Psicopedagogia]: { nombre: "Departamento de Psicopedagogía", descripcion: "Abierto de lunes a viernes de 9:00 a 18:00 horas" },
+    [Salones.Enfermeria]: { nombre: "Enfermería", descripcion: "Abierto de lunes a viernes de 7:00 a 20:00 horas" },
+
+    [Salones.Posgrado_Entrada]: { nombre: "Posgrado Entrada", descripcion: " " },
+
+    [Salones.Deportivo_Entrada]: { nombre: "Deportivo Entrada", descripcion: "Abierto de lunes a viernes de 8:00 a 20:00 horas" }
 };
 
 
@@ -887,7 +897,7 @@ function loadEnvironmentAndModel() {
 
                     //loadGLBModel('/public/modelos/Atras/posgrado_.glb', { x: 0, y: 9.35, z: -12.36, scale: 100, tag: 'ATRAS' }),
 
-                    //loadGLBModel('/public/modelos/Atras/posgrado_.glb', { x: 0, y: 10, z: -10, scale: 100, tag: 'ATRAS' }),
+                    loadGLBModel('/public/modelos/Atras/posgradoOP.glb', { x: 0, y: 10, z: -10, scale: 100, tag: 'ATRAS' }),
                     loadGLBModel('/public/modelos/Atras/POSGRADO-P1OP.glb', { x: 0, y: 10, z: -10, scale: 100, tag: 'ATRAS' }),
                     loadGLBModel('/public/modelos/Atras/POSGRADO-P2OP.glb', { x: 0, y: 10, z: -10, scale: 100, tag: 'ATRAS' }),
                     loadGLBModel('/public/modelos/Atras/POSGRADO-TEMPOP.glb', { x: 0, y: 10, z: -10, scale: 100, tag: 'ATRAS' }),
@@ -1311,21 +1321,14 @@ function init() {
 
     CrearSalonColision(Salones.Sala_Maestros, 34.51, 7.46, 51.28, 'EST');
     
+    //FACULTAD
     
-    
-
-
-
-
-
-
-
-
+    //Piso1
     CrearSalonColision(Salones.Princ_Dep_Coordinacion, -8.54, 8.05, -22.25, 'FACU');
-    CrearSalonColision(Salones.Princ_Dep_Servicios_General, -8.77, 8.05, 3.59, 'FACU');
+    CrearSalonColision(Salones.Princ_Dep_Servicios_General, -8.77, 8.05, 5, 'FACU');
     CrearSalonColision(Salones.Princ_Cafeteria, -9.14, 8.05, -7.87, 'FACU');
     CrearSalonColision(Salones.Princ_Dep_Direccion, 14.33, 8.05, 6.22, 'FACU');
-    CrearSalonColision(Salones.Princ_Dep_Tesoreria, 14.50, 8.05, -7.28, 'FACU');
+    CrearSalonColision(Salones.Princ_Dep_Tesoreria, 14.50, 8.05, 1, 'FACU');
     CrearSalonColision(Salones.Princ_Audi_Eladio, 17.72, 8.05, -13.97, 'FACU');
     CrearSalonColision(Salones.Princ_Salon_401, 30.97, 8.05, -18.80, 'FACU');
 
@@ -1355,11 +1358,6 @@ function init() {
     CrearSalonColision(Salones.Princ_Dep_Astronomia, -18.81, 15.16, -22.28, 'FACU');
     CrearSalonColision(Salones.Princ_Dep_Animacion, -57.33, 15.16, -12.28, 'FACU');
 
-
-
-
-
-
     //USIT
     CrearSalonColision(Salones.USIT_entrada, -24.80, 7.53, 20.87, 'EST');
     CrearSalonColision(Salones.USIT_Tienda_Bisonte, -33, 7.51, 17.48, 'USIT');
@@ -1367,20 +1365,21 @@ function init() {
     CrearSalonColision(Salones.USIT_Sala_Juntas, -33.5, 7.51, 13.32, 'USIT');
     CrearSalonColision(Salones.USIT_Sala_Usos_Multiples, -38.75, 7.51, 21.81, 'USIT');
     
-    
-    
     CrearSalonColision(Salones.USIT_Lab_Computo, -48.86, 7.51, 14.30, 'USIT');
     CrearSalonColision(Salones.USIT_Investig_Telecom, -43.74, 7.51, 14.30, 'USIT');
     CrearSalonColision(Salones.USIT_Lab_Telecomun, -40.80, 7.51, 14.30, 'USIT');
     
-    
+    //300s
     CrearSalonColision(Salones.Asesorias_Entrada, 38.7, 6.52, -78.69, 'ATRAS');
+    CrearSalonColision(Salones.Dep_Psicopedagogia, 36.5, 7.5, -82, 'ATRAS');
+    CrearSalonColision(Salones.Enfermeria, 39, 7.5, -80.5, 'ATRAS');
+
+
+    //Posgrado
     CrearSalonColision(Salones.Posgrado_Entrada, 26.54, 6.52, -74.05, 'ATRAS');
 
-    
-
-
-
+    //Deportivo
+    CrearSalonColision(Salones.Deportivo_Entrada, 36, 6.25, -116.7, 'ATRAS');
 
     CrearBuildingColision('Princ', 3.94, 16.00, -10.95, 35, 20, 44.5);
     CrearBuildingColision('Princ', -42.06, 16.00, -16.95, 35, 20, 30.3);
