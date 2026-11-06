@@ -32,6 +32,11 @@ import { FilmPass } from 'three/addons/postprocessing/FilmPass.js';
 import { ShaderPass } from 'three/addons/postprocessing/ShaderPass.js';
 import { VignetteShader } from 'three/addons/shaders/VignetteShader.js';
 
+import { revisarZonas } from './jumpscare.js';
+//debug
+import { Box3Helper, Color } from 'three';
+import { zonas } from './jumpscare.js';
+
 //#endregion 
 
 
@@ -1381,6 +1386,7 @@ function init() {
     //Deportivo
     CrearSalonColision(Salones.Deportivo_Entrada, 36, 6.25, -116.7, 'ATRAS');
 
+
     CrearBuildingColision('Princ', 3.94, 16.00, -10.95, 35, 20, 44.5);
     CrearBuildingColision('Princ', -42.06, 16.00, -16.95, 35, 20, 30.3);
     CrearBuildingColision('Princ', -19.06, 16.00, -26.95, 11.5, 20, 10);
@@ -1477,17 +1483,16 @@ function animate() {
             _lastCoordX = cx; _lastCoordY = cy; _lastCoordZ = cz;
         }
 
+        revisarZonas(p);
+
         const playerObj = controls.getObject();
 
-        // Si el jugador cae por debajo de Y = 0 (ajusta este número según tu mapa)
+        // Si el jugador cae por debajo de Y = 0
         if (playerObj.position.y < 5.0) {
             console.log("¡Jugador se cayó del mapa! Teletransportando...");
 
-            // Resetear la posición a la entrada (usando las coords de tu init)
+            // Resetear la posición a la entrada
             playerObj.position.set(7, 8.41, 37);
-
-            // OPCIONAL: Si tu 'physicsStep' usa una variable de velocidad (ej. velocity.y), 
-            // asegúrate de resetearla a 0 aquí para que no siga cayendo rápido al reaparecer.
         }
     }
 
