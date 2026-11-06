@@ -54,6 +54,10 @@ let isModelLoaded = false;
 let MakeVideoWarm = true; 
 let tintPass;
 
+let Modo_HALLOWEEN = true;
+
+let hemiLight, sunLight, fillLight, ambientLight;
+
 // ── DOM ───────────────────────────────────────────────────────
 const canvas       = document.getElementById('webgl');
 const blocker      = document.getElementById('blocker');
@@ -902,10 +906,15 @@ function loadEnvironmentAndModel() {
 
                     //loadGLBModel('/public/modelos/Atras/posgrado_.glb', { x: 0, y: 9.35, z: -12.36, scale: 100, tag: 'ATRAS' }),
 
-                    loadGLBModel('/public/modelos/Atras/posgradoOP.glb', { x: 0, y: 10, z: -10, scale: 100, tag: 'ATRAS' }),
+                    //loadGLBModel('/public/modelos/Atras/posgrado_.glb', { x: 0, y: 10, z: -10, scale: 100, tag: 'ATRAS' }),
+                    loadGLBModel('/public/modelos/Atras/POSGRADO-PISO.glb', { x: 0, y: 10, z: -10, scale: 100, tag: 'ATRAS' }),
                     loadGLBModel('/public/modelos/Atras/POSGRADO-P1OP.glb', { x: 0, y: 10, z: -10, scale: 100, tag: 'ATRAS' }),
                     loadGLBModel('/public/modelos/Atras/POSGRADO-P2OP.glb', { x: 0, y: 10, z: -10, scale: 100, tag: 'ATRAS' }),
-                    loadGLBModel('/public/modelos/Atras/POSGRADO-TEMPOP.glb', { x: 0, y: 10, z: -10, scale: 100, tag: 'ATRAS' }),
+                    loadGLBModel('/public/modelos/Atras/POSGRADO-P3OP.glb', { x: 0, y: 10, z: -10, scale: 100, tag: 'ATRAS' }),
+                    loadGLBModel('/public/modelos/Atras/POSGRADO-P4OP.glb', { x: 0, y: 10, z: -10, scale: 100, tag: 'ATRAS' }),
+                    loadGLBModel('/public/modelos/Atras/POSGRADO-TECHO_OP.glb', { x: 0, y: 10, z: -10, scale: 100, tag: 'ATRAS' }),
+                    //loadGLBModel('/public/modelos/Atras/POSGRADO-P2OP.glb', { x: 0, y: 10, z: -10, scale: 100, tag: 'ATRAS' }),
+                    //loadGLBModel('/public/modelos/Atras/POSGRADO-TEMPOP.glb', { x: 0, y: 10, z: -10, scale: 100, tag: 'ATRAS' }),
                     
                                                                                 
                 ]);
@@ -1275,27 +1284,34 @@ function init() {
     raycaster.firstHitOnly = true;
 
     // ── ILUMINACIÓN ───────────────────────────────────────────
-    const hemi = new THREE.HemisphereLight(0xd9d9d9, 0x3a5f8a, 1.5);
-    hemi.position.set(0, 50, 0);
-    scene.add(hemi);
+    hemiLight = new THREE.HemisphereLight(0xd9d9d9, 0x3a5f8a, 1.5);
+    hemiLight.position.set(0, 50, 0);
+    scene.add(hemiLight);
 
-    //Luz calida
-    //const sun = new THREE.DirectionalLight(0xffaa33, 2.5);
-    const sun = new THREE.DirectionalLight(0xd9d9d9, 3.0);
-    //const sun = new THREE.DirectionalLight(0xFFFFFF, 1.0);
+    sunLight = new THREE.DirectionalLight(0xd9d9d9, 3.0);
+    sunLight.position.set(50, 80, 50);
+    // ... configuración de sombras de sunLight ...
+    // scene.add(sunLight); // Descomenta si usas la luz direccional principal
+
+    fillLight = new THREE.DirectionalLight(0xd9d9d9, 0.1);
+    fillLight.position.set(-40, 20, -30);
+    scene.add(fillLight);
+
+    ambientLight = new THREE.AmbientLight(0xd9d9d9, 1.00);
+    scene.add(ambientLight);
 
 
 
-    sun.position.set(50, 80, 50);
-    sun.castShadow = false;
-    sun.shadow.mapSize.set(1024, 1024);
-    sun.shadow.camera.near = 1;
-    sun.shadow.camera.far  = 150;
-    sun.shadow.bias        = -0.001;
-    sun.shadow.radius      = 4;
-    const d = 60;
-    sun.shadow.camera.left = -d; sun.shadow.camera.right = d;
-    sun.shadow.camera.top  =  d; sun.shadow.camera.bottom = -d;
+    //sun.position.set(50, 80, 50);
+    //sun.castShadow = false;
+    //sun.shadow.mapSize.set(1024, 1024);
+    //sun.shadow.camera.near = 1;
+    //sun.shadow.camera.far  = 150;
+    //sun.shadow.bias        = -0.001;
+    //sun.shadow.radius      = 4;
+    //const d = 60;
+    //sun.shadow.camera.left = -d; sun.shadow.camera.right = d;
+    //sun.shadow.camera.top  =  d; sun.shadow.camera.bottom = -d;
     //scene.add(sun);
 
     const fill = new THREE.DirectionalLight(0xd9d9d9, 0.1);
@@ -1448,12 +1464,98 @@ function init() {
         composer.setSize(innerWidth, innerHeight);
     });
 
+
+    aplicarModoHalloween(Modo_HALLOWEEN);
+    
     //── EMPEZAR A ANIMAR ─────────────────────────────────────────
 
     animate();
 }
 
 //#endregion 
+
+function aplicarModoHalloween(activar) {
+    Modo_HALLOWEEN = activar;
+
+    if (Modo_HALLOWEEN) {
+        console.log("🎃 Modo Halloween Activado");
+
+        // 1. Cargar un HDRI alternativo (nocturno, tormentoso o tenebroso)
+        new RGBELoader().load(
+            'https://dl.polyhaven.org/file/ph-assets/HDRIs/hdr/1k/kiara_1_mid_noon_1k.hdr', // Puedes cambiar esta URL por un HDRI nocturno
+            (hdr) => {
+                hdr.mapping = THREE.EquirectangularReflectionMapping;
+                scene.background = hdr;
+                scene.environment = hdr;
+                scene.backgroundIntensity = 0.2;  // Fondo más oscuro
+                scene.environmentIntensity = 0.4; // Reflejos metálicos más tenues
+
+                const pmrem = new THREE.PMREMGenerator(renderer);
+                const envRT = pmrem.fromEquirectangular(hdr);
+                const probe = LightProbeGenerator.fromCubeRenderTarget(renderer, envRT);
+                probe.intensity = 0.2;
+                scene.add(probe);
+                pmrem.dispose();
+            }
+        );
+
+        // 2. Modificar colores e intensidades de las luces para dar una atmósfera tétrica
+        if (hemiLight) {
+            hemiLight.color.setHex(0x1a1a2e);      // Azul nocturno frío
+            hemiLight.groundColor.setHex(0x4a0e4e); // Púrpura oscuro en el suelo
+            hemiLight.intensity = 0.8;
+        }
+
+        if (ambientLight) {
+            ambientLight.color.setHex(0x221133);
+            ambientLight.intensity = 0.3;
+        }
+
+        if (fillLight) {
+            fillLight.color.setHex(0xff5500); // Tono naranja tipo calabaza / luz de relleno cálida
+            fillLight.intensity = 1.5;
+        }
+
+        // 3. Ajustar la niebla y el color de limpieza del renderizador
+        const colorNieblaHalloween = new THREE.Color(0x0d0d1a);
+        if (scene.fog) {
+            scene.fog.color = colorNieblaHalloween;
+            scene.fog.near = 15; // Acercar la niebla para mayor inmersión
+            scene.fog.far = 80;
+        }
+        renderer.setClearColor(colorNieblaHalloween, 1.0);
+
+    } else {
+        console.log("☀️ Modo Normal Restaurado");
+
+        // Restaurar valores originales de iluminación y niebla
+        const colorNieblaNormal = new THREE.Color(0xdae6f7);
+        if (scene.fog) {
+            scene.fog.color = colorNieblaNormal;
+            scene.fog.near = 80;
+            scene.fog.far = 150;
+        }
+        renderer.setClearColor(colorNieblaNormal, 1.0);
+
+        if (hemiLight) {
+            hemiLight.color.setHex(0xd9d9d9);
+            hemiLight.groundColor.setHex(0x3a5f8a);
+            hemiLight.intensity = 1.5;
+        }
+
+        if (ambientLight) {
+            ambientLight.color.setHex(0xd9d9d9);
+            ambientLight.intensity = 1.0;
+        }
+
+        if (fillLight) {
+            fillLight.color.setHex(0xd9d9d9);
+            fillLight.intensity = 0.1;
+        }
+
+        // Opcional: Recargar el HDRI original si deseas revertirlo por completo
+    }
+}
 
 
 // ============================================================
