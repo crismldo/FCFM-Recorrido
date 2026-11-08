@@ -622,7 +622,7 @@ function DisplaySalonInfo(ID_Salon_Seleccionado) {
 function CrearSalonColision(id, centroX, centroY, centroZ, Salontag) {
 
     
-    loadGLBModel('/public/modelos/A_test.glb', { x: centroX, y: (centroY - 1.3), z: centroZ, scale: 1, tag: Salontag });
+    loadGLBModel('/modelos/A_test.glb', { x: centroX, y: (centroY - 1.3), z: centroZ, scale: 1, tag: Salontag });
     const centro = new THREE.Vector3(centroX, centroY, centroZ);
     const tamaño = new THREE.Vector3(2, 2, 2);
     
@@ -857,54 +857,54 @@ function loadEnvironmentAndModel() {
             try {
                 await Promise.all([                                        
                     // ===============================USIT===============================
-                    loadGLBModel('/public/modelos/USIT-Opt/USIT-BANCASOP.glb', { x: 0, y: 10, z: -10, scale: 100, tag: 'USIT' }),
-                    loadGLBModel('/public/modelos/USIT-Opt/USIT-Ext-Op.glb', { x: 0, y: 10, z: -10, scale: 100, tag: 'USIT_Low' }),
-                    loadGLBModel('/public/modelos/USIT-Opt/USIT-P1_.glb', { x: 0, y: 10, z: -10, scale: 100, tag: 'USIT_High' }),
-                    loadGLBModel('/public/modelos/USIT-Opt/USIT-P1Lab_.glb', { x: 0, y: 10, z: -10, scale: 100, tag: 'USIT_Detalles' }),
-                    loadGLBModel('/public/modelos/USIT-Opt/USIT-P2_.glb', { x: 0, y: 10, z: -10, scale: 100, tag: 'USIT_High' }),
-                    loadGLBModel('/public/modelos/USIT-Opt/USIT-P2Oro_.glb', { x: 0, y: 10, z: -10, scale: 100, tag: 'USIT_Detalles' }),
-                    loadGLBModel('/public/modelos/USIT-Opt/USIT-P2Podcast_.glb', { x: 0, y: 10, z: -10, scale: 100, tag: 'USIT_Detalles' }),
-                    loadGLBModel('/public/modelos/USIT-Opt/USIT-P2SOPORTE_.glb', { x: 0, y: 10, z: -10, scale: 100, tag: 'USIT_Detalles' }),
-                    loadGLBModel('/public/modelos/USIT-Opt/USIT-PBLABOP.glb', { x: 0, y: 10, z: -10, scale: 100, tag: 'USIT_High' }),
-                    loadGLBModel('/public/modelos/USIT-Opt/USIT-PBMULTI_.glb', { x: 0, y: 10, z: -10, scale: 100, tag: 'USIT_Detalles' }),
-                    loadGLBModel('/public/modelos/USIT-Opt/USIT-PBOP.glb', { x: 0, y: 10, z: -10, scale: 100, tag: 'USIT_High' }),
+                    loadGLBModel('/modelos/USIT-Opt/USIT-BANCASOP.glb', { x: 0, y: 10, z: -10, scale: 100, tag: 'USIT' }),
+                    loadGLBModel('/modelos/USIT-Opt/USIT-Ext-Op.glb', { x: 0, y: 10, z: -10, scale: 100, tag: 'USIT_Low' }),
+                    loadGLBModel('/modelos/USIT-Opt/USIT-P1_.glb', { x: 0, y: 10, z: -10, scale: 100, tag: 'USIT_High' }),
+                    loadGLBModel('/modelos/USIT-Opt/USIT-P1Lab_.glb', { x: 0, y: 10, z: -10, scale: 100, tag: 'USIT_Detalles' }),
+                    loadGLBModel('/modelos/USIT-Opt/USIT-P2_.glb', { x: 0, y: 10, z: -10, scale: 100, tag: 'USIT_High' }),
+                    loadGLBModel('/modelos/USIT-Opt/USIT-P2Oro_.glb', { x: 0, y: 10, z: -10, scale: 100, tag: 'USIT_Detalles' }),
+                    loadGLBModel('/modelos/USIT-Opt/USIT-P2Podcast_.glb', { x: 0, y: 10, z: -10, scale: 100, tag: 'USIT_Detalles' }),
+                    loadGLBModel('/modelos/USIT-Opt/USIT-P2SOPORTE_.glb', { x: 0, y: 10, z: -10, scale: 100, tag: 'USIT_Detalles' }),
+                    loadGLBModel('/modelos/USIT-Opt/USIT-PBLABOP.glb', { x: 0, y: 10, z: -10, scale: 100, tag: 'USIT_High' }),
+                    loadGLBModel('/modelos/USIT-Opt/USIT-PBMULTI_.glb', { x: 0, y: 10, z: -10, scale: 100, tag: 'USIT_Detalles' }),
+                    loadGLBModel('/modelos/USIT-Opt/USIT-PBOP.glb', { x: 0, y: 10, z: -10, scale: 100, tag: 'USIT_High' }),
                     
                     // ===============================ESTACIONAMIENTO===============================
-                    loadGLBModel('/public/modelos/Est-Opt/Est_.glb', { x: 0, y: 10, z: -10, scale: 100, tag: 'EST' }),
-                    loadGLBModel('/public/modelos/Est-Opt/Est-Arboles_.glb', { x: 0, y: 10, z: -10, scale: 100, tag: 'EST' }),
+                    loadGLBModel('/modelos/Est-Opt/Est_.glb', { x: 0, y: 10, z: -10, scale: 100, tag: 'EST' }),
+                    loadGLBModel('/modelos/Est-Opt/Est-Arboles_.glb', { x: 0, y: 10, z: -10, scale: 100, tag: 'EST' }),
             
                     // ===============================FACU===============================
-                    loadGLBModel('/public/modelos/FACU/FACU-PBOP.glb', { x: 0, y: 10, z: -10, scale: 100, tag: 'FACU_High' }),
-                    loadGLBModel('/public/modelos/FACU/FACU-P1OP.glb', { x: 0, y: 10, z: -10, scale: 100, tag: 'FACU_High' }),
-                    loadGLBModel('/public/modelos/FACU/FACU-P2OP.glb', { x: 0, y: 10, z: -10, scale: 100, tag: 'FACU_High' }),
-                    loadGLBModel('/public/modelos/FACU/FACU-PB_Placas.glb', { x: 0, y: 10, z: -10, scale: 100, tag: 'FACU_High' }),
-                    loadGLBModel('/public/modelos/FACU/FACU-PB_Titulos.glb', { x: 0, y: 10, z: -10, scale: 100, tag: 'FACU_High' }).then(model => {
+                    loadGLBModel('/modelos/FACU/FACU-PBOP.glb', { x: 0, y: 10, z: -10, scale: 100, tag: 'FACU_High' }),
+                    loadGLBModel('/modelos/FACU/FACU-P1OP.glb', { x: 0, y: 10, z: -10, scale: 100, tag: 'FACU_High' }),
+                    loadGLBModel('/modelos/FACU/FACU-P2OP.glb', { x: 0, y: 10, z: -10, scale: 100, tag: 'FACU_High' }),
+                    loadGLBModel('/modelos/FACU/FACU-PB_Placas.glb', { x: 0, y: 10, z: -10, scale: 100, tag: 'FACU_High' }),
+                    loadGLBModel('/modelos/FACU/FACU-PB_Titulos.glb', { x: 0, y: 10, z: -10, scale: 100, tag: 'FACU_High' }).then(model => {
                         model.traverse(child => {
                             if (child.isMesh) {
                                 child.renderOrder = 1;
                             }
                         });
                     }),
-                    loadGLBModel('/public/modelos/FACU/FACU-EXTOP.glb', { x: 0, y: 10, z: -10, scale: 100, tag: 'FACU_Low' }),
+                    loadGLBModel('/modelos/FACU/FACU-EXTOP.glb', { x: 0, y: 10, z: -10, scale: 100, tag: 'FACU_Low' }),
                     
                     // ===============================SALONES ATRAS===============================
-                    loadGLBModel('/public/modelos/Salones-Opt/Salones-OPT.glb', { x: 0, y: 10, z: -10, scale: 100, tag: 'FACU' }),
-                    loadGLBModel('/public/modelos/Salones-Opt/Salones-Plant_.glb', { x: 0, y: 10, z: -10, scale: 100, tag: 'FACU' }), 
+                    loadGLBModel('/modelos/Salones-Opt/Salones-OPT.glb', { x: 0, y: 10, z: -10, scale: 100, tag: 'FACU' }),
+                    loadGLBModel('/modelos/Salones-Opt/Salones-Plant_.glb', { x: 0, y: 10, z: -10, scale: 100, tag: 'FACU' }), 
                     
                     // =============================== ATRAS NUEVO ===============================
-                    loadGLBModel('/public/modelos/Atras/300-EOPT.glb', { x: 0, y: 10, z: -10, scale: 100, tag: 'ATRAS' }),
-                    loadGLBModel('/public/modelos/Atras/300-PBOPT.glb', { x: 0, y: 10, z: -10, scale: 100, tag: 'ATRAS' }),
-                    loadGLBModel('/public/modelos/Atras/300-P1OPT.glb', { x: 0, y: 10, z: -10, scale: 100, tag: 'ATRAS' }),
-                    loadGLBModel('/public/modelos/Atras/cancha-futOP.glb', { x: 0, y: 10, z: -10, scale: 100, tag: 'ATRAS' }),
-                    loadGLBModel('/public/modelos/Atras/cancha-baskOP.glb', { x: 0, y: 10, z: -10, scale: 100, tag: 'ATRAS' }),
-                    loadGLBModel('/public/modelos/Atras/Deportivo-PBOP.glb', { x: 0, y: 10, z: -10, scale: 100, tag: 'ATRAS' }),
-                    loadGLBModel('/public/modelos/Atras/Deportivo-P1OP.glb', { x: 0, y: 10, z: -10, scale: 100, tag: 'ATRAS' }),
-                    loadGLBModel('/public/modelos/Atras/POSGRADO-PISO.glb', { x: 0, y: 10, z: -10, scale: 100, tag: 'ATRAS' }),
-                    loadGLBModel('/public/modelos/Atras/POSGRADO-P1OP.glb', { x: 0, y: 10, z: -10, scale: 100, tag: 'ATRAS' }),
-                    loadGLBModel('/public/modelos/Atras/POSGRADO-P2OP.glb', { x: 0, y: 10, z: -10, scale: 100, tag: 'ATRAS' }),
-                    loadGLBModel('/public/modelos/Atras/POSGRADO-P3OP.glb', { x: 0, y: 10, z: -10, scale: 100, tag: 'ATRAS' }),
-                    loadGLBModel('/public/modelos/Atras/POSGRADO-P4OP.glb', { x: 0, y: 10, z: -10, scale: 100, tag: 'ATRAS' }),
-                    loadGLBModel('/public/modelos/Atras/POSGRADO-TECHO_OP.glb', { x: 0, y: 10, z: -10, scale: 100, tag: 'ATRAS' }),
+                    loadGLBModel('/modelos/Atras/300-EOPT.glb', { x: 0, y: 10, z: -10, scale: 100, tag: 'ATRAS' }),
+                    loadGLBModel('/modelos/Atras/300-PBOPT.glb', { x: 0, y: 10, z: -10, scale: 100, tag: 'ATRAS' }),
+                    loadGLBModel('/modelos/Atras/300-P1OPT.glb', { x: 0, y: 10, z: -10, scale: 100, tag: 'ATRAS' }),
+                    loadGLBModel('/modelos/Atras/cancha-futOP.glb', { x: 0, y: 10, z: -10, scale: 100, tag: 'ATRAS' }),
+                    loadGLBModel('/modelos/Atras/cancha-baskOP.glb', { x: 0, y: 10, z: -10, scale: 100, tag: 'ATRAS' }),
+                    loadGLBModel('/modelos/Atras/Deportivo-PBOP.glb', { x: 0, y: 10, z: -10, scale: 100, tag: 'ATRAS' }),
+                    loadGLBModel('/modelos/Atras/Deportivo-P1OP.glb', { x: 0, y: 10, z: -10, scale: 100, tag: 'ATRAS' }),
+                    loadGLBModel('/modelos/Atras/POSGRADO-PISO.glb', { x: 0, y: 10, z: -10, scale: 100, tag: 'ATRAS' }),
+                    loadGLBModel('/modelos/Atras/POSGRADO-P1OP.glb', { x: 0, y: 10, z: -10, scale: 100, tag: 'ATRAS' }),
+                    loadGLBModel('/modelos/Atras/POSGRADO-P2OP.glb', { x: 0, y: 10, z: -10, scale: 100, tag: 'ATRAS' }),
+                    loadGLBModel('/modelos/Atras/POSGRADO-P3OP.glb', { x: 0, y: 10, z: -10, scale: 100, tag: 'ATRAS' }),
+                    loadGLBModel('/modelos/Atras/POSGRADO-P4OP.glb', { x: 0, y: 10, z: -10, scale: 100, tag: 'ATRAS' }),
+                    loadGLBModel('/modelos/Atras/POSGRADO-TECHO_OP.glb', { x: 0, y: 10, z: -10, scale: 100, tag: 'ATRAS' }),
                 ]);
 
                 toggleEdificio('USIT_Low', false);
