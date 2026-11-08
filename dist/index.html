@@ -5,11 +5,21 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>FCFM - Recorrido Virtual</title>
     
-    
 
-    
-  <script type="module" crossorigin src="/assets/index-XyTVlNqM.js"></script>
-  <link rel="stylesheet" crossorigin href="/assets/index-FWWmNdFp.css">
+    <script type="importmap">
+    {
+        "imports": {
+            "three": "https://unpkg.com/three@0.160.0/build/three.module.js",
+            "three/examples/jsm/": "https://unpkg.com/three@0.160.0/examples/jsm/",
+            "three/addons/": "https://unpkg.com/three@0.160.0/examples/jsm/",
+            "three-mesh-bvh": "https://unpkg.com/three-mesh-bvh@0.7.8/build/index.module.js",
+            "stats": "https://unpkg.com/stats.js@0.17.0/build/stats.min.js"
+        }
+    }
+
+    </script>
+  <script type="module" crossorigin src="/assets/index-D4qIo7nQ.js"></script>
+  <link rel="stylesheet" crossorigin href="/assets/index-DMSwa-4E.css">
 </head>
 <body>
     <canvas id="webgl"></canvas>
@@ -55,7 +65,7 @@
         </div>
     </div>
 
-    
+    <div id="jumpscare"></div>
 
 </body>
 </html>

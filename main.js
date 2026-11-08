@@ -1379,16 +1379,16 @@ function init() {
     CrearSalonColision(Salones.USIT_Lab_Telecomun, -40.80, 7.51, 14.30, 'USIT');
     
     //300s
-    CrearSalonColision(Salones.Asesorias_Entrada, 38.7, 6.52, -78.69, 'ATRAS');
-    CrearSalonColision(Salones.Dep_Psicopedagogia, 36.5, 7.5, -82, 'ATRAS');
-    CrearSalonColision(Salones.Enfermeria, 39, 7.5, -80.5, 'ATRAS');
+    CrearSalonColision(Salones.Asesorias_Entrada, 38.18, 7.07, -76.23, 'ATRAS');
+    CrearSalonColision(Salones.Dep_Psicopedagogia, 36.75, 7.07, -80.39, 'ATRAS');
+    CrearSalonColision(Salones.Enfermeria, 39.17, 7.07, -80.27, 'ATRAS');
 
 
     //Posgrado
-    CrearSalonColision(Salones.Posgrado_Entrada, 26.54, 6.52, -74.05, 'ATRAS');
+    CrearSalonColision(Salones.Posgrado_Entrada, 24.89, 6.26, -70.99, 'ATRAS');
 
     //Deportivo
-    CrearSalonColision(Salones.Deportivo_Entrada, 36, 6.25, -116.7, 'ATRAS');
+    CrearSalonColision(Salones.Deportivo_Entrada, 36.15, 6.25, -115.69, 'ATRAS');
 
 
     CrearBuildingColision('Princ', 3.94, 16.00, -10.95, 35, 20, 44.5);

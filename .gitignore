@@ -1,3 +1,5 @@
 * .glb
 /modelos
 /public
+.vercel
+.env*

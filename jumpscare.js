@@ -9,7 +9,7 @@ export const zonas = [
       new THREE.Vector3(4, 8, -3)   // esquina máxima (x, y, z)
     ),
     //imagen: '/public/jumpscare/cutebison.jpg',
-    imagen: '/public/jumpscare/Bisonte_3.png',
+    imagen: '/public/jumpscare/Bisonte_2.png',
     duracion: 2500,   // milisegundos
     repetir: false,   // true = se activa cada vez que entres
     activada: false,
