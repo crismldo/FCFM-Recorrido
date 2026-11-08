@@ -170,7 +170,7 @@ const teleportList = [
 
 
 function teletransportarA(nuevaPosicion) {
-    const camObj = controls.getObject();
+    const camObj = controls.object;
 
     camObj.position.copy(nuevaPosicion);
 
@@ -190,7 +190,7 @@ function teletransportarA(nuevaPosicion) {
 // ============================================================
 const dracoLoader = new DRACOLoader();
 dracoLoader.setDecoderPath('https://www.gstatic.com/draco/versioned/decoders/1.5.6/');
-dracoLoader.setDecoderConfig({ type: 'wasm' });
+//dracoLoader.setDecoderConfig({ type: 'wasm' });
 
 const gltfLoader = new GLTFLoader();
 gltfLoader.setDRACOLoader(dracoLoader);
@@ -522,8 +522,8 @@ let isPlayerInside101 = false;
 
 function physicsStep() {
     const dt     = FIXED_STEP;
-    //const camObj = controls.getObject();
-    const camObj = controls.getObject();
+    //const camObj = controls.object;
+    const camObj = controls.object;
 
     _rayOrigin.copy(camObj.position);
     raycaster.set(_rayOrigin, _down);
@@ -642,7 +642,7 @@ function CrearSalonColision(id, centroX, centroY, centroZ, Salontag) {
 }
 
 function verificarColisionSalones() {
-    const camObj = controls.getObject();
+    const camObj = controls.object;
     const playerPos = camObj.position;
     let dentroDeAlgunSalon = false;
 
@@ -722,7 +722,7 @@ function CrearBuildingColision(prefijo, centroX, centroY, centroZ, w, h, d) {
 }
 
 function verificarColisionEdificios() {
-    const playerPos = controls.getObject().position;
+    const playerPos = controls.object.position;
     let sectorActual = 'Exterior'; // Asumimos que está afuera por defecto
 
     // Revisamos si el jugador está dentro de alguna caja gigante de edificio
@@ -1134,7 +1134,7 @@ function actualizarLOD_FACU(FACU_Lejos, permitido) {
 }
 
 function verificarDistanciasLOD() {
-    const playerPos = controls.getObject().position;
+    const playerPos = controls.object.position;
     
     // Obtenemos qué edificios permite el Chunk Manager en el sector actual
     const tagsPermitidos = ReglasVisibilidad[sectorActivoActual] || ReglasVisibilidad['Exterior'];
@@ -1247,7 +1247,7 @@ function init() {
 
     // ── CONTROLES ─────────────────────────────────────────────
     controls = new PointerLockControls(camera, renderer.domElement);
-    scene.add(controls.getObject());
+    scene.add(controls.object);
 
     const startBtn = document.getElementById('start-btn');
     if (startBtn) {
@@ -1565,7 +1565,7 @@ function animate() {
         }
         verificarColisionEdificios();
         verificarDistanciasLOD();
-        const p = controls.getObject().position;
+        const p = controls.object.position;
         const cx = p.x.toFixed(2), cy = p.y.toFixed(2), cz = p.z.toFixed(2);
         if (cx !== _lastCoordX || cy !== _lastCoordY || cz !== _lastCoordZ) {
             const posDisplay = document.getElementById('pos-values');
@@ -1573,9 +1573,9 @@ function animate() {
             _lastCoordX = cx; _lastCoordY = cy; _lastCoordZ = cz;
         }
 
-        revisarZonas(p);
+        //revisarZonas(p);
 
-        const playerObj = controls.getObject();
+        const playerObj = controls.object;
 
         // Si el jugador cae por debajo de Y = 0
         if (playerObj.position.y < 5.0) {
